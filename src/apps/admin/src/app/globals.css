@@ -1,26 +1,105 @@
 @import "tailwindcss";
+@source "../../../../packages/ui/**/*.{js,ts,tsx,jsx}";
+@source "../../../../packages/providers/**/*.{js,ts,tsx,jsx}";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+  :root {
+    --max-width: 100vw;
+    --max-height: 100vh;
+
+    --background: hsl(207, 20%, 89%);
+    --foreground: hsl(220, 43%, 11%);
+
+    --primary: hsl(220, 7%, 8%);
+    --primary-alpha: hsla(220, 7%, 8%, 0.5);
+    --secondary: hsl(38, 86%, 51%);
+    --secondary-alpha: hsla(38, 86%, 51%, 0.5);
+    --tertiary: hsl(105, 60%, 33%);
+    --tertiary-alpha: hsla(105, 60%, 33%, 0.5);
+    --quaternary: hsl(220, 3%, 82%);
+    --quaternary-alpha: hsla(220, 3%, 82%, 0.5);
+
+    --primary-text: #FFFFFF;
+
+    --primary-error: hsl(0, 84%, 59%);
+    --secondary-error: hsla(0, 91%, 71%, 0.5);
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-quaternary: var(--quaternary);
+
+  --color-error: var(--primary-error);
+  --color-error-100: var(--secondary-error);
+
+  --color-primary-text: var(--primary-text);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--foreground);
+    --foreground: var(--background);
+  }
+  svg path {
+    stroke: var(--background);
+  }
+  img[alt] {
+    color: var(--background);
+  }
+  p {
+    color: var(--background);
+  }
+  /* nav {
+    background-color: var(--color-primary);
+  } */
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  input {
+    [type="checkbox"]:checked {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23262626' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    }
+    [type="radio"]:checked {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23262626' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+    }
+    [type="checkbox"],
+    [type="radio"] {
+      box-shadow: none;
+      outline: 2px solid transparent;
+      outline-offset: 0;
+    }
+
+    [type="checkbox"],
+    [type="checkbox"]:checked,
+    [type="checkbox"]:checked:hover,
+    [type="checkbox"]:checked:focus,
+    [type="checkbox"]:indeterminate:hover,
+    [type="radio"],
+    [type="radio"]:checked,
+    [type="radio"]:checked:hover,
+    [type="radio"]:checked:focus {
+      color: hsl(210, 40%, 98%);
+      border-color: hsl(216, 12%, 84%);
+    }
+  }
 }
+
+@layer components {}

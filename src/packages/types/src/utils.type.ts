@@ -19,3 +19,12 @@ export type Toast = {
   message: string;
   className: string;
 };
+
+export const AsConstant = {
+  SSO: "sso",
+  HOME: "home",
+  FRUIT: "fruit",
+  SIGNIN: "signin",
+  SIGNUP: "signup",
+  F_SERVICE: "fService"
+} as const;

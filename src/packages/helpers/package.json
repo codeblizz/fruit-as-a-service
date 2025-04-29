@@ -1,6 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/package.json",
-  "name": "@codeblizz/types",
+  "name": "@codeblizz/utils",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,18 +9,22 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "react-hook-form": "^7.56.1",
-    "@hookform/resolvers": "^5.0.1"
-  },
   "peerDependencies": {
     "next": "^15.3.1",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.56.1",
+    "zod": "^3.24.3",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "react": "^19.1.0"
+  },
+  "dependencies": {
+    "classnames": "^2.5.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.2.0"
   }
 }

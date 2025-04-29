@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import Nav from "@/packages/ui/atoms/nav";
-import NextLink from "@/packages/ui/atoms/link";
-import NextImage from "@/packages/ui/atoms/image";
-import { ThemeToggle } from "@/packages/providers/theme.provider";
+import Nav from "@/packages/ui/src/atoms/nav";
+import NextLink from "@/packages/ui/src/atoms/link";
+import NextImage from "@/packages/ui/src/atoms/image";
+import { ThemeToggle } from "@/packages/providers/src/theme.provider";
 
 function NavBar() {
   return (

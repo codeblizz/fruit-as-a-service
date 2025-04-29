@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link";
-import lib from "@/packages/helpers/lib";
+import lib from "@/packages/helpers/src/libs";
 import { type LinkProps } from "next/link";
 import React, { forwardRef, ReactNode } from "react";
 import type { MouseEventHandler, AnchorHTMLAttributes, StyleHTMLAttributes } from "react";

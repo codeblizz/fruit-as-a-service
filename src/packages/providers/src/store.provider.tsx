@@ -1,8 +1,8 @@
 "use client";
 
-import utils from '@/packages/helpers/utils';
+import utils from '@/packages/helpers/src/utils';
 import { createContext, useContext, ReactNode } from 'react';
-import { StoreType, initializeStore } from '@/packages/store';
+import { StoreType, initializeStore } from '@/packages/store/src';
 
 // Create the Zustand context
 export const ZustandContext = createContext<StoreType | null>(null);

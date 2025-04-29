@@ -1,6 +1,6 @@
 "use client";
 
-import { TBaseElement } from "@/packages/types/ui/base.type";
+import { TBaseElement } from "@/packages/types/src/ui/base.type";
 import React from "react";
 
 interface SpanType extends TBaseElement {

@@ -1,5 +1,5 @@
-import { ErrorType } from "@/packages/store/errorSlice";
-import { CustomError } from "@/packages/types/utils.type";
+import { ErrorType } from "@/packages/store/src/errorSlice";
+import { CustomError } from "@/packages/types/src/utils.type";
 
 const utils = {
   defaultUser: {

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import lib from "@/packages/helpers/lib";
+import lib from "@/packages/helpers/src/libs";
 
 interface NavType extends React.HTMLAttributes<HTMLElement> {}
 

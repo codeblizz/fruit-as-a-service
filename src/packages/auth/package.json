@@ -1,6 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/package.json",
-  "name": "@codeblizz/types",
+  "name": "@codeblizz/auth",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,18 +9,14 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "react-hook-form": "^7.56.1",
-    "@hookform/resolvers": "^5.0.1"
-  },
   "peerDependencies": {
     "next": "^15.3.1",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "next-auth": "^4.24.11"
   },
   "devDependencies": {
     "react": "^19.1.0",
-    "next-auth": "^4.24.11",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2"
   }

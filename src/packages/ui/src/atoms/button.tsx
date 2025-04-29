@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import lib from "@/packages/helpers/lib";
-import { TButton } from "@/packages/types/ui/button.type";
+import lib from "@/packages/helpers/src/libs";
+import { TButton } from "@/packages/types/src/ui/button.type";
 
 function Button({ className, text, name, type }: TButton) {
   return (

@@ -1,6 +1,6 @@
 "use client"
 
-import lib from "@/packages/helpers/lib";
+import lib from "@/packages/helpers/src/libs";
 import type { HTMLAttributes } from "react";
 
 interface Paragraph extends HTMLAttributes<HTMLParagraphElement> {

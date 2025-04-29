@@ -1,17 +1,17 @@
 import { createStore, useStore as useZustandStore } from "zustand";
 import { persist, devtools, createJSONStorage } from "zustand/middleware";
 
-import utils from "@/packages/helpers/utils";
+import utils from "@/packages/helpers/src/utils";
 // import { ToastSlice } from "./toastSlice";
-import { UserSlice } from "@/packages/store/userSlice";
+import { UserSlice } from "@/packages/store/src/userSlice";
 import { UserState } from "@/packages/types/auth.type";
 // import { ToastState } from "@/packages/types/toast.type";
-import { LoaderSlice } from "@/packages/store/loaderSlice";
-import { LoaderState } from "@/packages/store/loaderSlice";
-import { ThemeSlice, ThemeState } from "@/packages/store/themeSlice";
-import { ErrorSlice, ErrorState } from "@/packages/store/errorSlice";
-import { ModalSlice, ModalState } from "@/packages/store/modalSlice";
-import { useZustandContext } from "@/packages/providers/store.provider";
+import { LoaderSlice } from "@/packages/store/src/loaderSlice";
+import { LoaderState } from "@/packages/store/src/loaderSlice";
+import { ThemeSlice, ThemeState } from "@/packages/store/src/themeSlice";
+import { ErrorSlice, ErrorState } from "@/packages/store/src/errorSlice";
+import { ModalSlice, ModalState } from "@/packages/store/src/modalSlice";
+import { useZustandContext } from "@/packages/providers/src/store.provider";
 
 // Define the combined Store type
 export type Store = UserState &

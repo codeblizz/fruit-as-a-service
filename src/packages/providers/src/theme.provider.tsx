@@ -1,11 +1,11 @@
 "use client";
 
-import lib from "@/packages/helpers/lib";
-import Span from "@/packages/ui/atoms/span";
-import { useCreateStore } from "@/packages/store/index";
-import SunIcon from "@/packages/ui/atoms/icons/sunIcon";
-import MoonIcon from "@/packages/ui/atoms/icons/moonIcon";
-import { TBaseElement } from "@/packages/types/ui/base.type";
+import lib from "@/packages/helpers/src/libs";
+import Span from "@/packages/ui/src/atoms/span";
+import { useCreateStore } from "@/packages/store/src/index";
+import SunIcon from "@/packages/ui/src/atoms/icons/sunIcon";
+import MoonIcon from "@/packages/ui/src/atoms/icons/moonIcon";
+import { TBaseElement } from "@/packages/types/src/ui/base.type";
 import { useTheme, ThemeProvider as NextThemeProvider } from "next-themes";
 
 function ThemeProvider({ children }: Pick<TBaseElement, "children">) {

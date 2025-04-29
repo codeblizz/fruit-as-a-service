@@ -1,5 +1,5 @@
-import Fragment from "@/packages/ui/atoms/fragment";
-import AuthForm from "@/packages/ui/molecules/authForm";
+import Fragment from "@/packages/ui/src/atoms/fragment";
+import AuthForm from "@/packages/ui/src/molecules/authForm";
 
 export default function Home() {
   return (

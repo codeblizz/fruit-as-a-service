@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import lib from "@/packages/helpers/lib";
-import Fragment from "@/packages/ui/atoms/fragment";
-import { TBaseElement } from "@/packages/types/ui/base.type";
+import lib from "@/packages/helpers/src/libs";
+import Fragment from "@/packages/ui/src/atoms/fragment";
+import { TBaseElement } from "@/packages/types/src/ui/base.type";
 
 export interface CardType extends TBaseElement {}
 

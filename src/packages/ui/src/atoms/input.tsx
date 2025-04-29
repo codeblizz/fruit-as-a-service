@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import lib from "@/packages/helpers/lib";
-import { TInput } from "@/packages/types/ui/input.type";
+import lib from "@/packages/helpers/src/libs";
+import { TInput } from "@/packages/types/src/ui/input.type";
 import {
   FieldValues,
   useController,

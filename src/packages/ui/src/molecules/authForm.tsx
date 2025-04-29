@@ -2,22 +2,22 @@
 
 import React from "react";
 import { ZodSchema } from "zod";
-import lib from "@/packages/helpers/lib";
 import Paragraph from "../atoms/paragraph";
-import Form from "@/packages/ui/atoms/form";
+import lib from "@/packages/helpers/src/libs";
 import { usePathname } from "next/navigation";
-import Input from "@/packages/ui/atoms/input";
-import Button from "@/packages/ui/atoms/button";
-import NextLink from "@/packages/ui/atoms/link";
-import Card from "@/packages/ui/molecules/card";
-import Fragment from "@/packages/ui/atoms/fragment";
+import Form from "@/packages/ui/src/atoms/form";
+import Input from "@/packages/ui/src/atoms/input";
+import Button from "@/packages/ui/src/atoms/button";
+import NextLink from "@/packages/ui/src/atoms/link";
+import Card from "@/packages/ui/src/molecules/card";
 import useResetFields from "./hooks/useResetFields";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Fragment from "@/packages/ui/src/atoms/fragment";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
   LoginSchema,
   RegisterSchema,
-} from "@/packages/helpers/validations/auth.validate";
+} from "@/packages/helpers/src/validations/auth.validate";
 
 type Login = {
   email: string;

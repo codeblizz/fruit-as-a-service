@@ -1,5 +1,5 @@
 {
-  "name": "@codeblizz/utils",
+  "name": "@codeblizz/helpers",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,8 +11,10 @@
   "license": "MIT",
   "peerDependencies": {
     "next": "^15.3.1",
+    "axios": "^1.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "next-auth": "^4.24.11",
     "react-hook-form": "^7.56.1",
     "zod": "^3.24.3",
     "zustand": "^5.0.3"

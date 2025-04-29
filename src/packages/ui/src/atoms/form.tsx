@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import lib from "@/packages/helpers/lib";
-import { TForm } from "@/packages/types/ui/form.type";
+import lib from "@/packages/helpers/src/libs";
+import { TForm } from "@/packages/types/src/ui/form.type";
 
 function Form({ name, children, className, onSubmit }: TForm) {
   return (

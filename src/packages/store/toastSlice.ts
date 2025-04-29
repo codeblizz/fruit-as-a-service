@@ -1,0 +1,19 @@
+import { StateCreator } from "zustand";
+import { ToastState } from "@/packages/types/utils.type";
+
+export const ToastSlice: StateCreator<ToastState> = (set) => ({
+  toast: { message: "", isOpen: false, className: "" },
+  updateToast: (isOpen: boolean, message: string, className: string) => {
+    set((state) => ({
+      ...state,
+      toast: {
+        ...state.toast,
+        isOpen: isOpen,
+        message: message,
+        className: className
+      },
+    }));
+  },
+  clearToast: () =>
+    set(() => ({ toast: { message: "", isOpen: false, className: "" } })),
+});

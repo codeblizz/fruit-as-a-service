@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import NavBar from "@/packages/ui/molecules/navBar";
 import { Geist, Geist_Mono } from "next/font/google";
-import { authOptions } from "./api/auth/[...nextauth]/options";
-import StoreProvider from "@/packages/providers/store.provider";
-import { ThemeProvider } from "@/packages/providers/theme.provider";
-import SessionProvider from "@/packages/providers/session.provider";
+import NavBar from "@/packages/ui/src/molecules/navBar";
+import { authOptions } from "@/packages/auth/src/authOptions";
+import StoreProvider from "@/packages/providers/src/store.provider";
+import { ThemeProvider } from "@/packages/providers/src/theme.provider";
+import SessionProvider from "@/packages/providers/src/session.provider";
 import "./globals.css";
 
 const geistSans = Geist({

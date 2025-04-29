@@ -15,6 +15,11 @@
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./src",
+    "baseUrl": "./src",
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./*"],
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules"]

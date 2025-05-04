@@ -9,7 +9,7 @@ import axios, {
 } from "axios";
 
 // Function to create Axios clients with interceptors
-export const createAxiosClients = async () => {
+export default function createAxiosClients() {
   // Configuration for Axios clients
   const config = {
     timeout: 30000,
@@ -17,11 +17,11 @@ export const createAxiosClients = async () => {
   };
   const nodeAxiosClient = axios.create({
     ...config,
-    baseURL: env.JAVA_AUTH_URL,
+    baseURL: process.env.NODE_BASE_URL,
   });
-  const nextAuthAxiosClient = axios.create({
+  const nextAxiosClient = axios.create({
     ...config,
-    baseURL: env.NEXT_AUTH_URL,
+    baseURL: process.env.PUBLIC_NEXT_URL,
   });
 
   // Interceptor for adding Authorization header
@@ -35,7 +35,7 @@ export const createAxiosClients = async () => {
   };
 
   // Set up request interceptors
-  nextAuthAxiosClient.interceptors.request.use(
+  nextAxiosClient.interceptors.request.use(
     interceptor,
     (error: AxiosError) => Promise.reject(error)
   );
@@ -45,7 +45,7 @@ export const createAxiosClients = async () => {
   );
 
   // Set up response interceptors
-  nextAuthAxiosClient.interceptors.response.use(
+  nextAxiosClient.interceptors.response.use(
     (response: AxiosResponse) => {
       return response;
     },
@@ -59,5 +59,5 @@ export const createAxiosClients = async () => {
     (error: AxiosError) => Promise.reject(error)
   );
 
-  return { nodeAxiosClient, nextAuthAxiosClient };
+  return { nodeAxiosClient, nextAxiosClient };
 };

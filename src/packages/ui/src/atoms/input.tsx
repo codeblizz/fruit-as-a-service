@@ -2,17 +2,16 @@
 
 import React, { useState } from "react";
 import lib from "@/packages/helpers/src/libs";
+import Label from "@/packages/ui/src/atoms/label";
 import { TInput } from "@/packages/types/src/ui/input.type";
+import ErrorField from "@/packages/ui/src/molecules/errorField";
+import PasswordIcon from "@/packages/ui/src/molecules/passwordIcon";
+import { TButtonMouseEvent } from "@/packages/types/src/ui/button.type";
 import {
   FieldValues,
   useController,
   UseControllerProps,
 } from "react-hook-form";
-
-type FocusOrBlur = {
-  blur: boolean;
-  focus: boolean;
-};
 function Input<T extends FieldValues>({
   id,
   name,
@@ -20,17 +19,41 @@ function Input<T extends FieldValues>({
   control,
   className,
   placeholder,
+  placeholderClassName,
 }: TInput & UseControllerProps<T>) {
+  const isPassword = type === "password";
   const isCheckbox = type === "checkbox";
-  const { field, fieldState } = useController({ control, name });
   const [focus, setFocus] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const { field } = useController({ control, name });
+
+  const InputLabelField = () => (
+    <Label
+      id={id}
+      htmlFor={id}
+      className={lib.cn([
+        !isCheckbox
+          ? focus
+            ? "inline-block absolute -translate-y-[60%] text-center bg-quaternary transition ease-in-out duration-100 text-secondary text-xs px-1 z-10 origin-0"
+            : "hidden"
+          : "text-slate-700 cursor-pointer text-xs overflow-hidden text-ellipsis text-nowrap",
+        placeholderClassName,
+      ])}
+    >
+      {placeholder}
+    </Label>
+  );
+
+  const onShowPassword = (e: TButtonMouseEvent) => {
+    e.preventDefault(); 
+    e.stopPropagation();
+    setShowPassword(!showPassword);
+  }
 
   return (
-    <section
-      className={lib.cn(["flex flex-col relative", "w-full"])}
-    >
+    <section className={lib.cn(["flex flex-col relative", "w-full"])}>
       {isCheckbox ? (
-        <section className="inline-flex items-center justify-start gap-x-2">
+        <section className="inline-flex items-center justify-start gap-x-1 md:gap-x-2 w-full flex-nowrap">
           <input
             {...field}
             id={id}
@@ -45,27 +68,16 @@ function Input<T extends FieldValues>({
               className,
             ])}
           />
-          <label htmlFor={id} className="text-slate-700 cursor-pointer text-xs overflow-hidden text-ellipsis text-nowrap">
-            {placeholder}
-          </label>
+          <InputLabelField />
+          <ErrorField<T> className="relative" control={control} name={name} />
         </section>
       ) : (
         <>
-          <label
-            className={lib.cn([
-              focus
-                ? "inline-block absolute -translate-y-[60%] text-center bg-quaternary transition ease-in-out duration-100 text-secondary text-xs px-1 z-10 origin-0"
-                : "hidden",
-            ])}
-            htmlFor={id}
-          >
-            {placeholder}
-          </label>
+          <InputLabelField />
           <input
             {...field}
             id={id}
             name={name}
-            type={type}
             ref={field.ref}
             autoComplete="on"
             value={field.value}
@@ -74,18 +86,19 @@ function Input<T extends FieldValues>({
             onChange={field.onChange}
             onFocus={() => setFocus(!focus)}
             placeholder={focus ? "" : placeholder}
+            type={isPassword && showPassword ? "text" : type}
             className={lib.cn([
               "rounded-lg px-2 h-12 text-sm ring ring-slate-400 placeholder:italic placeholder:text-xs focus:outline-none",
               className,
             ])}
           />
-          {fieldState.error ? (
-            <i className="text-[11px] absolute left-0 -bottom-4 text-error overflow-hidden text-ellipsis">
-              {fieldState.error?.message}
-            </i>
-          ) : (
-            ""
-          )}
+          <ErrorField<T> className="" control={control} name={name} />
+          <PasswordIcon
+            isPassword={isPassword}
+            onClick={onShowPassword}
+            showPassword={showPassword}
+            className="absolute top-4 right-3 cursor-pointer"
+          />
         </>
       )}
     </section>

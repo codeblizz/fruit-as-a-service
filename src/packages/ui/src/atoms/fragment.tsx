@@ -1,7 +1,13 @@
 "use client";
 
 import React, { PropsWithChildren, Fragment, forwardRef } from "react";
-import { TFragment } from "@/packages/types/ui/fragment.type";
+
+import { HtmlHTMLAttributes } from "react";
+
+export interface TFragment extends HtmlHTMLAttributes<HTMLDivElement> {
+  name?: string;
+  custom?: boolean;
+}
 
 const Fragments = forwardRef<HTMLDivElement, PropsWithChildren<TFragment>>(
   ({ children, className, custom = true, ...rest }, ref) => {

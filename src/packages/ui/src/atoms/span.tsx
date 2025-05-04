@@ -1,14 +1,13 @@
 "use client";
 
-import { TBaseElement } from "@/packages/types/src/ui/base.type";
-import React from "react";
+import React, { HTMLAttributes } from "react";
 
-interface SpanType extends TBaseElement {
-  onClick?: () => void;
+interface SpanType extends HTMLAttributes<HTMLSpanElement> {
+  name: string;
 }
 
-function Span({ children, onClick, className }: SpanType) {
-  return <span className={className} onClick={onClick}>{children}</span>;
+function Span({ children, id, onClick, role, className }: SpanType) {
+  return <span id={id} role={role} className={className} onClick={onClick}>{children}</span>;
 }
 
 export default Span;

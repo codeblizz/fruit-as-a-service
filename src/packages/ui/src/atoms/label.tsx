@@ -1,15 +1,24 @@
 "use client";
 
-import type { MouseEventHandler, LabelHTMLAttributes } from "react";
+import type { LabelHTMLAttributes } from "react";
 
 export interface TLabel extends LabelHTMLAttributes<HTMLLabelElement> {
-  className: string;
+  ariaLabel?: string;
   children: React.ReactNode;
-  onClick?: MouseEventHandler<HTMLLabelElement>
 }
 
-function Label({ className, htmlFor, children, onClick }: TLabel) {
-  return <label htmlFor={htmlFor} onClick={onClick} className={className}>{children}</label>;
+function Label({ className, id, ariaLabel, htmlFor, children, onClick }: TLabel) {
+  return (
+    <label
+      id={id}
+      htmlFor={htmlFor}
+      onClick={onClick}
+      className={className}
+      aria-label={ariaLabel}
+    >
+      {children}
+    </label>
+  );
 }
 
 export default Label;

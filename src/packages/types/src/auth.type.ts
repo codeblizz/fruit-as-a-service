@@ -1,5 +1,5 @@
-import { AppReturnType } from "@/packages/types/utils.type";
-// import { NextAuthAPIRepositoryInterface } from "./repository/index.type";
+import { AppReturnType } from "@/packages/types/src/utils.type";
+import { ClientMainRepositoryInterface } from "@/packages/types/src/repository.type";
 
 // App Project User type
 export type AppUser = {
@@ -81,10 +81,25 @@ export type CredentialType = {
   redirect: string | boolean;
 };
 
+export type AuthField = {
+  type: string;
+  className: string;
+  placeholder: string;
+  name: "email" | "password" | "acceptTerms";
+};
+
+export type Login = {
+  email: string;
+  password: string;
+};
+
+export type Register = {
+  acceptTerms: false;
+} & Login;
+
 // Authentication Domain Interface
-// export interface AuthInterface extends NextAuthAPIRepositoryInterface {
-//   signIn: (credentials: SignInType) => Promise<unknown>;
-//   signUp: (payload: SignUpType) => Promise<unknown>;
-//   saveSSODetails: (sso: SsoDetailsType) => Promise<unknown>;
-//   getRefreshToken: (token: RefreshToken) => Promise<unknown>;
-// }
+export interface AuthInterface extends ClientMainRepositoryInterface {
+  signIn: (credentials: SignInType) => Promise<AuthUserReturnType>;
+  signUp: (payload: SignUpType) => Promise<AuthUserReturnType>;
+  getRefreshToken: (payload: any) => Promise<unknown>;
+}

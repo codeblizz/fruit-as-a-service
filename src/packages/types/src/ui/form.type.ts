@@ -1,5 +1,3 @@
-import { TBaseElement } from "@/packages/types/src/ui/base.type";
+import { FormHTMLAttributes } from "react";
 
-export interface TForm extends TBaseElement {
-  onSubmit: () => void;
-}
+export interface TForm extends FormHTMLAttributes<HTMLFormElement> {}

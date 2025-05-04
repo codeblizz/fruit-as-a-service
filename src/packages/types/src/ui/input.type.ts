@@ -1,2 +1,5 @@
+import { InputHTMLAttributes } from "react";
 
-export interface TInput extends React.InputHTMLAttributes<HTMLInputElement> {}
+export interface TInput extends InputHTMLAttributes<HTMLInputElement> {
+  placeholderClassName: string;
+}

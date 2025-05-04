@@ -20,7 +20,7 @@ export type Toast = {
   className: string;
 };
 
-export const AsConstant = {
+export const URLResource = {
   SSO: "sso",
   HOME: "home",
   FRUIT: "fruit",
@@ -28,3 +28,5 @@ export const AsConstant = {
   SIGNUP: "signup",
   F_SERVICE: "fService"
 } as const;
+
+export type UnionFromURLResource = (typeof URLResource)[keyof typeof URLResource];

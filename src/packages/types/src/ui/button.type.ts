@@ -1,7 +1,8 @@
-import { TBaseElement } from "./base.type";
+import { ButtonHTMLAttributes, MouseEvent } from "react";
 
-export interface TButton extends TBaseElement {
-    text: string;
-    onSubmit?: () => void;
-    type?: "submit" | "reset" | "button" | undefined;
+export interface TButton extends ButtonHTMLAttributes<HTMLButtonElement> {
+  text: string;
+  loader?: boolean;
 }
+
+export type TButtonMouseEvent = MouseEvent<HTMLButtonElement>;

@@ -27,7 +27,7 @@ export interface TBaseHookForm<T extends FieldValues> {
   errors: FieldErrors<T>;
   reset: UseFormReset<T>;
   formState: FormState<T>;
-  control: Control<T, unknown>;
+  control?: Control<T, any, T>;
   register: UseFormRegister<T>;
   setValue?: UseFormSetValue<T>;
   getValues: UseFormGetValues<T>;

@@ -9,6 +9,6 @@
       }
     ]
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "../../packages/types/next-auth.d.ts"],
   "exclude": ["node_modules"]
 }

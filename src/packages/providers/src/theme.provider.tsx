@@ -24,20 +24,25 @@ function ThemeProvider({ children }: Pick<TBaseElement, "children">) {
 function ThemeToggle(className: { className: string }) {
   const { theme, setTheme } = useTheme();
   const { setDarkTheme } = useCreateStore((state) => state);
+  let isDark = theme === "dark";
 
   return (
     <Span
+      role="toggle"
       name="theme-toggle"
+      aria-label={theme}
       className={lib.cn(["cursor-pointer", className])}
+      aria-controls={isDark ? "light-icon" : "dark-icon"}
       onClick={() => {
-        setTheme((theme) => theme === "dark" ? "light" : "dark");
-        // setDarkTheme(theme === "dark");
+        setTheme(isDark ? "light" : "dark");
+        // setDarkTheme(isDark);
       }}
     >
-      {theme === "dark" 
-        ? <SunIcon className="cursor-pointer size-5 rounded-full" />
-        : <MoonIcon className="cursor-pointer size-5 rounded-full" /> 
-      }
+      {isDark ? (
+        <SunIcon className="cursor-pointer size-5 rounded-full" />
+      ) : (
+        <MoonIcon className="cursor-pointer size-5 rounded-full" />
+      )}
     </Span>
   );
 }

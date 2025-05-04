@@ -8,9 +8,9 @@ export const ToastSlice: StateCreator<ToastState> = (set) => ({
       ...state,
       toast: {
         ...state.toast,
-        isOpen: isOpen,
-        message: message,
-        className: className
+        isOpen,
+        message,
+        className
       },
     }));
   },

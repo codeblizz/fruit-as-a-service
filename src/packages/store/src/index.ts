@@ -4,7 +4,7 @@ import { persist, devtools, createJSONStorage } from "zustand/middleware";
 import utils from "@/packages/helpers/src/utils";
 // import { ToastSlice } from "./toastSlice";
 import { UserSlice } from "@/packages/store/src/userSlice";
-import { UserState } from "@/packages/types/auth.type";
+import { UserState } from "@/packages/types/src/auth.type";
 // import { ToastState } from "@/packages/types/toast.type";
 import { LoaderSlice } from "@/packages/store/src/loaderSlice";
 import { LoaderState } from "@/packages/store/src/loaderSlice";

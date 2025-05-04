@@ -1,10 +1,10 @@
 import { StateCreator } from "zustand";
 
-import utils from "@/packages/helpers/src/utils";
+import CONSTANT from "@/packages/helpers/src/constants";
 import { UserDetail, UserState } from "@/packages/types/src/auth.type";
 
 export const UserSlice: StateCreator<UserState> = (set) => ({
-  user: { ...utils.defaultUser },
+  user: { ...CONSTANT.defaultUser },
   updateUser: (user: UserDetail) =>
     set((state) => ({
       ...state,
@@ -13,5 +13,5 @@ export const UserSlice: StateCreator<UserState> = (set) => ({
         ...user,
       },
     })),
-  clearUser: () => set(() => ({ user: { ...utils.defaultUser }}))
+  clearUser: () => set(() => ({ user: { ...CONSTANT.defaultUser } })),
 });

@@ -10,7 +10,7 @@ export const LoaderSlice: StateCreator<LoaderState> = (set) => ({
   setLoader: (loader: boolean) => {
     set((state) => ({
       ...state,
-      loader: loader,
+      loader,
     }));
   },
 });

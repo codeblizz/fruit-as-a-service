@@ -1,24 +1,30 @@
 import { z } from "zod";
 import utils from "@/packages/helpers/src/utils";
 
-const envSchema = z.object({
-  NEXT_AUTH_URL: z.string().min(1, { message: "value is empty" }),
-  JAVA_AUTH_URL: z.string().min(1, { message: "value is empty" }),
-  NEXT_AUTH_SECRET: z.string().min(1, { message: "value is empty" }),
-  NEXT_GOOGLE_CLIENT_ID: z.string().min(1, { message: "value is empty" }),
-  NEXT_NODE_ENV: z.enum(["development", "staging"]).default("development"),
-  NEXT_GOOGLE_CLIENT_SECRET: z.string().min(1, { message: "value is empty" }),
+const envClientSchema = z.object({
+  PUBLIC_NEXT_URL: z.string().min(1, { message: "value is empty" }).url(),
+  PUBLIC_NEXT_ENV: z.enum(["development", "staging"]).default("development"),
 });
 
-export type EnvType = z.infer<typeof envSchema>;
+const envServerSchema = z.object({
+  AUTH_SECRET: z.string().min(1, { message: "value is empty" }),
+  GOOGLE_CLIENT_ID: z.string().min(1, { message: "value is empty" }),
+  NODE_BASE_URL: z.string().min(1, { message: "value is empty" }).url(),
+  GOOGLE_CLIENT_SECRET: z.string().min(1, { message: "value is empty" }),
+});
 
-const parsedEnvVariables = envSchema.safeParse(process.env);
+export type EnvType = z.infer<typeof envServerSchema & typeof envClientSchema>;
+export function validateEnv() {
+  if(typeof window === "undefined") { 
+    const parsedEnv = envServerSchema.safeParse(process.env);
+    if (parsedEnv.error) {
+      console.error("Environment variable validation failed:", parsedEnv.error.issues);
+      throw utils.customError("Invalid environment variable");
+    }
+    return parsedEnv.data;
+  } else return envClientSchema.safeParse(process.env).data;
+} 
 
-if (!parsedEnvVariables.success) {
-  const { error } = parsedEnvVariables;
-  console.error("Environment variable validation failed:", error.issues);
-  throw utils.customError("Invalid environment variable");
-}
-const env = parsedEnvVariables.data;
+const env = validateEnv();
 
 export default env;

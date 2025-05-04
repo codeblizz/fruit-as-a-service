@@ -1,8 +1,10 @@
-import type { NextAuthOptions } from "next-auth";
+import { JWT } from "next-auth/jwt";
+import { AxiosResponse } from "axios";
+import utils from "@/packages/helpers/src/utils";
+import type { NextAuthOptions, Session } from "next-auth";
+import { AuthService } from "@/services/src/auth/auth.service";
 import credentialsProvider from "next-auth/providers/credentials";
-import {
-  CredentialType,
-} from "@/packages/types/src/auth.type";
+import { CredentialType, PayloadType } from "@/packages/types/src/auth.type";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,17 +16,32 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(
-        credentials: Record<string, string> | undefined
-      ) {
+      async authorize(credentials: Record<string, string> | undefined) {
         if (!credentials) return null;
         const { email, password } = credentials as CredentialType;
-        return null;
+        try {
+          const result = await AuthService("signin").signIn({
+            email,
+            password,
+          }) as unknown as AxiosResponse;
+          const { message, statusCode, statusText, user } = result.data;
+          return {
+            payload: {
+              message,
+              statusCode,
+              statusText,
+              user: { ...user },
+            },
+            id: "success",
+          } as unknown as PayloadType;
+        } catch (error) {
+          throw utils.formatError(error);
+        }
       },
     }),
   ],
   pages: {
-    signIn: "/login",
+    signIn: "/signin",
     error: "/error",
   },
   jwt: {
@@ -34,5 +51,56 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 3600,
   },
-  callbacks: {},
+  callbacks: {
+    async jwt({ token, user, profile, account }): Promise<JWT> {
+      if (user) {
+        token = {
+          ...token,
+          ...user,
+          ...account,
+          ...profile,
+        };
+      }
+      if (
+        token && token.type === "credentials" &&
+        utils.checkIfTokenExpired(token.exp)
+      ) {
+        try {
+          const authToken = await utils.refreshAccessToken({
+            token: token.refreshToken,
+          });
+          token = {
+            ...token,
+            error: authToken.error ?? "",
+            accessToken: authToken.accessToken ?? "",
+            refreshToken: authToken.refreshToken ?? "",
+          };
+        } catch (error: unknown) {
+          throw utils.formatError(error);
+        }
+      }
+      return Promise.resolve(token);
+    },
+    async session({
+      session,
+      token,
+    }: {
+      session: Session;
+      token: JWT;
+    }): Promise<Session> {
+      if (token) {
+        session = {
+          ...session,
+          ...token,
+        };
+      }
+      session.provider = token.provider;
+      session.id = token.jti ?? token.id;
+      session.accessToken =
+        token.type === "oauth" ? token.id_token : token.accessToken;
+
+
+      return Promise.resolve(session);
+    },
+  },
 };

@@ -2,10 +2,10 @@ import { AxiosResponse } from "axios";
 import { type NextRequest, NextResponse } from "next/server";
 
 import utils from "@/packages/helpers/src/utils";
-import { AsConstant } from "@/packages/types/src/utils.type";
+import { URLResource } from "@/packages/types/src/utils.type";
 import { createAxiosClients } from "@/packages/helpers/src/libs/axiosClients";
 
-const url = `/api/v1/auth/${AsConstant.F_SERVICE}`;
+const url = `/api/v1/auth/${URLResource.F_SERVICE}`;
 
 export async function POST(req: NextRequest) {
   try {

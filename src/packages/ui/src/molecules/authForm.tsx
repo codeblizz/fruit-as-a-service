@@ -2,46 +2,44 @@
 
 import React from "react";
 import { ZodSchema } from "zod";
+import { signIn } from "next-auth/react";
 import Paragraph from "../atoms/paragraph";
 import lib from "@/packages/helpers/src/libs";
 import { usePathname } from "next/navigation";
 import Form from "@/packages/ui/src/atoms/form";
+import utils from "@/packages/helpers/src/utils";
 import Input from "@/packages/ui/src/atoms/input";
 import Button from "@/packages/ui/src/atoms/button";
 import NextLink from "@/packages/ui/src/atoms/link";
 import Card from "@/packages/ui/src/molecules/card";
 import useResetFields from "./hooks/useResetFields";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCreateStore } from "@/packages/store/src";
 import Fragment from "@/packages/ui/src/atoms/fragment";
+import CONSTANT from "@/packages/helpers/src/constants";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Login, Register } from "@/packages/types/src/auth.type";
 import {
   LoginSchema,
   RegisterSchema,
 } from "@/packages/helpers/src/validations/auth.validate";
 
-type Login = {
-  email: string;
-  password: string;
-};
-
-type Register = {
-  acceptTerms: false;
-} & Login;
-
-const defaultLogin = { email: "", password: "" };
-const defaultSignUp = { ...defaultLogin, acceptTerms: false };
-
 function AuthForm({ className }: { className: string }) {
   const pathname = usePathname();
   const isLogin = pathname === "/";
   const isRegister = pathname === "/signup";
+  const { loader, setLoader } = useCreateStore((state) => state);
   const {
     reset,
     control,
     handleSubmit,
     formState: { isDirty, errors },
   } = useForm<Login | Register>({
-    defaultValues: isLogin ? defaultLogin : isRegister ? defaultSignUp : {},
+    defaultValues: isLogin
+      ? CONSTANT.defaultLogin
+      : isRegister
+      ? CONSTANT.getDefaultSignUp()
+      : {},
     resolver: zodResolver(
       pathname === "/"
         ? LoginSchema
@@ -51,8 +49,21 @@ function AuthForm({ className }: { className: string }) {
     ),
   });
 
-  const onSubmit: SubmitHandler<Login> = (data) => {
-    console.log("data", data);
+  const onSubmit: SubmitHandler<Login> = async (data) => {
+    setLoader(true);
+    try {
+      const response = await signIn("credentials", {
+        ...data,
+        callbackUrl: "/dashboard",
+        redirect: false,
+      });
+      console.log("response", response);
+      return response;
+    } catch (error) {
+      return utils.formatError(error);
+    } finally {
+      setLoader(false);
+    }
   };
 
   useResetFields(isDirty, errors, reset);
@@ -74,37 +85,31 @@ function AuthForm({ className }: { className: string }) {
       <Form
         name="auth-form"
         onSubmit={handleSubmit(onSubmit)}
-        className={lib.cn([
-          "flex flex-col justify-center w-full rounded-none items-center gap-y-7",
-        ])}
+        className="flex flex-col justify-center w-full rounded-none items-center"
       >
-        <Input<Login | Register>
-          id="email"
-          type="email"
-          name="email"
-          control={control}
-          placeholder="Your Email"
+        {CONSTANT.InputAuthObjects.map((value) => {
+          const checkInputClass =
+            isLogin && value.type === "checkbox" ? "hidden mb-0" : "mb-7";
+          return (
+            <Input<Login | Register>
+              key={value.name}
+              id={value.name}
+              type={value.type}
+              name={value.name}
+              control={control}
+              placeholder={value.placeholder}
+              placeholderClassName={checkInputClass}
+              className={lib.cn([value.className, checkInputClass])}
+            />
+          );
+        })}
+        <Button
+          name="login"
+          type="submit"
+          loader={loader}
+          text={"Submit"}
           className="w-full"
         />
-        <Input<Login | Register>
-          id="password"
-          type="password"
-          name="password"
-          control={control}
-          placeholder="Your Password"
-          className="w-full"
-        />
-        {isRegister ? (
-          <Input<Login | Register>
-            type="checkbox"
-            id="acceptTerms"
-            control={control}
-            name="acceptTerms"
-            className="w-3 h-3"
-            placeholder="Accept Terms & Conditions"
-          />
-        ) : null}
-        <Button name="login" text={"Submit"} type="submit" className="w-full" />
       </Form>
       <Fragment className="inline-flex items-center text-sm h-12">
         <Paragraph

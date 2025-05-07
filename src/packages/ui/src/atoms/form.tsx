@@ -10,7 +10,7 @@ function Form({ name, children, className, onSubmit }: TForm) {
       name={name}
       onSubmit={onSubmit}
       className={lib.cn([
-        "border border-slate-100 rounded-lg p-10 bg-quaternary",
+        "border border-slate-100 rounded-lg p-10 bg-gradient-to-br from-quaternary to-yellow-50",
         className
       ])}
     >

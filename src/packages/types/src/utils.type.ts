@@ -2,6 +2,11 @@ export interface CustomError extends Exclude<Error, "stack"> {
   code?: number | undefined;
 }
 
+export interface ErrorProps {
+  error: Error,
+  reset: () => void;
+}
+
 export interface AppReturnType {
   status: boolean;
   message: string;

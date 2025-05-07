@@ -1,10 +1,8 @@
 "use client";
 
-import React, { PropsWithChildren, Fragment, forwardRef } from "react";
+import React, { PropsWithChildren, Fragment, HTMLAttributes, forwardRef } from "react";
 
-import { HtmlHTMLAttributes } from "react";
-
-export interface TFragment extends HtmlHTMLAttributes<HTMLDivElement> {
+export interface TFragment extends HTMLAttributes<HTMLDivElement> {
   name?: string;
   custom?: boolean;
 }

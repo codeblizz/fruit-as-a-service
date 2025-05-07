@@ -73,7 +73,7 @@ function AuthForm({ className }: { className: string }) {
       id="card"
       name="card"
       className={lib.cn([
-        "flex flex-col items-center justify-center rounded-lg",
+        "flex flex-col items-center justify-center rounded-lg from-quaternary to-yellow-50",
         className,
       ])}
     >

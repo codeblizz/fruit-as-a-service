@@ -1,10 +1,9 @@
 import { JWT } from "next-auth/jwt";
 import { AxiosResponse } from "axios";
 import utils from "@/packages/helpers/src/utils";
-import type { NextAuthOptions, Session } from "next-auth";
+import type { NextAuthOptions, Session, User } from "next-auth";
 import { AuthService } from "@/services/src/auth/auth.service";
 import credentialsProvider from "next-auth/providers/credentials";
-import { CredentialType, PayloadType } from "@/packages/types/src/auth.type";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -16,9 +15,11 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Record<string, string> | undefined) {
+      async authorize(
+        credentials: Record<"email" | "password", string> | undefined
+      ): Promise<User | null> {
         if (!credentials) return null;
-        const { email, password } = credentials as CredentialType;
+        const { email, password } = credentials;
         try {
           const result = await AuthService("signin").signIn({
             email,
@@ -33,7 +34,7 @@ export const authOptions: NextAuthOptions = {
               user: { ...user },
             },
             id: "success",
-          } as unknown as PayloadType;
+          } as User;
         } catch (error) {
           throw utils.formatError(error);
         }

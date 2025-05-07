@@ -1,5 +1,5 @@
 import { StateCreator } from "zustand";
-import { AppReturnType } from "@/packages/types/utils.type";
+import { AppReturnType } from "@/packages/types/src/utils.type";
 
 export type ErrorType = AppReturnType | Record<string, string>;
 

@@ -10,16 +10,24 @@
     --background: hsl(207, 20%, 89%);
     --foreground: hsl(220, 43%, 11%);
 
-    --primary: hsl(220, 7%, 8%);
+    --primary: hsl(225, 6%, 13%);
     --primary-alpha: hsla(220, 7%, 8%, 0.5);
-    --secondary: hsl(38, 86%, 51%);
-    --secondary-alpha: hsla(38, 86%, 51%, 0.5);
+    --secondary: hsl(42, 93%, 59%);
+    --secondary-alpha: hsla(38, 86%, 51%, 0.666);
     --tertiary: hsl(0, 88%, 57%);
+    --tertiary-prime: hsl(31, 87%, 76%);
     --tertiary-alpha: hsla(105, 60%, 33%, 0.5);
     --quaternary: hsl(220, 3%, 82%);
     --quaternary-alpha: hsla(220, 3%, 82%, 0.5);
 
-    --primary-text: #FFFFFF;
+    --orange: hsl(42, 92%, 50%);
+    --apple: hsl(91, 59%, 44%);
+    --strawberry: hsl(8, 57%, 51%);
+    --pineapple: hsl(42, 51%, 67%);
+
+    --primary-text: hsl(0, 0%, 100%);
+    --primary-black: hsl(210, 6%, 63%);
+    --primary-blue: hsl(217, 89%, 76%);
 
     --primary-error: hsl(0, 84%, 59%);
     --secondary-error: hsla(0, 91%, 71%, 0.5);
@@ -34,6 +42,11 @@
   --color-secondary: var(--secondary);
   --color-tertiary: var(--tertiary);
   --color-quaternary: var(--quaternary);
+  --color-prime: var(--tertiary-prime);
+  --color-primary-blue: var(--primary-blue);
+  --color-primary-black: var(--primary-black);
+
+  --color-strawberry: var(--strawberry);
 
   --color-error: var(--primary-error);
   --color-error-100: var(--secondary-error);

@@ -1,0 +1,23 @@
+{
+  "name": "@codeblizz/gateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@paypal/checkout-server-sdk": "^1.0.3",
+    "stripe": "^18.1.0"
+  },
+  "peerDependencies": {
+    "axios": "^1.9.0",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@types/paypal__checkout-server-sdk": "^1.0.8"
+  }
+}

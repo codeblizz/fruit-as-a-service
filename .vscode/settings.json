@@ -2,6 +2,9 @@
     "cSpell.words": [
         "csvg",
         "faas",
+        "flutterwave",
+        "Paystack",
         "turbopack"
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

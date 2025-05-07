@@ -8,6 +8,7 @@ const envClientSchema = z.object({
 
 const envServerSchema = z.object({
   AUTH_SECRET: z.string().min(1, { message: "value is empty" }),
+  STRIPE_SECRET_KEY: z.string().min(1, { message: "value is empty"}),
   GOOGLE_CLIENT_ID: z.string().min(1, { message: "value is empty" }),
   NODE_BASE_URL: z.string().min(1, { message: "value is empty" }).url(),
   GOOGLE_CLIENT_SECRET: z.string().min(1, { message: "value is empty" }),

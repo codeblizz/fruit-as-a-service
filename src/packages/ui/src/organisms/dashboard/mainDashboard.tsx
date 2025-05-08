@@ -11,7 +11,7 @@ function MainDashboard({ className }: { className: string }) {
   return (
     <Section
       className={lib.cn([
-        "flex flex-col gap-y-4 justify-start p-6 items-center border-4 border-l-2 mt-16 border-quaternary",
+        "flex flex-col gap-y-4 justify-start p-6 items-center border-2 border-l-1 mt-16 border-plum",
         className,
       ])}
     >
@@ -20,7 +20,7 @@ function MainDashboard({ className }: { className: string }) {
           <Card
             key={c}
             name=""
-            className="flex flex-col justify-start items-start gap-1 p-1 border-2 border-quaternary size-full col-span-1"
+            className="flex flex-col justify-start items-start gap-1 p-1 border-2 border-plum size-full col-span-1"
           >
           </Card>
         ))}
@@ -32,18 +32,18 @@ function MainDashboard({ className }: { className: string }) {
               <Card
                 key={c}
                 name=""
-                className="flex flex-col p-1 justify-start items-start gap-1 border-2 border-quaternary size-auto col-span-1"
+                className="flex flex-col p-1 justify-start items-start gap-1 border-2 border-plum size-auto col-span-1"
               >
               </Card>
             ))}
           </Section>
           <Section className="w-full min-h-48">
-            <Card className="flex flex-col justify-start items-start border-2 border-quaternary size-full" name="">
+            <Card className="flex flex-col justify-start items-start border-2 border-plum size-full" name="">
             </Card>
           </Section>
         </Section>
         <Section className="w-full h-auto">
-          <Card className="flex flex-col justify-start items-start border-2 border-quaternary size-full" name="">
+          <Card className="flex flex-col justify-start items-start border-2 border-plum size-full" name="">
           </Card>
         </Section>
       </Section>
@@ -51,7 +51,7 @@ function MainDashboard({ className }: { className: string }) {
         {[1, 2].map((c) => (
           <Card
             key={c}
-            className="flex flex-col justify-start items-start border-2 border-quaternary size-auto col-span-1"
+            className="flex flex-col justify-start items-start border-2 border-plum size-auto col-span-1"
             name=""
           >
           </Card>

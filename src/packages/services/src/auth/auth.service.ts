@@ -1,5 +1,5 @@
-import AuthRepository from "@/repository/src/auth.repository";
-import RepositoryFactory from "@/repository/src/factory.repository";
+import AuthRepository from "@/packages/repository/src/auth.repository";
+import RepositoryFactory from "@/packages/repository/src/factory.repository";
 import {
   AuthInterface,
   SignInType,

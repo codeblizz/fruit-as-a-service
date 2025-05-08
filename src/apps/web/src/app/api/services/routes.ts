@@ -3,14 +3,14 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import utils from "@/packages/helpers/src/utils";
 import { URLResource } from "@/packages/types/src/utils.type";
-import { createAxiosClients } from "@/packages/helpers/src/libs/axiosClients";
+import createAxiosClients from "@/packages/helpers/src/libs/axiosClients";
 
 const url = `/api/v1/auth/${URLResource.F_SERVICE}`;
 
 export async function POST(req: NextRequest) {
   try {
     const requestBody = await req.json();
-    const { nodeAxiosClient } = await createAxiosClients();
+    const { nodeAxiosClient } = createAxiosClients();
     if (!utils.isObject(requestBody))
       throw utils.customError("Invalid Params", 401);
     const result = (await nodeAxiosClient.post(

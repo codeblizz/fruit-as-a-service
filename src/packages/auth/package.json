@@ -9,6 +9,9 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "@codeblizz/services": "workspace:*"
+  },
   "peerDependencies": {
     "next": "^15.3.1",
     "react": "^19.1.0",

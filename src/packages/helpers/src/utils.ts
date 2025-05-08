@@ -1,10 +1,10 @@
+import { JWT } from "next-auth/jwt";
+import { AxiosResponse } from "axios";
+import CONSTANT from "@/packages/helpers/src/constants";
 import { ErrorType } from "@/packages/store/src/errorSlice";
+import { AuthService } from "@/packages/services/src/auth/auth.service";
 import { AuthToken, RefreshToken } from "@/packages/types/src/auth.type";
 import { URLResource, UnionFromURLResource, CustomError } from "@/packages/types/src/utils.type";
-import { AxiosResponse } from "axios";
-import CONSTANT from "./constants";
-import { JWT } from "next-auth/jwt";
-import { AuthService } from "@/services/src/auth/auth.service";
 
 const utils = {
   isUnionFromURLResource: function(value: string): value is UnionFromURLResource {

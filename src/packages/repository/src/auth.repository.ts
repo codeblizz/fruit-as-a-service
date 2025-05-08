@@ -1,7 +1,7 @@
+import utils from "@/packages/helpers/src/utils";
 import { SignInType, SignUpType } from "@/packages/types/src/auth.type";
 import createAxiosClients from "@/packages/helpers/src/libs/axiosClients";
-import ClientMainRepository from "@/repository/src/mainRepository/client.repository";
-import utils from "@/packages/helpers/src/utils";
+import ClientMainRepository from "@/packages/repository/src/mainRepository/client.repository";
 
 // Create and Destructure Axios Clients Instance
 const { nextAxiosClient } = createAxiosClients();

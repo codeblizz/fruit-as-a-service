@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import utils from "@/packages/helpers/src/utils";
 import { URLResource } from "@/packages/types/src/utils.type";
-import { createAxiosClients } from "@/packages/helpers/src/libs/axiosClients";
+import createAxiosClients from "@/packages/helpers/src/libs/axiosClients";
 
 const url = `/api/v1/auth/${URLResource.FRUIT}`;
 

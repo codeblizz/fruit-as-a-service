@@ -1,6 +1,6 @@
 import utils from "@/packages/helpers/src/utils";
-import AuthRepository from "@/repository/src/auth.repository";
-import HomeRepository from "@/repository/src/home.repository";
+import AuthRepository from "@/packages/repository/src/auth.repository";
+import HomeRepository from "@/packages/repository/src/home.repository";
 import { URLResource } from "@/packages/types/src/utils.type";
 
 export default function RepositoryFactory() {

@@ -104,5 +104,47 @@ export function StripeGateway(): PaymentGateway {
         status: refund.status ?? 'failed'
       };
     },
+
+    async createSubscription(params) {
+      const subscription = await stripe.subscriptions.create({
+        customer: params.customerId,
+        items: [{ price: params.planId }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { payment_method_types: ['card'] },
+        default_payment_method: params.paymentMethodId,
+        metadata: params.metadata,
+      });
+
+      return {
+        id: subscription.id,
+        status: subscription.status,
+        current_period_end: Math.floor(Date.now() / 1000) + (subscription.trial_end || 30 * 24 * 60 * 60),
+      };
+    },
+
+    async cancelSubscription(subscriptionId: string) {
+      await stripe.subscriptions.cancel(subscriptionId);
+    },
+
+    async pauseSubscription(subscriptionId: string) {
+      await stripe.subscriptions.update(subscriptionId, { 
+        pause_collection: { behavior: 'void' } 
+      });
+    },
+
+    async resumeSubscription(subscriptionId: string) {
+      await stripe.subscriptions.update(subscriptionId, { 
+        pause_collection: null 
+      });
+    },
+
+    async constructWebhookEvent(payload: string, signature: string) {
+      const event = stripe.webhooks.constructEvent(
+        payload,
+        signature,
+        process.env.STRIPE_WEBHOOK_SECRET!
+      );
+      return event;
+    },
   };
 }

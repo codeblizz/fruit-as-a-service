@@ -12,19 +12,19 @@ function NavBar() {
   const pathname = usePathname();
   return (
     <Nav
-      className="fixed overscroll-contain z-50 border h-16 w-full px-2 flex justify-between items-center"
+      className="fixed overscroll-contain z-50 border border-plum h-16 w-full px-2 flex justify-between items-center"
     >
-      <NextLink className="cursor-pointer" href="/">
+      <NextLink className="cursor-pointer w-[10%] h-[60%] md:h-[70%] min-w-[60px] max-w-[100px] [mask-image:radial-gradient(circle,rgba(0,0,0,1)_80%,transparent_100%)]" href="/">
         <NextImage
           alt="logo"
-          width={120}
-          height={80}
+          width={100}
+          height={100}
           priority={true}
-          className="size-auto"
+          className="h-full w-full"
           src="/images/faas-512x512.png"
         />
       </NextLink>
-      <Paragraph className="text-primary-blue capitalize" text={pathname.replaceAll("/", " ")} />
+      <Paragraph className="text-tertiary-text capitalize" text={pathname.replaceAll("/", " ")} />
       <ThemeToggle className="flex justify-center items-center" />
     </Nav>
   );

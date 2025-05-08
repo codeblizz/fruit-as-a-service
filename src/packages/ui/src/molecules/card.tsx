@@ -13,7 +13,7 @@ function Card({ className, children, id, name }: CardType) {
       id={id}
       name={name}
       className={lib.cn(
-        "border border-slate-100 size-full bg-gradient-to-b from-yellow-100 to-quaternary shadow-gray-300 shadow-md",
+        "border border-plum size-full bg-gradient-to-br from-quaternary via-guava to-yellow-100 shadow-gray-300 shadow-md",
         className
       )}
     >

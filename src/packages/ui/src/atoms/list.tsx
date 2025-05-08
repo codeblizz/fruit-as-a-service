@@ -23,7 +23,7 @@ function List({
   return (
     <ul className={className}>
       {list.map((li: string, index: number) => {
-        const selectedSubMenuClass = paramsId === li ? "bg-strawberry text-primary-blue" : "";
+        const selectedSubMenuClass = paramsId === li ? "bg-mango text-tertiary-text text-extrabold" : "";
         return isLink ? (
           <Link key={index} href={`${path + li}`}>
             <li className={lib.cn([liClass, selectedSubMenuClass])}>{li}</li>

@@ -20,11 +20,11 @@ function DashBoardSubMenuAccordion({
         path="/fruits/"
         list={values.type}
         className={lib.cn([
-          "w-[80%] overflow-y-auto transition-all duration-700 ease-in-out",
+          "w-[80%] overflow-y-auto transition-all duration-700 ease-in-out px-1 border-2 border-plum",
           menuName === menu ? "flex flex-col -gap-y-2" : "hidden",
         ])}
         liClass={lib.cn([
-          "text-[9px] focus:text-[10px] focus:bg-primary-blue focus:h-6 text-center cursor-pointer bg-primary-black w-full rounded-md h-5 px-3 inline-flex items-center justify-center"
+          "text-[9px] focus:text-[10px] focus:bg-tertiary-text focus:h-6 text-center cursor-pointer bg-mulberry w-full rounded-md h-5 px-3 inline-flex items-center justify-center"
         ])}
       />
     ) : null

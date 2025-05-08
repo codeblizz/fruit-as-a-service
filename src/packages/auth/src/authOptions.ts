@@ -2,8 +2,8 @@ import { JWT } from "next-auth/jwt";
 import { AxiosResponse } from "axios";
 import utils from "@/packages/helpers/src/utils";
 import type { NextAuthOptions, Session, User } from "next-auth";
-import { AuthService } from "@/services/src/auth/auth.service";
 import credentialsProvider from "next-auth/providers/credentials";
+import { AuthService } from "@/packages/services/src/auth/auth.service";
 
 export const authOptions: NextAuthOptions = {
   providers: [

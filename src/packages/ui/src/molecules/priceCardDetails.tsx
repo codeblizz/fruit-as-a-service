@@ -21,7 +21,7 @@ function PriceCardDetails({
   description,
 }: PriceCardDetails) {
   return (
-    <Section className="grid grid-cols-3 border p-1 border-primary-black size-full text-[9px] flex-col">
+    <Section className="grid grid-cols-3 border p-1 border-secondary-text size-full text-[9px] flex-col">
       <Section className="col-span-1">
         <Paragraph className="" text="Title:" />
         <Paragraph className="" text="Price:" />

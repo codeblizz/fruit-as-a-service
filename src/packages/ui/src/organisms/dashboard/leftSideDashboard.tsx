@@ -24,7 +24,7 @@ function LeftSideDashboard({ className, dashboardMenu }: TLeftSideDashboard) {
   return (
     <Section
       className={lib.cn([
-        "flex flex-col border-4 h-full border-r-2 mt-16 border-quaternary justify-start items-start",
+        "flex flex-col border-2 h-full border-r-1 mt-16 border-plum justify-start items-start",
         className,
       ])}
     >

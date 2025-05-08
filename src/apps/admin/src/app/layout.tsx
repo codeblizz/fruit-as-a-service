@@ -36,10 +36,10 @@ export default async function RootLayout({
       >
         <StoreProvider>
           <SessionProvider session={session}>
-            {/* <ThemeProvider> */}
+            <ThemeProvider>
               <NavBar />
               {children}
-            {/* </ThemeProvider> */}
+            </ThemeProvider>
           </SessionProvider>
         </StoreProvider>
       </body>

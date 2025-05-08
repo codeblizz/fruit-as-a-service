@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PaymentGateway } from "../common/gateway.interface";
+import { PaymentGateway } from "@/apps/gateway/src/common/gateway.interface";
 
 if (!process.env.PAYSTACK_SECRET_KEY) {
   throw new Error("PAYSTACK_SECRET_KEY is not defined");
@@ -67,5 +67,25 @@ export function PaystackGateway(): PaymentGateway {
         status: response.data.data.status.toLowerCase(),
       };
     },
+
+    async createSubscription(params) {
+      throw new Error('Paystack subscriptions not implemented');
+    },
+
+    async cancelSubscription(subscriptionId: string) {
+      throw new Error('Paystack subscriptions not implemented');
+    },
+
+    async pauseSubscription(subscriptionId: string) {
+      throw new Error('Paystack subscriptions not implemented');
+    },
+
+    async resumeSubscription(subscriptionId: string) {
+      throw new Error('Paystack subscriptions not implemented');
+    },
+
+    async constructWebhookEvent(payload: string, signature: string) {
+      throw new Error('Paystack webhooks not implemented');
+    }
   };
 }

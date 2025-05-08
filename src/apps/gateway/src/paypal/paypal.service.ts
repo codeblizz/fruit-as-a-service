@@ -1,5 +1,5 @@
-import { PaymentGateway } from "../common/gateway.interface";
 import { core, orders, payments } from "@paypal/checkout-server-sdk";
+import { PaymentGateway } from "@/apps/gateway/src/common/gateway.interface";
 
 if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
   throw new Error("PayPal credentials are not defined");
@@ -105,5 +105,25 @@ export function PayPalGateway(): PaymentGateway {
         status: refund.result.status ?? "failed",
       };
     },
+
+    async createSubscription(params) {
+      throw new Error('PayPal subscriptions not implemented');
+    },
+
+    async cancelSubscription(subscriptionId: string) {
+      throw new Error('PayPal subscriptions not implemented');
+    },
+
+    async pauseSubscription(subscriptionId: string) {
+      throw new Error('PayPal subscriptions not implemented');
+    },
+
+    async resumeSubscription(subscriptionId: string) {
+      throw new Error('PayPal subscriptions not implemented');
+    },
+
+    async constructWebhookEvent(payload: string, signature: string) {
+      throw new Error('PayPal webhooks not implemented');
+    }
   };
 }

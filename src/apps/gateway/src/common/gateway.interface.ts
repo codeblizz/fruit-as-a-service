@@ -18,19 +18,31 @@ export interface PaymentIntent {
 }
 
 export interface PaymentGateway {
-  createPaymentIntent(params: {
+  createPaymentIntent: (params: {
     amount: number;
     currency: string;
-    description: string;
+    description?: string;
     metadata?: Record<string, string>;
-  }): Promise<PaymentIntent>;
+  }) => Promise<{
+    id: string;
+    amount: number;
+    currency: string;
+    status: string;
+    paymentMethodId?: string;
+  }>;
 
-  confirmPaymentIntent(params: {
+  confirmPaymentIntent: (params: {
     paymentIntentId: string;
     paymentMethodId: string;
-  }): Promise<PaymentIntent>;
+  }) => Promise<{
+    id: string;
+    amount: number;
+    currency: string;
+    status: string;
+    paymentMethodId?: string;
+  }>;
 
-  createPaymentMethod(params: {
+  createPaymentMethod: (params: {
     type: string;
     card: {
       number: string;
@@ -50,15 +62,60 @@ export interface PaymentGateway {
         country?: string;
       };
     };
-  }): Promise<PaymentMethod>;
-
-  listPaymentMethods(params: {
-    customerId: string;
+  }) => Promise<{
+    id: string;
     type: string;
-  }): Promise<PaymentMethod[]>;
+    card?: {
+      brand: string;
+      last4: string;
+      expMonth: number;
+      expYear: number;
+    };
+  }>;
 
-  refundPayment(params: {
+  listPaymentMethods: (params: { customerId: string }) => Promise<
+    Array<{
+      id: string;
+      type: string;
+      card?: {
+        brand: string;
+        last4: string;
+        expMonth: number;
+        expYear: number;
+      };
+    }>
+  >;
+
+  refundPayment: (params: {
     paymentIntentId: string;
     amount?: number;
-  }): Promise<{ id: string; status: string }>;
+  }) => Promise<{
+    id: string;
+    status: string;
+  }>;
+
+  createSubscription: (params: {
+    customerId: string;
+    planId: string;
+    paymentMethodId: string;
+    metadata?: Record<string, string>;
+  }) => Promise<{
+    id: string;
+    status: string;
+    current_period_end: number;
+  }>;
+
+  cancelSubscription: (subscriptionId: string) => Promise<void>;
+  pauseSubscription: (subscriptionId: string) => Promise<void>;
+  resumeSubscription: (subscriptionId: string) => Promise<void>;
+
+  constructWebhookEvent: (
+    payload: string,
+    signature: string
+  ) => Promise<{
+    type: string;
+    data: {
+      object: any;
+    };
+  }>;
 }

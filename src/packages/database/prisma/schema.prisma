@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userEmail String
+  status    String      @default("pending") // pending, processing, delivered, cancelled
+  total     Int
+  type      String      @default("one-time") // one-time, subscription
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Subscription relationship
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+  subscriptionId String?
+
+  @@index([userEmail])
+  @@index([subscriptionId])
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  orderId  String
+  name     String
+  quantity Int
+  price    Int
+  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model SubscriptionPlan {
+  id          String         @id @default(cuid())
+  name        String
+  description String
+  price       Int
+  features    String[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id                    String           @id @default(cuid())
+  userEmail            String
+  planId               String
+  plan                 SubscriptionPlan @relation(fields: [planId], references: [id])
+  status               String           @default("active") // active, paused, cancelled
+  gatewaySubscriptionId String          @unique
+  nextBillingDate      DateTime
+  orders               Order[]
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  @@index([userEmail])
+  @@index([planId])
+} 

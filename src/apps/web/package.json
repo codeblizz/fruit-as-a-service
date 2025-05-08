@@ -28,6 +28,7 @@
     "@codeblizz/types": "workspace:*",
     "@codeblizz/config": "workspace:*",
     "@codeblizz/helpers": "workspace:*",
+    "@codeblizz/services": "workspace:*",
     "@codeblizz/providers": "workspace:*"
   },
   "devDependencies": {

@@ -1,46 +1,145 @@
 @import "tailwindcss";
+@plugin "tailwind-gradient-mask-image";
 @source "../../../../packages/ui/**/*.{js,ts,tsx,jsx}";
+@source "../../../../packages/providers/**/*.{js,ts,tsx,jsx}";
 
 @layer base {
-:root {
-  --max-width: 100vw;
-  --max-height: 100vh;
+  :root {
+    --max-width: 100vw;
+    --max-height: 100vh;
 
-  --background: hsl(207, 20%, 89%);
-  --foreground: hsl(220, 43%, 11%);
+    --background: hsl(207, 20%, 89%);
+    --foreground: hsl(220, 43%, 11%);
 
-  --color-primary: hsl(225, 5.9%, 13.3%);
-  --color-primary-alpha: hsla(225, 5.9%, 13.3%, 0.5);
-  --color-secondary: hsl(215, 19%, 35%);
-  --color-secondary-alpha: hsla(215, 19%, 35%, 0.5);
-  --color-tertiary: hsl(210, 6.3%, 62.7%);
-  --color-tertiary-alpha: hsla(210, 6.3%, 62.7%, 0.5);
-  --color-quaternary: hsl(0, 0%, 85%);
-  --color-quaternary-alpha: hsla(0, 0%, 85%, 0.5);
-}
+    --primary: hsl(225, 6%, 13%);
+    --primary-alpha: hsla(220, 7%, 8%, 0.5);
+    --secondary: hsl(42, 93%, 59%);
+    --secondary-alpha: hsla(38, 86%, 51%, 0.666);
+    --tertiary: hsl(0, 88%, 57%);
+    --tertiary-prime: hsl(31, 87%, 76%);
+    --tertiary-alpha: hsla(105, 60%, 33%, 0.5);
+    --quaternary: hsl(220, 3%, 82%);
+    --quaternary-alpha: hsla(220, 3%, 82%, 0.5);
 
+    --apple-red: hsl(344, 100%, 37%);
+    --apple-green: hsl(103, 43%, 49%);
+    --banana: hsl(59, 100%, 74%);
+    --blackberry: hsl(328, 47%, 18%);
+    --blueberry: hsl(249, 100%, 50%);
+    --cherry: hsl(350, 98%, 49%);
+    --coconut-shell: hsl(19, 42%, 42%);
+    --cantaloupe: hsl(7, 95%, 85%)4;
+    --cranberry: hsl(338, 100%, 31%);
+    --dragon-fruit: hsl(343, 51%, 59%);
+    --fig: hsl(338, 30%, 25%);
+    --grape-purple: hsl(291, 64%, 33%);
+    --grape-green: hsl(76, 56%, 52%);
+    --grape-fruit: hsl(1, 98%, 66%);
+    --guava: hsl(348, 83%, 75%);
+    --kiwi: hsl(91, 76%, 57%);
+    --lemon: hsl(65, 100%, 50%);
+    --lime: hsl(78, 99%, 58%);
+    --lychee: hsl(347, 89%, 39%);
+    --mango: hsl(35, 84%, 73%);
+    --mulberry: hsl(332, 62%, 56%);
+    --orange: hsl(39, 100%, 50%);
+    --papaya: hsl(23, 99%, 70%);
+    --passion-fruit: hsl(0, 55%, 26%);
+    --peach: hsl(24, 100%, 74%);
+    --pear: hsl(64, 43%, 62%);
+    --pineapple: hsl(39, 76%, 61%);
+    --plum : hsl(300, 47%, 75%);
+    --pomegranate: hsl(350, 80%, 37%);
+    --raspberry: hsl(339, 74%, 45%);
+    --strawberry: hsl(356, 41%, 46%);
+    --watermelon: hsl(350, 96%, 71%);
+
+    --primary-text: hsl(0, 0%, 100%);
+    --secondary-text: hsl(210, 6%, 63%);
+    --tertiary-text: hsl(217, 89%, 76%);
+
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-quaternary: var(--quaternary);
+  --color-tertiary-prime: var(--tertiary-prime);
+
+  --color-primary-text: var(--primary-text);
+  --color-tertiary-text: var(--tertiary-text);
+  --color-secondary-text: var(--secondary-text);
+  
+  --color-orange: var(--orange);
+  --color-pineapple: var(--pineapple);
+  --color-strawberry: var(--strawberry);
+  --color-apple-red: var(--apple-red);
+  --color-apple-green: var(--apple-green);
+  --color-banana: var(--banana);
+  --color-blackberry: var(--blackberry);
+  --color-blueberry: var(--blueberry);
+  --color-cherry: var(--cherry);
+  --color-coconut-shell: var(--coconut-shell);
+  --color-cantaloupe: var(--cantaloupe);
+  --color-cranberry: var(--cranberry);
+  --color-dragon-fruit: var(--dragon-fruit);
+  --color-fig: var(--fig);
+  --color-grape-purple: var(--grape-purple);
+  --color-grape-green: var(--grape-green);
+  --color-grape-fruit: var(--grape-fruit);
+  --color-guava: var(--guava);
+  --color-kiwi: var(--kiwi);
+  --color-lemon: var(--lemon);
+  --color-lime: var(--lime);
+  --color-lychee: var(--lychee);
+  --color-mango: var(--mango);
+  --color-mulberry: var(--mulberry);
+  --color-orange: var(--orange);
+  --color-papaya: var(--papaya);
+  --color-passion-fruit: var(--passion-fruit);
+  --color-peach: var(--peach);
+  --color-pear: var(--pear);
+  --color-pineapple: var(--pineapple);
+  --color-plum : var(--plum);
+  --color-pomegranate: var(--pomegranate);
+  --color-raspberry: var(--raspberry);
+  --color-strawberry: var(--strawberry);
+  --color-watermelon: var(--watermelon);
+
+  --color-error: var(--raspberry);
+  --color-error-100: var(--pomegranate);
+
+  --color-primary-text: var(--primary-text);
+  --color-secondary-text: var(--secondary-text);
+  --color-tertiary-text: var(--tertiary-text);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
-    --background: hsl(220, 43%, 11%);
-    --foreground: hsl(207, 20%, 89%);
+    --background: var(--foreground);
+    --foreground: var(--background);
   }
   svg path {
-    stroke: var(--color-secondary);
+    stroke: var(--background);
   }
   img[alt] {
-    color: var(--color-secondary);
+    color: var(--background);
   }
-  
-} */
+  p {
+    color: var(--background);
+  }
+  /* nav {
+    background-color: var(--color-primary);
+  } */
+}
 
 @layer base {
   html,
@@ -49,17 +148,36 @@
     color: var(--foreground);
     font-family: Arial, Helvetica, sans-serif;
   }
-
 }
 
-/* @layer utilities {} */
-
-@layer components {
-  button {
-    background-color: var(--color-primary);
-    color: var(--color-quaternary);
-  }
+@layer utilities {
   input {
-    background-color: var(--color-quaternary-alpha);
+    [type="checkbox"]:checked {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23262626' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    }
+    [type="radio"]:checked {
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23262626' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+    }
+    [type="checkbox"],
+    [type="radio"] {
+      box-shadow: none;
+      outline: 2px solid transparent;
+      outline-offset: 0;
+    }
+
+    [type="checkbox"],
+    [type="checkbox"]:checked,
+    [type="checkbox"]:checked:hover,
+    [type="checkbox"]:checked:focus,
+    [type="checkbox"]:indeterminate:hover,
+    [type="radio"],
+    [type="radio"]:checked,
+    [type="radio"]:checked:hover,
+    [type="radio"]:checked:focus {
+      color: var(--primary-text);
+      border-color: var(--primary-text);
+    }
   }
 }
+
+@layer components {}

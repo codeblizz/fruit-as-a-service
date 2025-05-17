@@ -15,6 +15,13 @@ const utils = {
     error.code = code ?? undefined;
     return error;
   },
+  formatQuery: function (payload: Record<string, string | number | boolean>): string {
+    let toReturn = "?";
+    for (const key in payload) {
+      toReturn += `${key}=${payload[key]}&`;
+    }
+    return toReturn.slice(0, -1);
+  },
   isObject: function (
     value: Record<string, unknown> | { [key: string]: { [key: string]: string } }
   ): boolean {

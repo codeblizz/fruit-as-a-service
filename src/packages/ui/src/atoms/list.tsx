@@ -1,13 +1,16 @@
-import { useParams } from "next/navigation";
+"use client";
+
 import lib from "@/packages/helpers/src/libs";
-import Link from "@/packages/ui/src/atoms/link";
 import React, { LiHTMLAttributes } from "react";
+import Link from "@/packages/ui/src/atoms/link";
+import utils from "@/packages/helpers/src/utils";
 
 function List({
   list,
   path,
   isLink,
   liClass,
+  selected,
   className,
 }: {
   path: string;
@@ -15,17 +18,15 @@ function List({
   liClass: string;
   className?: string;
   list: Array<string>;
+  selected?: string | null;
 } & LiHTMLAttributes<HTMLUListElement>) {
-
-  const params = useParams();
-  const paramsId = Array.isArray(params.id) && params.id[0];
-  
   return (
     <ul className={className}>
       {list.map((li: string, index: number) => {
-        const selectedSubMenuClass = paramsId === li ? "bg-mango text-tertiary-text text-extrabold" : "";
+        const active = selected === li;
+        const selectedSubMenuClass = active ? "bg-mango text-tertiary-text text-extrabold" : "";
         return isLink ? (
-          <Link key={index} href={`${path + li}`}>
+          <Link key={index} href={`${path + utils.formatQuery({ selected: li, active: true })}`}>
             <li className={lib.cn([liClass, selectedSubMenuClass])}>{li}</li>
           </Link>
         ) : (

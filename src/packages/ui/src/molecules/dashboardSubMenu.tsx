@@ -7,9 +7,13 @@ import CONSTANT from "@/packages/helpers/src/constants";
 
 function DashBoardSubMenuAccordion({
   menu,
+  isActive,
+  selected,
   menuName,
 }: {
   menu: string;
+  isActive: boolean;
+  selected: string | null;
   menuName: string | null;
 }) {
   return Object.values(CONSTANT.fruitMenu.categories).map((values, idx) => {
@@ -17,17 +21,20 @@ function DashBoardSubMenuAccordion({
       <List
         key={idx}
         isLink={true}
-        path="/fruits/"
         list={values.type}
+        selected={selected}
+        path={`/dashboard/fruits/${menuName?.toLowerCase() ?? ""}`}
         className={lib.cn([
           "w-[80%] overflow-y-auto transition-all duration-700 ease-in-out px-1 border-2 border-plum",
-          menuName === menu ? "flex flex-col -gap-y-2" : "hidden",
+          menuName === null && isActive && selected && values.type.includes(selected) || menuName === menu
+            ? "flex flex-col -gap-y-2"
+            : "hidden",
         ])}
         liClass={lib.cn([
-          "text-[9px] focus:text-[10px] focus:bg-tertiary-text focus:h-6 text-center cursor-pointer bg-mulberry w-full rounded-md h-5 px-3 inline-flex items-center justify-center"
+          "text-[12px] focus:text-[14px] focus:h-6 text-center cursor-pointer bg-mulberry w-full rounded-md h-5 px-3 inline-flex items-center justify-center",
         ])}
       />
-    ) : null
+    ) : null;
   });
 }
 

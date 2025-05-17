@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import { signOut } from "next-auth/react";
 import lib from "@/packages/helpers/src/libs";
 import Link from "@/packages/ui/src/atoms/link";
 import Span from "@/packages/ui/src/atoms/span";
+import { useSearchParams } from "next/navigation";
 import Card from "@/packages/ui/src/molecules/card";
 import Section from "@/packages/ui/src/atoms/section";
 import Paragraph from "@/packages/ui/src/atoms/paragraph";
@@ -15,11 +17,16 @@ type TLeftSideDashboard = {
 };
 
 function LeftSideDashboard({ className, dashboardMenu }: TLeftSideDashboard) {
+  const searchParams = useSearchParams();
+  const selected = searchParams.get("selected");
+  const isActive = searchParams.get("active") === "true";
   const [menuName, setMenuName] = useState<null | string>(null);
 
   const onSetMenuName = (menu: string) => {
     setMenuName(menuName === menu ? null : menu);
   };
+
+  const onSignOut = async () => await signOut();
 
   return (
     <Section
@@ -51,6 +58,8 @@ function LeftSideDashboard({ className, dashboardMenu }: TLeftSideDashboard) {
               />
               <DashBoardSubMenuAccordion
                 menu={menu}
+                selected={selected}
+                isActive={isActive}
                 menuName={menuName}
               />
             </Span>
@@ -58,6 +67,7 @@ function LeftSideDashboard({ className, dashboardMenu }: TLeftSideDashboard) {
         </Section>
         <Link
           href="/"
+          onClick={onSignOut}
           className="bg-primary inline-flex items-center justify-center w-full h-8 px-3 text-white rounded-xl"
         >
           <Paragraph text="Sign Out" className="text-center text-md" />

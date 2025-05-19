@@ -1,22 +1,25 @@
-import { StripeGateway } from "./stripe/stripe.service";
-import { PayPalGateway } from "./paypal/paypal.service";
+import { PayPalGateway } from "./paypal";
+import { StripeGateway } from "./stripe";
 import { PaymentGateway } from "./common/gateway.interface";
-import { PaystackGateway } from "./paystack/paystack.service";
-
-type PaymentProvider = "stripe" | "paypal" | "paystack" | "";
-
-// Payment Gateway Factory
-export function createPaymentGateway(provider: PaymentProvider): PaymentGateway {
-  switch (provider) {
+export async function createPaymentGateway(gateway: string): Promise<PaymentGateway> {
+  "use server";
+  switch (gateway) {
     case "stripe":
       return StripeGateway();
     case "paypal":
       return PayPalGateway();
-    case "paystack":
-      return PaystackGateway();
     default:
-      throw new Error(`Unsupported payment provider: ${provider}`);
+      throw new Error(`Payment gateway ${gateway} not supported`);
   }
 }
 
-export { StripeGateway, PayPalGateway, PaystackGateway };
+// Export common interfaces
+export * from "./common/gateway.interface";
+
+// Export Gateway services
+export { PayPalGateway } from "./paypal";
+
+// Export all Gateway types
+export * from './stripe/stripe.type';
+export * from "./paypal/paypal.type";
+

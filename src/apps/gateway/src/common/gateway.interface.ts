@@ -9,6 +9,11 @@ export interface PaymentMethod {
   };
 }
 
+export interface PaymentIntentAndMethod {
+  paymentIntentId: string;
+  paymentMethodId: string;
+}
+
 export interface PaymentIntent {
   id: string;
   amount: number;
@@ -17,82 +22,85 @@ export interface PaymentIntent {
   paymentMethodId?: string;
 }
 
+export interface PaymentIntentCreationParameter {
+  amount: number;
+  currency: string;
+  description?: string;
+  metadata?: Record<string, string>;
+}
+
+export interface PaymentMethodCreationParameter {
+  type?: string;
+  card: {
+    number: string;
+    expMonth: number;
+    expYear: number;
+    cvc: string;
+  };
+  billingDetails?: {
+    name?: string;
+    email?: string;
+    address?: {
+      line1?: string;
+      line2?: string;
+      city?: string;
+      state?: string;
+      postalCode?: string;
+      country?: string;
+    };
+  };
+}
+
+export interface PaymentMethodCreation {
+  id: string;
+  type: string;
+  card?: {
+    brand: string;
+    last4: string;
+    expMonth: number;
+    expYear: number;
+  };
+}
+
+export type ListPaymentMethodReturnType = Array<{
+  id: string;
+  type: string;
+  card?: {
+    brand: string;
+    last4: string;
+    expMonth: number;
+    expYear: number;
+  };
+}>;
+
+export interface RefundPaymentParameter {
+  paymentIntentId: string;
+  amount?: number;
+}
+
+export interface RefundPayment {
+  id: string;
+  status: string;
+}
+
 export interface PaymentGateway {
-  createPaymentIntent: (params: {
-    amount: number;
-    currency: string;
-    description?: string;
-    metadata?: Record<string, string>;
-  }) => Promise<{
-    id: string;
-    amount: number;
-    currency: string;
-    status: string;
-    paymentMethodId?: string;
-  }>;
+  createPaymentIntent: (
+    params: PaymentIntentCreationParameter
+  ) => Promise<PaymentIntent>;
 
-  confirmPaymentIntent: (params: {
-    paymentIntentId: string;
-    paymentMethodId: string;
-  }) => Promise<{
-    id: string;
-    amount: number;
-    currency: string;
-    status: string;
-    paymentMethodId?: string;
-  }>;
+  confirmPaymentIntent: (
+    params: PaymentIntentAndMethod
+  ) => Promise<PaymentIntent>;
 
-  createPaymentMethod: (params: {
-    type: string;
-    card: {
-      number: string;
-      expMonth: number;
-      expYear: number;
-      cvc: string;
-    };
-    billingDetails?: {
-      name?: string;
-      email?: string;
-      address?: {
-        line1?: string;
-        line2?: string;
-        city?: string;
-        state?: string;
-        postalCode?: string;
-        country?: string;
-      };
-    };
-  }) => Promise<{
-    id: string;
-    type: string;
-    card?: {
-      brand: string;
-      last4: string;
-      expMonth: number;
-      expYear: number;
-    };
-  }>;
+  createPaymentMethod: (
+    params: PaymentMethodCreationParameter
+  ) => Promise<PaymentMethodCreation>;
 
-  listPaymentMethods: (params: { customerId: string }) => Promise<
-    Array<{
-      id: string;
-      type: string;
-      card?: {
-        brand: string;
-        last4: string;
-        expMonth: number;
-        expYear: number;
-      };
-    }>
-  >;
+  listPaymentMethods: (params: {
+    customerId: string;
+  }) => Promise<ListPaymentMethodReturnType>;
 
-  refundPayment: (params: {
-    paymentIntentId: string;
-    amount?: number;
-  }) => Promise<{
-    id: string;
-    status: string;
-  }>;
+  refundPayment: (params: RefundPaymentParameter) => Promise<RefundPayment>;
 
   createSubscription: (params: {
     customerId: string;

@@ -1,108 +1,159 @@
-import { core, orders, payments } from "@paypal/checkout-server-sdk";
+import axios from "axios";
 import { PaymentGateway } from "@/apps/gateway/src/common/gateway.interface";
 
-if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
-  throw new Error("PayPal credentials are not defined");
+
+const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID!;
+const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET!;
+const PAYPAL_API_BASE =
+  process.env.NODE_ENV === "production"
+    ? "https://api-m.paypal.com"
+    : "https://api-m.sandbox.paypal.com";
+
+let cachedAccessToken: string | null = null;
+let tokenExpiryTime = 0;
+
+async function getAccessToken(): Promise<string> {
+  const now = Date.now();
+  if (cachedAccessToken && now < tokenExpiryTime) {
+    return cachedAccessToken;
+  }
+  const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString(
+    "base64"
+  );
+  const response = await axios.post(
+    `${PAYPAL_API_BASE}/v1/oauth2/token`,
+    "grant_type=client_credentials",
+    {
+      headers: {
+        Authorization: `Basic ${auth}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    }
+  );
+
+  cachedAccessToken = response.data.access_token;
+  tokenExpiryTime = now + response.data.expires_in * 1000 - 60000; // refresh 1 min early
+
+  return cachedAccessToken ?? "";
 }
 
-const environment =
-  process.env.NODE_ENV === "production"
-    ? new core.LiveEnvironment(
-        process.env.PAYPAL_CLIENT_ID,
-        process.env.PAYPAL_CLIENT_SECRET
-      )
-    : new core.SandboxEnvironment(
-        process.env.PAYPAL_CLIENT_ID,
-        process.env.PAYPAL_CLIENT_SECRET
-      );
+async function paypalRequest<T>(
+  method: "GET" | "POST" | "PATCH",
+  path: string,
+  data?: any
+): Promise<T> {
+  const accessToken = await getAccessToken();
 
-const client = new core.PayPalHttpClient(environment);
+  const response = await axios.request<T>({
+    method,
+    url: `${PAYPAL_API_BASE}${path}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    data,
+  });
+
+  return response.data;
+}
+
 
 export function PayPalGateway(): PaymentGateway {
   return {
     async createPaymentIntent(params) {
-      const request = new orders.OrdersCreateRequest();
-      request.prefer("return=representation");
-      request.requestBody({
+      const body = {
         intent: "CAPTURE",
         purchase_units: [
           {
             amount: {
               currency_code: params.currency.toUpperCase(),
-              value: (params.amount / 100).toString(), // Convert from cents to dollars
+              value: (params.amount / 100).toFixed(2),
             },
             description: params.description,
             custom_id: params.metadata?.orderId,
           },
         ],
-      });
+      };
 
-      const order = await client.execute(request);
+      const order = await paypalRequest<{ id: string; status: string; }>(
+        "POST",
+        "/v2/checkout/orders",
+        body
+      );
 
       return {
-        id: order.result.id,
+        id: order.id,
         amount: params.amount,
         currency: params.currency,
-        status: order.result.status.toLowerCase(),
+        status: order.status?.toLowerCase() || "created",
         paymentMethodId: undefined,
       };
     },
 
     async confirmPaymentIntent(params) {
-      const request = new orders.OrdersCaptureRequest(params.paymentIntentId);
-      const capture = await client.execute(request);
+      // Capture the order
+      const capture = await paypalRequest<any>(
+        "POST",
+        `/v2/checkout/orders/${params.paymentIntentId}/capture`
+      );
+
+      const purchaseUnit = capture.purchase_units?.[0];
+      const amountValue = purchaseUnit?.payments?.captures?.[0]?.amount?.value;
+      const currencyCode = purchaseUnit?.payments?.captures?.[0]?.amount?.currency_code;
 
       return {
-        id: capture.result.id,
-        amount: parseInt(
-          (
-            parseFloat(capture.result.purchase_units[0].amount.value) * 100
-          ).toString()
-        ),
-        currency:
-          capture.result.purchase_units[0].amount.currency_code.toLowerCase(),
-        status: capture.result.status.toLowerCase(),
+        id: capture.id,
+        amount: amountValue ? Math.round(parseFloat(amountValue) * 100) : 0,
+        currency: currencyCode?.toLowerCase() || "$",
+        status: capture.status?.toLowerCase() || "unknown",
         paymentMethodId: undefined,
       };
     },
 
     async createPaymentMethod(params) {
-      // PayPal doesn't require storing payment methods as they're handled through their checkout flow
       throw new Error(
         "PayPal doesn't support storing payment methods directly"
       );
     },
 
     async listPaymentMethods(params) {
-      // PayPal doesn't support listing stored payment methods
       return [];
     },
 
     async refundPayment(params) {
-      const captureRequest = new orders.OrdersGetRequest(
-        params.paymentIntentId
+      // First get the capture ID from the order
+      const order = await paypalRequest<any>(
+        "GET",
+        `/v2/checkout/orders/${params.paymentIntentId}`
       );
-      const capture = await client.execute(captureRequest);
-      const captureId =
-        capture.result.purchase_units[0].payments.captures[0].id;
 
-      const refundRequest = new payments.CapturesRefundRequest(captureId);
-      if (params.amount) {
-        refundRequest.requestBody({
-          amount: {
-            value: (params.amount / 100).toString(),
-            currency_code: "USD",
-          },
-          note_to_payer: "Refund for order",
-          invoice_id: params.paymentIntentId,
-        });
+      const captureId =
+        order.purchase_units?.[0]?.payments?.captures?.[0]?.id;
+
+      if (!captureId) {
+        throw new Error("Capture ID not found for refund");
       }
 
-      const refund = await client.execute(refundRequest);
+      const refundBody: any = {};
+
+      if (params.amount) {
+        refundBody.amount = {
+          value: (params.amount / 100).toFixed(2),
+          currency_code: "USD", // You may want to make this dynamic
+        };
+        refundBody.note_to_payer = "Refund for order";
+        refundBody.invoice_id = params.paymentIntentId;
+      }
+
+      const refund = await paypalRequest<any>(
+        "POST",
+        `/v2/payments/captures/${captureId}/refund`,
+        refundBody
+      );
 
       return {
-        id: refund.result.id,
-        status: refund.result.status ?? "failed",
+        id: refund.id,
+        status: refund.status ?? "failed",
       };
     },
 

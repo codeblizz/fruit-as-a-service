@@ -1,3 +1,5 @@
+"use client";
+
 import { z } from "zod";
 import utils from "@/packages/helpers/src/utils";
 
@@ -8,10 +10,17 @@ const envClientSchema = z.object({
 
 const envServerSchema = z.object({
   AUTH_SECRET: z.string().min(1, { message: "value is empty" }),
+  PAYPAL_API_BASE: z.string().min(1, { message: "value is empty" }),
   STRIPE_SECRET_KEY: z.string().min(1, { message: "value is empty"}),
   GOOGLE_CLIENT_ID: z.string().min(1, { message: "value is empty" }),
+  PAYPAL_CLIENT_ID: z.string().min(1, { message: "value is empty" }),
+  DATABASE_URL: z.string().min(1, { message: "value is empty" }).url(),
   NODE_BASE_URL: z.string().min(1, { message: "value is empty" }).url(),
+  PAYSTACK_SECRET_KEY: z.string().min(1, { message: "value is empty" }),
+  PAYPAL_CLIENT_SECRET: z.string().min(1, { message: "value is empty" }),
   GOOGLE_CLIENT_SECRET: z.string().min(1, { message: "value is empty" }),
+  STRIPE_WEBHOOK_SECRET: z.string().min(1, { message: "value is empty" }),
+  PAYSTACK_BASE_URL: z.string().min(1, { message: "value is empty" }).url(),
 });
 
 export type EnvType = z.infer<typeof envServerSchema & typeof envClientSchema>;

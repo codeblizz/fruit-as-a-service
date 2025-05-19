@@ -114,10 +114,6 @@
   --color-error: var(--raspberry);
   --color-error-100: var(--pomegranate);
 
-  --color-primary-text: var(--primary-text);
-  --color-secondary-text: var(--secondary-text);
-  --color-tertiary-text: var(--tertiary-text);
-
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -180,4 +176,8 @@
   }
 }
 
-@layer components {}
+@layer components {
+  main {
+    @apply w-full min-w-72;
+  }
+}

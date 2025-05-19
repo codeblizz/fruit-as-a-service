@@ -1,11 +1,9 @@
 "use client";
 
-import React from "react";
-import { ZodSchema } from "zod";
 import { signIn } from "next-auth/react";
 import Paragraph from "../atoms/paragraph";
+import React, { useTransition } from "react";
 import lib from "@/packages/helpers/src/libs";
-import { usePathname } from "next/navigation";
 import Form from "@/packages/ui/src/atoms/form";
 import utils from "@/packages/helpers/src/utils";
 import Input from "@/packages/ui/src/atoms/input";
@@ -14,9 +12,9 @@ import NextLink from "@/packages/ui/src/atoms/link";
 import Card from "@/packages/ui/src/molecules/card";
 import useResetFields from "./hooks/useResetFields";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateStore } from "@/packages/store/src";
 import Fragment from "@/packages/ui/src/atoms/fragment";
 import CONSTANT from "@/packages/helpers/src/constants";
+import { useParams, usePathname } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Login, Register } from "@/packages/types/src/auth.type";
 import {
@@ -26,43 +24,36 @@ import {
 
 function AuthForm({ className }: { className: string }) {
   const pathname = usePathname();
-  const isLogin = pathname === "/";
-  const isRegister = pathname === "/signup";
-  const { loader, setLoader } = useCreateStore((state) => state);
+  const params = useParams<{ slug: string }>();
+  const [isPending, startTransition] = useTransition();
+  const slug = params.slug;
+  const isRegister = pathname === "/signup" || slug === "signup";
   const {
     reset,
     control,
     handleSubmit,
     formState: { isDirty, errors },
   } = useForm<Login | Register>({
-    defaultValues: isLogin
-      ? CONSTANT.defaultLogin
-      : isRegister
+    defaultValues: isRegister
       ? CONSTANT.getDefaultSignUp()
-      : {},
-    resolver: zodResolver(
-      pathname === "/"
-        ? LoginSchema
-        : pathname === "/signup"
-        ? RegisterSchema
-        : (undefined as unknown as ZodSchema)
-    ),
+      : CONSTANT.defaultLogin,
+    resolver: zodResolver(isRegister ? RegisterSchema : LoginSchema),
   });
 
-  const onSubmit: SubmitHandler<Login> = async (data) => {
-    setLoader(true);
+  const onSubmit: SubmitHandler<Login> = (data) => {
+    let response;
     try {
-      const response = await signIn("credentials", {
-        ...data,
-        callbackUrl: "/dashboard",
-        redirect: false,
+      startTransition(async() => {
+        response = await signIn("credentials", {
+          ...data,
+          callbackUrl: "/dashboard",
+          redirect: false,
+        });
       });
       console.log("response", response);
       return response;
     } catch (error) {
       return utils.formatError(error);
-    } finally {
-      setLoader(false);
     }
   };
 
@@ -79,7 +70,7 @@ function AuthForm({ className }: { className: string }) {
     >
       <Paragraph
         id="auth-title"
-        text={isLogin ? "Sign In" : isRegister ? "Sign Up" : ""}
+        text={isRegister ? "Sign Up" : "Sign In"}
         className="inline-flex text-xl font-extrabold capitalize items-center justify-center w-full text-center h-12"
       />
       <Form
@@ -89,7 +80,7 @@ function AuthForm({ className }: { className: string }) {
       >
         {CONSTANT.InputAuthObjects.map((value) => {
           const checkInputClass =
-            isLogin && value.type === "checkbox" ? "hidden mb-0" : "mb-7";
+            !isRegister && value.type === "checkbox" ? "hidden mb-0" : "mb-7";
           return (
             <Input<Login | Register>
               key={value.name}
@@ -106,24 +97,26 @@ function AuthForm({ className }: { className: string }) {
         <Button
           name="login"
           type="submit"
-          loader={loader}
           text={"Submit"}
           className="w-full"
+          isPending={isPending}
         />
       </Form>
       <Fragment className="inline-flex items-center text-sm h-12">
         <Paragraph
           text={
-            isLogin
-              ? "New User -- Sign up"
-              : isRegister
+            isRegister
               ? "Already have an account -- Sign in"
-              : ""
+              : "New User -- Sign up"
           }
           className="text-[13px]"
         />
         <NextLink
-          href={isLogin ? "/signup" : "/"}
+          href={
+            isRegister
+              ? pathname.replace("/signup", slug ? "/signin" : "/")
+              : pathname.replace("/signin", "/signup")
+          }
           className="underline ml-1 cursor-pointer text-[13px]"
         >
           here

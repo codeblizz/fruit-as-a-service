@@ -2,54 +2,48 @@
 
 import React from "react";
 import { useSession } from "next-auth/react";
+import NextLink from "@/packages/ui/src/atoms/link";
 import Card from "@/packages/ui/src/molecules/card";
-import Button from "@/packages/ui/src/atoms/button";
-import { useCreateStore } from "@/packages/store/src";
+import Section from "@/packages/ui/src/atoms/section";
+import Paragraph from "@/packages/ui/src/atoms/paragraph";
 import AuthForm from "@/packages/ui/src/molecules/authForm";
 
 export default function Home() {
   const { data: session } = useSession();
-  const { loader } = useCreateStore((state) => state);
 
-  // if (session) {
+  if (!session) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <Card name="" className="w-[60%] max-w-xl p-8">
-          <h1 className="text-3xl font-bold mb-8">
-            Welcome to Fruit-as-a-Service
-          </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <section>
-              <h2 className="text-xl font-semibold mb-4">Quick Order</h2>
-              <Button
-                name="order"
-                type="button"
-                loader={loader}
-                text="Order Fresh Fruits"
-                className="w-full"
-                onClick={() => (window.location.href = "/order")}
-              />
-            </section>
-            <section>
-              <h2 className="text-xl font-semibold mb-4">Subscription</h2>
-              <Button
-                type="button"
-                loader={loader}
-                name="subscribe"
-                className="w-full"
-                text="Start Subscription"
-                onClick={() => (window.location.href = "/subscription")}
-              />
-            </section>
-          </div>
+      <main className="flex min-h-screen w-full bg-[url('/images/fruit-platter-002.webp')] bg-no-repeat bg-cover bg-center bg-fixed flex-col items-center justify-center">
+        <Card
+          name=""
+          className="flex flex-col justify-start text-primary-text items-center text-center gap-y-10 w-full pb-10 max-w-xl rounded-t-xl"
+        >
+          <Paragraph
+            text="Welcome to Fruit-as-a-Service"
+            className="text-2xl md:text-3xl font-bold bg-primary rounded-t-xl w-full p-4"
+          />
+          <Section className="flex justify-center items-center gap-8">
+            {[
+              { href: "/fruits/order", text: "Order Fruits" },
+              { href: "/fruits/subscription", text: "Start Subscription" },
+            ].map((value, index) => (
+              <NextLink
+                key={index}
+                href={value.href}
+                className="w-40 inline-flex justify-center items-center h-12 bg-tertiary px-4 rounded-lg text-nowrap text-overflow text-ellipsis"
+              >
+                {value.text}
+              </NextLink>
+            ))}
+          </Section>
         </Card>
       </main>
     );
-  // }
+  }
 
-  // return (
-  //   <main className="flex min-h-screen flex-col items-center justify-center p-24">
-  //     <AuthForm className="w-full max-w-md p-8 shadow-lg" />
-  //   </main>
-  // );
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+      <AuthForm className="w-full max-w-md p-8 shadow-lg" />
+    </main>
+  );
 }

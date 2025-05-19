@@ -2,8 +2,8 @@
 
 import lib from "@/packages/helpers/src/libs";
 import React, { LiHTMLAttributes } from "react";
-import Link from "@/packages/ui/src/atoms/link";
 import utils from "@/packages/helpers/src/utils";
+import NextLink from "@/packages/ui/src/atoms/link";
 
 function List({
   list,
@@ -26,9 +26,9 @@ function List({
         const active = selected === li;
         const selectedSubMenuClass = active ? "bg-mango text-tertiary-text text-extrabold" : "";
         return isLink ? (
-          <Link key={index} href={`${path + utils.formatQuery({ selected: li, active: true })}`}>
+          <NextLink key={index} href={`${path + utils.formatQuery({ selected: li, active: true })}`}>
             <li className={lib.cn([liClass, selectedSubMenuClass])}>{li}</li>
-          </Link>
+          </NextLink>
         ) : (
           <li className={lib.cn([liClass, selectedSubMenuClass])} key={index}>
             {li}

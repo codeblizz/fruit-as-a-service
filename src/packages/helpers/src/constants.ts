@@ -1,5 +1,6 @@
 import { Register } from "@/packages/types/src/auth.type";
 import { AuthField } from "@/packages/types/src/auth.type";
+import { FruitItem } from "@/packages/types/src/fruits.type";
 
 const CONSTANT = {
   defaultCurrency: "N",
@@ -76,7 +77,13 @@ const CONSTANT = {
         type: ["mango", "pineapple", "banana", "papaya", "guava"]
       },
     },
-  }
+  },
+  fruits: [
+    { id: '1', name: 'Apple', price: 100, image: '🍎', unit: 'kg' },
+    { id: '2', name: 'Banana', price: 80, image: '🍌', unit: 'dozen' },
+    { id: '3', name: 'Orange', price: 120, image: '🍊', unit: 'kg' },
+    { id: '4', name: 'Mango', price: 150, image: '🥭', unit: 'kg' },
+  ] as FruitItem[],
 };
 
 export default CONSTANT;

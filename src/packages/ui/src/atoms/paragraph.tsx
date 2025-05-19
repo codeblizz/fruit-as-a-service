@@ -16,7 +16,7 @@ const Paragraph = ({
   ...rest
 }: Paragraph) => {
   return (
-    <p className={lib.cn([className])} onClick={onClick} {...rest}>
+    <p className={lib.cn(["", className])} onClick={onClick} {...rest}>
       {text}
     </p>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { TButtonMouseEvent } from "@/packages/types/src/ui/button.type";
 
 function PasswordIcon({
@@ -21,7 +21,7 @@ function PasswordIcon({
       className={className}
       aria-label={showPassword ? "Hide password" : "Show password"}
     >
-      {showPassword ? <EyeClosedIcon /> : <EyeOpenIcon />}
+      {showPassword ? <EyeClosedIcon /> : <EyeIcon />}
     </button>
   ) : null;
 }

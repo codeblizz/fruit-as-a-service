@@ -10,9 +10,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "stripe": "^18.1.0",
     "@codeblizz/services": "workspace:*",
-    "@paypal/checkout-server-sdk": "^1.0.3"
+    "@paypal/paypal-js": "^8.2.0",
+    "stripe": "^18.1.0"
   },
   "peerDependencies": {
     "axios": "^1.9.0",

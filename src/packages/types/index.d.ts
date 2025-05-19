@@ -15,6 +15,7 @@ declare global {
         };
       };
     }
+
     export interface AxiosRequestConfig {
       headers: {
         baseURL: string;
@@ -24,17 +25,23 @@ declare global {
       _retry?: boolean;
     }
   }
-}
 
-declare module "next" {
-  interface NextApiRequest {
-    language: string;
-    file: Express.Multer.File;
+  module "next" {
+    export interface NextApiRequest {
+      language: string;
+      file: Express.Multer.File;
+    }
   }
-}
 
-declare namespace NodeJS {
-  interface ProcessEnv extends EnvType {
-    NEXT_NODE_ENV?: string;
+  namespace NodeJS {
+    export interface ProcessEnv extends EnvType {
+      NEXT_NODE_ENV?: string;
+    }
+  }
+
+  export interface Window {
+    paypal?: {
+      Buttons: (config: any) => { render: (element: HTMLElement) => void };
+    };
   }
 }

@@ -1,11 +1,11 @@
 import React from "react";
+import { StarHalfIcon, StarIcon } from "lucide-react";
 import CONSTANTS from "@/packages/helpers/src/constants";
-import { StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 
 function StarRating({ rating = 0 }: { rating: number }) {
   return CONSTANTS.ratingArray.map((r, idx) =>
     r <= rating ? (
-      <StarFilledIcon
+      <StarHalfIcon
         key={idx}
         className="inline-flex flex-row size-2"
         style={{ fill: "text-secondary" }}

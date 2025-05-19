@@ -1,41 +1,29 @@
-"use client";
-
 import React, { useState } from "react";
-import { useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
-import Card from "@/packages/ui/src/molecules/card";
-import Button from "@/packages/ui/src/atoms/button";
-import Input from "@/packages/ui/src/atoms/input";
-import { useCreateStore } from "@/packages/store/src";
-import { createPaymentGateway } from "@/apps/gateway/src";
 import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import Input from "@/packages/ui/src/atoms/input";
+import Card from "@/packages/ui/src/molecules/card";
+import { PaymentGateway } from "@/apps/gateway/src";
+import Button from "@/packages/ui/src/atoms/button";
+import { useCreateStore } from "@/packages/store/src";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useSearchParams, useRouter } from "next/navigation";
+import PayPalButtons from "@/packages/ui/src/molecules/paypalButton";
+import PayPalScriptProvider from "@/packages/providers/src/paypal.provider";
+import { PaymentFormData, PaymentSchema } from "@/packages/helpers/src/validations/paypal.validate";
 
-const PaymentSchema = z.object({
-  cardNumber: z.string().min(16).max(16),
-  expMonth: z.string().min(1).max(2),
-  expYear: z.string().length(4),
-  cvc: z.string().length(3),
-  name: z.string().min(1),
-  email: z.string().email(),
-  address: z.object({
-    line1: z.string().min(1),
-    city: z.string().min(1),
-    state: z.string().min(1),
-    postalCode: z.string().min(1),
-    country: z.string().min(1),
-  }),
-});
+// Payment method type
+type PaymentMethod = 'stripe' | 'paypal';
 
-type PaymentFormData = z.infer<typeof PaymentSchema>;
-
-export default function CheckoutPage() {
+export default function Checkout({ gateway }: { gateway: PaymentGateway }) {
+  const router = useRouter();
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-  const { loader, setLoader } = useCreateStore((state) => state);
   const [error, setError] = useState<string>();
+  const orderAmount = searchParams.get("amount") || "0.00";
   const paymentIntentId = searchParams.get("payment_intent");
+  const { loader, setLoader } = useCreateStore((state) => state);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('stripe');
 
   const {
     control,
@@ -52,9 +40,6 @@ export default function CheckoutPage() {
     try {
       setLoader(true);
       setError(undefined);
-
-      const gateway = createPaymentGateway("stripe");
-
       // Create payment method
       const paymentMethod = await gateway.createPaymentMethod({
         type: "card",
@@ -105,14 +90,54 @@ export default function CheckoutPage() {
     );
   }
 
+  // Handle PayPal success
+  const handlePayPalSuccess = (orderId: string) => {
+    // Redirect to success page with the order ID
+    router.push(`/fruits/success?order_id=${orderId}`);
+  };
+
+  // Handle PayPal error
+  const handlePayPalError = (error: Error) => {
+    setError(error.message || 'PayPal payment failed');
+    setLoader(false);
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center p-8">
       <Card name="" className="w-full max-w-2xl p-8">
         <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Payment Information</h2>
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
+          <div className="flex space-x-4">
+            <button
+              type="button"
+              onClick={() => setPaymentMethod('stripe')}
+              className={`px-4 py-2 rounded-md ${
+                paymentMethod === 'stripe'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-800'
+              }`}
+            >
+              Credit Card
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaymentMethod('paypal')}
+              className={`px-4 py-2 rounded-md ${
+                paymentMethod === 'paypal'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-800'
+              }`}
+            >
+              PayPal
+            </button>
+          </div>
+        </div>
+        {paymentMethod === 'stripe' ? (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Payment Information</h2>
             <Input
               placeholderClassName=""
               control={control}
@@ -212,6 +237,25 @@ export default function CheckoutPage() {
             className="w-full"
           />
         </form>
+        ) : (
+          <div className="space-y-6">
+            <div className="py-4">
+              <h2 className="text-xl font-semibold mb-4">PayPal Checkout</h2>
+              <p className="mb-4">
+                Click the PayPal button below to complete your payment of ${orderAmount}.
+              </p>
+              <PayPalScriptProvider clientId={process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'test'}>
+                <PayPalButtons
+                  amount={orderAmount}
+                  onError={handlePayPalError}
+                  onSuccess={handlePayPalSuccess}
+                />
+              </PayPalScriptProvider>
+            </div>
+
+            {error && <div className="text-red-500 text-sm">{error}</div>}
+          </div>
+        )}
       </Card>
     </main>
   );

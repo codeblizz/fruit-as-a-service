@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { Geist, Geist_Mono } from "next/font/google";
 import NavBar from "@/packages/ui/src/molecules/navBar";
+import Footer from "@/packages/ui/src/organisms/footer";
 import { authOptions } from "@/packages/auth/src/authOptions";
 import StoreProvider from "@/packages/providers/src/store.provider";
 import { ThemeProvider } from "@/packages/providers/src/theme.provider";
@@ -39,6 +40,7 @@ export default async function RootLayout({
             <ThemeProvider>
               <NavBar />
               {children}
+              <Footer />
             </ThemeProvider>
           </SessionProvider>
         </StoreProvider>

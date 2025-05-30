@@ -2,7 +2,6 @@ import { PayPalGateway } from "./paypal";
 import { StripeGateway } from "./stripe";
 import { PaymentGateway } from "./common/gateway.interface";
 export async function createPaymentGateway(gateway: string): Promise<PaymentGateway> {
-  "use server";
   switch (gateway) {
     case "stripe":
       return StripeGateway();

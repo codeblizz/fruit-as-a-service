@@ -23,6 +23,7 @@ export interface PaymentIntent {
 }
 
 export interface PaymentIntentCreationParameter {
+  intent: "CAPTURE"
   amount: number;
   currency: string;
   description?: string;

@@ -5,6 +5,7 @@ export const PaymentSchema = z.object({
   expMonth: z.string().min(1).max(2),
   expYear: z.string().length(4),
   cvc: z.string().length(3),
+  type: z.string().min(1),
   name: z.string().min(1),
   email: z.string().email(),
   address: z.object({

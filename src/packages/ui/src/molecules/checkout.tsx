@@ -1,21 +1,23 @@
+"use client";
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import Input from "@/packages/ui/src/atoms/input";
 import Card from "@/packages/ui/src/molecules/card";
-import { PaymentGateway } from "@/apps/gateway/src";
 import Button from "@/packages/ui/src/atoms/button";
 import { useCreateStore } from "@/packages/store/src";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createPaymentGateway } from "@/apps/gateway/src";
 import { useSearchParams, useRouter } from "next/navigation";
 import PayPalButtons from "@/packages/ui/src/molecules/paypalButton";
 import PayPalScriptProvider from "@/packages/providers/src/paypal.provider";
 import { PaymentFormData, PaymentSchema } from "@/packages/helpers/src/validations/paypal.validate";
 
 // Payment method type
-type PaymentMethod = 'stripe' | 'paypal';
+type PaymentMethod = 'stripe' | 'paypal' | 'paystack' | 'flutterwave';
 
-export default function Checkout({ gateway }: { gateway: PaymentGateway }) {
+export default function Checkout() {
   const router = useRouter();
   const { data: session } = useSession();
   const searchParams = useSearchParams();
@@ -41,6 +43,7 @@ export default function Checkout({ gateway }: { gateway: PaymentGateway }) {
       setLoader(true);
       setError(undefined);
       // Create payment method
+      const gateway = await createPaymentGateway(data.type);
       const paymentMethod = await gateway.createPaymentMethod({
         type: "card",
         card: {
@@ -73,7 +76,7 @@ export default function Checkout({ gateway }: { gateway: PaymentGateway }) {
     }
   };
 
-  if (!session || !paymentIntentId) {
+  if (session || !paymentIntentId) {
     return (
       <main className="flex min-h-screen items-center justify-center">
         <Card name="" className="p-8">
@@ -103,7 +106,7 @@ export default function Checkout({ gateway }: { gateway: PaymentGateway }) {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-8">
+    <main className="flex flex-col items-center p-8">
       <Card name="" className="w-full max-w-2xl p-8">
         <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
@@ -232,7 +235,7 @@ export default function Checkout({ gateway }: { gateway: PaymentGateway }) {
           <Button
             name="pay"
             type="submit"
-            loader={loader}
+            isPending={loader}
             text="Complete Payment"
             className="w-full"
           />

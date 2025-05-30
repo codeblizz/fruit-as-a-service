@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { PayPalClient } from "@/apps/gateway/src/paypal/paypal.service";
+import { PayPalGateway } from "@/apps/gateway/src/paypal/paypal.service";
 
 // PayPal Buttons component
 const PayPalButtons: React.FC<{
@@ -21,16 +21,14 @@ const PayPalButtons: React.FC<{
         createOrder: async () => {
           try {
             // Call our API to create the order
-            const orderData = await PayPalClient.createOrder({
+            const orderData = await PayPalGateway().createPaymentIntent({
               intent: "CAPTURE",
-              purchase_units: [
-                {
-                  amount: {
-                    currency_code: "USD",
-                    value: amount,
-                  },
-                },
-              ],
+              currency: "USD",
+              amount: Number(amount),
+              description: "",
+              metadata: {
+                orderId: "",
+              },
             });
             return orderData.id;
           } catch (err) {
@@ -43,7 +41,10 @@ const PayPalButtons: React.FC<{
         onApprove: async (data: { orderID: string }) => {
           try {
             // Call our API to capture the order
-            await PayPalClient.captureOrder(data.orderID);
+            await PayPalGateway().confirmPaymentIntent({
+              paymentIntentId: data.orderID,
+              paymentMethodId: "",
+            });
             onSuccess(data.orderID);
           } catch (err) {
             onError(

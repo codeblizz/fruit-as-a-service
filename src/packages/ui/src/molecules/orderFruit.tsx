@@ -57,7 +57,7 @@ export default function OrderFruit({ createPaymentIntent }: any) {
         });
       });
       const query = utils.formatQuery({ payment_intent: paymentIntent.id })
-      router.push("/checkout" + query);
+      router.push(`/fruits/checkout/${paymentIntent.paymentMethodId}` + query);
     } catch (error) {
       console.error("Payment error:", error);
     }

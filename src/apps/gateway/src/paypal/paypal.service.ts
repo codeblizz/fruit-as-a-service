@@ -62,7 +62,7 @@ export function PayPalGateway(): PaymentGateway {
   return {
     async createPaymentIntent(params) {
       const body = {
-        intent: "CAPTURE",
+        intent: params.intent,
         purchase_units: [
           {
             amount: {

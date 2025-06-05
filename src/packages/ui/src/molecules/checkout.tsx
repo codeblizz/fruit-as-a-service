@@ -67,7 +67,7 @@ export default function Checkout() {
         });
 
         // Redirect to success page
-        window.location.href = "/order/success";
+        router.replace("/order/success");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Payment failed");
@@ -86,7 +86,7 @@ export default function Checkout() {
             type="button"
             text="Back to Order"
             className="w-full"
-            onClick={() => (window.location.href = "/order")}
+            onClick={() => router.push("/order")}
           />
         </Card>
       </main>

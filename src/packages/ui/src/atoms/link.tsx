@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link";
-import lib from "@/packages/helpers/src/libs";
 import { type LinkProps } from "next/link";
+import { LoaderCircle } from "lucide-react";
+import lib from "@/packages/helpers/src/libs";
 import React, { forwardRef, ReactNode } from "react";
 import type { MouseEventHandler, AnchorHTMLAttributes, StyleHTMLAttributes } from "react";
 
@@ -12,6 +13,7 @@ export interface NextLinkType extends AnchorHTMLAttributes<HTMLAnchorElement>, L
   replace?: boolean;
   shallow?: boolean;
   passHref?: boolean;
+  isPending?: boolean;
   className?: string;
   children: ReactNode;
   legacyBehavior?: boolean;
@@ -30,6 +32,7 @@ const NextLink = forwardRef<HTMLAnchorElement, NextLinkType>(
       replace,
       passHref,
       children,
+      isPending,
       className,
       legacyBehavior,
     },
@@ -47,7 +50,7 @@ const NextLink = forwardRef<HTMLAnchorElement, NextLinkType>(
         passHref={passHref}
         className={lib.cn(["cursor-pointer", className])}
       >
-        {children}
+        {isPending ? <LoaderCircle className="animate-spin size-6" /> : children}
       </Link>
     );
   }

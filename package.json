@@ -15,8 +15,12 @@
   "author": "@codeblizz",
   "license": "MIT",
   "dependencies": {
+    "@emotion/react": "^11.14.0",
     "@hookform/resolvers": "^5.0.1",
+    "@types/react-headroom": "^3.2.3",
     "lucide-react": "^0.511.0",
+    "react-awesome-reveal": "^4.3.1",
+    "react-headroom": "^3.2.1",
     "react-hook-form": "^7.56.1",
     "zod": "^3.24.3",
     "zustand": "^5.0.3"

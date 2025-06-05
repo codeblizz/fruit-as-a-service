@@ -39,9 +39,9 @@ function ThemeToggle(className: { className: string }) {
       }}
     >
       {isDark ? (
-        <SunIcon className="cursor-pointer size-5 rounded-full" />
+        <SunIcon className="cursor-pointer size-6 rounded-full" />
       ) : (
-        <MoonIcon className="cursor-pointer size-5 rounded-full" />
+        <MoonIcon className="cursor-pointer size-6 rounded-full" />
       )}
     </Span>
   );

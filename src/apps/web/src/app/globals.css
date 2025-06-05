@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @plugin "tailwind-gradient-mask-image";
-@source "../../../../packages/ui/**/*.{js,ts,tsx,jsx}";
-@source "../../../../packages/providers/**/*.{js,ts,tsx,jsx}";
+@source "../../../../packages/ui/src/**/*.{js,ts,tsx,jsx}";
+@source "../../../../packages/providers/src/**/*.{js,ts,tsx,jsx}";
 
 @layer base {
   :root {
@@ -13,11 +13,14 @@
 
     --primary: hsl(225, 6%, 13%);
     --primary-alpha: hsla(220, 7%, 8%, 0.5);
+
     --secondary: hsl(42, 93%, 59%);
     --secondary-alpha: hsla(38, 86%, 51%, 0.666);
+
     --tertiary: hsl(0, 88%, 57%);
     --tertiary-prime: hsl(31, 87%, 76%);
     --tertiary-alpha: hsla(105, 60%, 33%, 0.5);
+
     --quaternary: hsl(220, 3%, 82%);
     --quaternary-alpha: hsla(220, 3%, 82%, 0.5);
 
@@ -66,10 +69,20 @@
   --color-foreground: var(--foreground);
 
   --color-primary: var(--primary);
+  --color-primary-alpha: var(--primary-alpha);
+
   --color-secondary: var(--secondary);
+  --color-secondary-alpha: var(--secondary-alpha);
+
   --color-tertiary: var(--tertiary);
+  --color-tertiary-alpha: var(--tertiary-alpha);
+
   --color-quaternary: var(--quaternary);
+  --color-quaternary-alpha: var(--quaternary-alpha);
+
+  --color-tertiary: var(--tertiary);
   --color-tertiary-prime: var(--tertiary-prime);
+  --color-tertiary-alpha: var(--tertiary-alpha);
 
   --color-primary-text: var(--primary-text);
   --color-tertiary-text: var(--tertiary-text);
@@ -140,7 +153,7 @@
 @layer base {
   html,
   body {
-    background: var(--background);
+    background: var(--fig);
     color: var(--foreground);
     font-family: Arial, Helvetica, sans-serif;
   }

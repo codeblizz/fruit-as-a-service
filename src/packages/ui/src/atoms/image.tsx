@@ -2,11 +2,7 @@
 
 import React from "react";
 import Image, { ImageProps } from "next/image";
-
-type ImageType = {
-  className?: string;
-  onClick?: () => void;
-};
+import { ImageType } from "@/packages/types/src/ui/image.type";
 function NextImage({
   src,
   alt,

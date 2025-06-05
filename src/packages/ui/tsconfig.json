@@ -9,6 +9,6 @@
       }
     ]
   },
-  "include": ["**/*.ts", "**/*.tsx", "../../packages/types/index.d.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "../../../index.d.ts"],
   "exclude": ["node_modules"]
 }

@@ -23,18 +23,20 @@ function PriceCardDetails({
   return (
     <Section className="grid grid-cols-3 border p-1 border-secondary-text size-full text-[9px] flex-col">
       <Section className="col-span-1">
-        <Paragraph className="" text="Title:" />
-        <Paragraph className="" text="Price:" />
-        <Paragraph className="" text="Rating:" />
-        <Paragraph className="" text="Description:" />
-        <Paragraph className="" text="Seller Name:" />
+        <Paragraph className="">{"Title:"}</Paragraph>
+        <Paragraph className="">{"Price:"}</Paragraph>
+        <Paragraph className="">{"Rating:"}</Paragraph>
+        <Paragraph className="">{"Description:"}</Paragraph>
+        <Paragraph className="">{"Seller Name:"}</Paragraph>
       </Section>
       <Section className="col-span-2">
-        <Paragraph className="capitalize" text={title} />
-        <Paragraph className="" text={CONSTANTS.defaultCurrency + `${price}`} />
+        <Paragraph className="capitalize">{title}</Paragraph>
+        <Paragraph className="">
+          {CONSTANTS.defaultCurrency + `${price}`}
+        </Paragraph>
         <StarRating rating={rating} />
-        <Paragraph className="capitalize" text={description} />
-        <Paragraph className="capitalize" text={sellerName} />
+        <Paragraph className="capitalize">{description}</Paragraph>
+        <Paragraph className="capitalize">{sellerName}</Paragraph>
       </Section>
     </Section>
   );

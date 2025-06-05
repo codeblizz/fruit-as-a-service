@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { StarHalfIcon, StarIcon } from "lucide-react";
 import CONSTANTS from "@/packages/helpers/src/constants";

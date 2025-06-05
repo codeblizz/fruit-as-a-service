@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { signOut } from "next-auth/react";
 import lib from "@/packages/helpers/src/libs";
-import Link from "@/packages/ui/src/atoms/link";
+import NextLink from "@/packages/ui/src/atoms/link";
 import Span from "@/packages/ui/src/atoms/span";
 import { useSearchParams } from "next/navigation";
 import Card from "@/packages/ui/src/molecules/card";
@@ -49,13 +49,14 @@ function LeftSideDashboard({ className, dashboardMenu }: TLeftSideDashboard) {
               className="flex flex-col items-center justify-center w-full text-white"
             >
               <Paragraph
-                text={menu}
                 id={String(idx)}
                 onClick={() => onSetMenuName(menu)}
                 className={lib.cn([
                   "text-md text-center cursor-pointer bg-primary w-full rounded-xl h-8 px-3 inline-flex flex-col items-center justify-center",
                 ])}
-              />
+              >
+                {menu}
+              </Paragraph>
               <DashBoardSubMenuAccordion
                 menu={menu}
                 selected={selected}
@@ -65,13 +66,13 @@ function LeftSideDashboard({ className, dashboardMenu }: TLeftSideDashboard) {
             </Span>
           ))}
         </Section>
-        <Link
+        <NextLink
           href="/"
           onClick={onSignOut}
           className="bg-primary inline-flex items-center justify-center w-full h-8 px-3 text-white rounded-xl"
         >
-          <Paragraph text="Sign Out" className="text-center text-md" />
-        </Link>
+          <Paragraph className="text-center text-md">{"Sign Out"}</Paragraph>
+        </NextLink>
       </Card>
     </Section>
   );

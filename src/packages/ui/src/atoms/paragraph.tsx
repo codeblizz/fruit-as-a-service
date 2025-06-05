@@ -1,23 +1,23 @@
 "use client"
 
 import lib from "@/packages/helpers/src/libs";
-import type { HTMLAttributes } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
-interface Paragraph extends HTMLAttributes<HTMLParagraphElement> {
-  text: string;
-  className: string;
+interface IParagraph extends HTMLAttributes<HTMLParagraphElement> {
+  className?: string;
+  children: ReactNode;
   onClick?: () => void;
 };
 
 const Paragraph = ({
-  text,
   onClick,
+  children,
   className,
   ...rest
-}: Paragraph) => {
+}: IParagraph) => {
   return (
-    <p className={lib.cn(["", className])} onClick={onClick} {...rest}>
-      {text}
+    <p className={lib.cn(["text-base", className])} onClick={onClick} {...rest}>
+      {children}
     </p>
   );
 };

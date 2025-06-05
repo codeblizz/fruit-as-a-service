@@ -1,18 +1,44 @@
 "use client";
 
 import React from "react";
-import Section from "../atoms/section";
-import Paragraph from "../atoms/paragraph";
-import { Facebook, Instagram, Twitter, Linkedin, Youtube } from "lucide-react";
-function ConnectWithUs() {
-  return <Section className="flex flex-col text-white">
-    <Paragraph text="Connect With Us" className="text-2xl font-bold" />
-    <Section className="inline-flex items-center"><Facebook /><Paragraph text="Facebook" className="text-sm" /></Section>
-    <Section className="inline-flex items-center"><Instagram /><Paragraph text="Instagram" className="text-sm" /></Section>
-    <Section className="inline-flex items-center"><Twitter /><Paragraph text="Twitter" className="text-sm" /></Section>
-    <Section className="inline-flex items-center"><Linkedin /><Paragraph text="LinkedIn" className="text-sm" /></Section>
-    <Section className="inline-flex items-center"><Youtube /><Paragraph text="YouTube" className="text-sm" /></Section>
-  </Section>;
+import lib from "@/packages/helpers/src/libs";
+import Section from "@/packages/ui/src/atoms/section";
+import Paragraph from "@/packages/ui/src/atoms/paragraph";
+import {
+  XIcon,
+  YoutubeIcon,
+  FacebookIcon,
+  LinkedinIcon,
+  InstagramIcon,
+} from "@/packages/ui/src/atoms/icons/socials";
+function ConnectWithUs({ className }: { className: string }) {
+  return (
+    <Section className={lib.cn(["flex flex-col text-quaternary", className])}>
+      <Paragraph className="text-lg md:text-2xl font-bold">
+        {"Connect With Us"}
+      </Paragraph>
+      <Section className="inline-flex items-center gap-x-1">
+        <FacebookIcon />
+        <Paragraph className="text-xs md:text-sm">{"Facebook"}</Paragraph>
+      </Section>
+      <Section className="inline-flex items-center gap-x-1">
+        <InstagramIcon />
+        <Paragraph className="text-xs md:text-sm">{"Instagram"}</Paragraph>
+      </Section>
+      <Section className="inline-flex items-center gap-x-1">
+        <XIcon />
+        <Paragraph className="text-xs md:text-sm">{"Twitter"}</Paragraph>
+      </Section>
+      <Section className="inline-flex items-center gap-x-1">
+        <LinkedinIcon className="" />
+        <Paragraph className="text-xs md:text-sm">{"LinkedIn"}</Paragraph>
+      </Section>
+      <Section className="inline-flex items-center gap-x-1">
+        <YoutubeIcon />
+        <Paragraph className="text-xs md:text-sm">{"YouTube"}</Paragraph>
+      </Section>
+    </Section>
+  );
 }
 
 export default ConnectWithUs;

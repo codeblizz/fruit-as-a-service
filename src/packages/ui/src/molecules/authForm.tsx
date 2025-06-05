@@ -43,7 +43,7 @@ function AuthForm({ className }: { className: string }) {
   const onSubmit: SubmitHandler<Login> = (data) => {
     let response;
     try {
-      startTransition(async() => {
+      startTransition(async () => {
         response = await signIn("credentials", {
           ...data,
           callbackUrl: "/dashboard",
@@ -70,9 +70,10 @@ function AuthForm({ className }: { className: string }) {
     >
       <Paragraph
         id="auth-title"
-        text={isRegister ? "Sign Up" : "Sign In"}
         className="inline-flex text-xl font-extrabold capitalize items-center justify-center w-full text-center h-12"
-      />
+      >
+        {isRegister ? "Sign Up" : "Sign In"}
+      </Paragraph>
       <Form
         name="auth-form"
         onSubmit={handleSubmit(onSubmit)}
@@ -103,14 +104,12 @@ function AuthForm({ className }: { className: string }) {
         />
       </Form>
       <Fragment className="inline-flex items-center text-sm h-12">
-        <Paragraph
-          text={
-            isRegister
-              ? "Already have an account -- Sign in"
-              : "New User -- Sign up"
-          }
-          className="text-[13px]"
-        />
+        <Paragraph className="text-[13px]">
+          text=
+          {isRegister
+            ? "Already have an account -- Sign in"
+            : "New User -- Sign up"}
+        </Paragraph>
         <NextLink
           href={
             isRegister

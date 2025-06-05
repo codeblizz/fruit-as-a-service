@@ -6,54 +6,11 @@ import Card from '@/packages/ui/src/molecules/card';
 import Button from '@/packages/ui/src/atoms/button';
 import { useCreateStore } from '@/packages/store/src';
 import { createPaymentGateway } from '@/apps/gateway/src';
-
-const subscriptionPlans = [
-  {
-    id: 'basic',
-    name: 'Basic Box',
-    price: 2500, // $25/month
-    description: 'Perfect for individuals',
-    features: [
-      '5 seasonal fruits',
-      'Weekly delivery',
-      'Basic fruit guide',
-      'Email support'
-    ],
-    image: '🍎'
-  },
-  {
-    id: 'family',
-    name: 'Family Box',
-    price: 4500, // $45/month
-    description: 'Great for families',
-    features: [
-      '10 seasonal fruits',
-      'Weekly delivery',
-      'Premium fruit guide',
-      'Priority support',
-      'Customization options'
-    ],
-    image: '🍎🍐'
-  },
-  {
-    id: 'premium',
-    name: 'Premium Box',
-    price: 6500, // $65/month
-    description: 'Ultimate fruit experience',
-    features: [
-      '15 exotic fruits',
-      'Weekly delivery',
-      'Expert fruit guide',
-      '24/7 support',
-      'Full customization',
-      'Special seasonal items'
-    ],
-    image: '🍎🍐🥝'
-  }
-];
+import CONSTANT from '@/packages/helpers/src/constants';
 
 export default function SubscriptionPage() {
   const { data: session } = useSession();
+  const subscriptionPlans = CONSTANT.subscriptionPlans;
   const { loader, setLoader } = useCreateStore((state) => state);
 
   const handleSubscribe = async (planId: string) => {
@@ -62,8 +19,9 @@ export default function SubscriptionPage() {
       const plan = subscriptionPlans.find(p => p.id === planId);
       if (!plan) return;
 
-      const gateway = createPaymentGateway('stripe');
+      const gateway = await createPaymentGateway('stripe');
       const paymentIntent = await gateway.createPaymentIntent({
+        intent: "CAPTURE",
         amount: plan.price,
         currency: 'usd',
         description: `${plan.name} Subscription`,
@@ -91,6 +49,7 @@ export default function SubscriptionPage() {
           <Button
             name="login"
             type="button"
+            isPending={loader}
             text="Go to Login"
             className="w-full"
             onClick={() => window.location.href = '/'}
@@ -127,7 +86,7 @@ export default function SubscriptionPage() {
               <Button
                 name={`subscribe-${plan.id}`}
                 type="button"
-                loader={loader}
+                isPending={loader}
                 text="Subscribe Now"
                 className="w-full"
                 onClick={() => handleSubscribe(plan.id)}

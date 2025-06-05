@@ -1,16 +1,23 @@
 "use client";
 
 import React from "react";
+import lib from "@/packages/helpers/src/libs";
 import Section from "@/packages/ui/src/atoms/section";
-import Paragraph from "../atoms/paragraph";
 import CONSTANT from "@/packages/helpers/src/constants";
-function ContactUs() {
-  return <Section className="flex flex-col text-white">
-    <Paragraph text="Contact Us" className="text-2xl font-bold" />
-    <Paragraph text={`Address: ${CONSTANT.Address}`} className="text-sm" />
-    <Paragraph text={`Phone: ${CONSTANT.Phone}`} className="text-sm" />
-    <Paragraph text={`Email: ${CONSTANT.Email}`} className="text-sm" />
-  </Section>;
+import Paragraph from "@/packages/ui/src/atoms/paragraph";
+function ContactUs({ className }: { className: string }) {
+  return (
+    <Section className={lib.cn(["flex flex-col text-quaternary", className])}>
+      <Paragraph className="text-lg md:text-2xl font-bold">
+        {"Contact Us"}
+      </Paragraph>
+      <Paragraph className="text-xs md:text-sm">{`Address: ${CONSTANT.Address}`}</Paragraph>
+      <Paragraph className="text-xs md:text-sm">
+        {`Phone: ${CONSTANT.Phone}`}{" "}
+      </Paragraph>
+      <Paragraph className="text-xs md:text-sm">{`Email: ${CONSTANT.Email}`}</Paragraph>
+    </Section>
+  );
 }
 
 export default ContactUs;

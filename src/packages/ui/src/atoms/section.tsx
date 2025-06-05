@@ -1,3 +1,5 @@
+"use client";
+
 import React, { HTMLAttributes } from 'react'
 
 export interface TSection extends HTMLAttributes<HTMLDivElement> {}

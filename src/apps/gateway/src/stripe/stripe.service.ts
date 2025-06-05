@@ -9,7 +9,7 @@ import {
   ListPaymentMethodReturnType,
   PaymentMethodCreationParameter,
   PaymentIntentCreationParameter,
-} from "../common/gateway.interface";
+} from "@/packages/types/src/gateway.type";
 
 export function StripeGateway(): PaymentGateway {
   if (process.env === undefined)

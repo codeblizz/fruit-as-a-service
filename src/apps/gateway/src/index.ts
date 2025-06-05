@@ -1,19 +1,25 @@
+import CryptoGateway from "./crypto";
 import { PayPalGateway } from "./paypal";
 import { StripeGateway } from "./stripe";
-import { PaymentGateway } from "./common/gateway.interface";
-export async function createPaymentGateway(gateway: string): Promise<PaymentGateway> {
-  switch (gateway) {
+import { PaystackGateway } from "./paystack";
+import { FlutterwaveGateway } from "./flutterwave";
+import { PaymentGateway } from "@/packages/types/src/gateway.type";
+export async function createPaymentGateway(gatewayType: string): Promise<PaymentGateway> {
+  switch (gatewayType) {
     case "stripe":
       return StripeGateway();
     case "paypal":
       return PayPalGateway();
+    case "paystack": 
+      return PaystackGateway();
+    // case "flutterwave": 
+    //   return FlutterwaveGateway();
+    // case "crypto": 
+    //   return CryptoGateway();
     default:
-      throw new Error(`Payment gateway ${gateway} not supported`);
+      throw new Error(`Payment gateway ${gatewayType} not supported`);
   }
 }
-
-// Export common interfaces
-export * from "./common/gateway.interface";
 
 // Export Gateway services
 export { PayPalGateway } from "./paypal";

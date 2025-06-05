@@ -1,6 +1,5 @@
 import axios from "axios";
-import { PaymentGateway } from "@/apps/gateway/src/common/gateway.interface";
-
+import { PaymentGateway } from "@/packages/types/src/gateway.type";
 
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID!;
 const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET!;

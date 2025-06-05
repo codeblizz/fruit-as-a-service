@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PaymentGateway } from "@/apps/gateway/src/common/gateway.interface";
+import { PaymentGateway } from "@/packages/types/src/gateway.type";
 
 if (!process.env.PAYSTACK_SECRET_KEY) {
   throw new Error("PAYSTACK_SECRET_KEY is not defined");

@@ -1,5 +1,3 @@
 
 
-export default function FlutterwaveGateway() {
-    
-}
+export function FlutterwaveGateway() {}

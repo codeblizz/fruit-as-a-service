@@ -1,6 +1,6 @@
 export interface PaymentMethod {
   id: string;
-  type: string;
+  type: "stripe" | "paypal" | "paystack" | "flutterwave";
   card?: {
     brand: string;
     last4: string;
@@ -23,7 +23,7 @@ export interface PaymentIntent {
 }
 
 export interface PaymentIntentCreationParameter {
-  intent: "CAPTURE"
+  intent: "CAPTURE";
   amount: number;
   currency: string;
   description?: string;

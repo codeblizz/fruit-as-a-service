@@ -1,12 +1,12 @@
 import { StaticImageData } from 'next/image';
 import React, { ReactElement, SVGProps, StyleHTMLAttributes } from 'react';
 
-export type HeroLabel = {
+export type THeroLabel = {
   label: string;
   labelClass: string;
 };
 
-export type HeroType = {
+export type THeroType = {
   href: string;
   width: number;
   height: number;
@@ -18,15 +18,10 @@ export type HeroType = {
   buttonText: string;
   imageSrc: string | StaticImageData ;
   onClickButton?: () => void;
-  texts: HeroLabel[] | string;
+  texts: THeroLabel[] | string;
 };
 
-export type imgType = {
-  imageId?: number;
-  imageSrc?: string;
-};
-
-export type SocialImageSrcType = {
+export type TSocialImageSrcType = {
   url: string;
   name: string;
   label: string;
@@ -35,24 +30,25 @@ export type SocialImageSrcType = {
   icon: (props: SVGProps<SVGSVGElement>) => ReactElement;
 };
 
-export type ImageDefaultType = string | Blob | MediaSource;
+export type TImageDefaultType = string | Blob | MediaSource;
 
-export type fileType = {
+export type IFileType = {
   name: string;
   size: number;
   type: string;
 };
 
-export type compressedImgOptionsType = {
+export type TCompressedImgOptionsType = {
   maxSizeMB: number;
   maxWidthOrHeight: number;
   useWebWorker: number;
 };
 
-export type ImageElement = React.ImgHTMLAttributes<HTMLImageElement>;
+export type TImageElement = React.ImgHTMLAttributes<HTMLImageElement>;
 
-export type ImageType = {
+export type TImageType = {
   alt: string;
+  id?: number;
   className?: string;
   onClick?: () => void;
   width?: number | `${number}`;

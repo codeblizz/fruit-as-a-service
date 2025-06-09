@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image, { ImageProps } from "next/image";
-import { ImageType } from "@/packages/types/src/ui/image.type";
+import { TImageType } from "@/packages/types/src/ui/image.type";
 function NextImage({
   src,
   alt,
@@ -11,7 +11,7 @@ function NextImage({
   onClick,
   className,
   ...rest
-}: ImageType & ImageProps) {
+}: TImageType & ImageProps) {
 
   return (
     <Image

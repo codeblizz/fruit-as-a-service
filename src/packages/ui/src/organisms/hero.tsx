@@ -9,7 +9,7 @@ import Section from "@/packages/ui/src/atoms/section";
 import Fragment from "@/packages/ui/src/atoms/fragment";
 import Paragraph from "@/packages/ui/src/atoms/paragraph";
 import Skeleton from "@/packages/ui/src/molecules/skeleton";
-import { HeroLabel, HeroType } from "@/packages/types/src/ui/image.type";
+import { THeroLabel, THeroType } from "@/packages/types/src/ui/image.type";
 
 export default function Hero({
   href,
@@ -24,7 +24,7 @@ export default function Hero({
   isLoading,
   buttonText,
   onClickButton,
-}: HeroType) {
+}: THeroType) {
   return (
     <Section className={lib.cn(["relative", className])}>
       {isLoading ? (
@@ -49,7 +49,7 @@ export default function Hero({
         <Section className="absolute w-full flex flex-col justify-center items-center -space-y-1 md:space-y-2 mdx:space-y-6 top-[10%] sm:top-[16%] md:top-[22%] lg:top-[24%] xl:top-[28%]">
           <Fragment className="w-full text-quaternary flex flex-col justify-center space-y-1 md:space-y-4 mdx:space-y-6 items-center">
             {Array.isArray(texts) ? (
-              texts.map((text: HeroLabel, idx: number) => (
+              texts.map((text: THeroLabel, idx: number) => (
                 <Paragraph
                   key={idx}
                   className={lib.cn(
@@ -70,17 +70,18 @@ export default function Hero({
                 <NextLink
                   href={href}
                   className={
-                    "flex flex-col border justify-center items-center text-center whitespace-nowrap text-sm rounded-2xl px-3 md:px-5 h-5 md:text-md md:h-8"
+                    "flex flex-col border text-quaternary justify-center bg-cranberry items-center text-center whitespace-nowrap text-sm rounded-2xl px-3 md:px-5 h-5 md:text-md md:h-8"
                   }
                 >
                   {buttonText}
                 </NextLink>
               ) : (
                 <Button
-                  text={buttonText}
                   onClick={onClickButton}
                   className="flex flex-col border justify-center items-center text-center whitespace-nowrap text-sm rounded-2xl px-3 md:px-5 h-5 md:text-md md:h-8"
-                />
+                >
+                  {buttonText}
+                </Button>
               ))}
           </Fragment>
         </Section>

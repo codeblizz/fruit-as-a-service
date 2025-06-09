@@ -8,13 +8,14 @@ function SellerPage() {
   return (
     <Fragment className="min-h-screen flex flex-col w-full justify-between">
       <Hero
+        hasLink
         width={700}
         height={395}
-        href="/product"
         isLoading={false}
+        href="/fruits/order"
         buttonText="Start Selling"
         onClickButton={undefined}
-        imageSrc={"/images/fruit-platter-002.webp"}
+        imageSrc={"/images/fruit-platter-004.webp"}
         imgClass="w-full h-full bg-cover bg-no-repeat"
         className="w-full h-96 flex flex-col justify-center items-center mt-16"
         texts={[

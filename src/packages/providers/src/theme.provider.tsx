@@ -5,10 +5,10 @@ import Span from "@/packages/ui/src/atoms/span";
 import { useCreateStore } from "@/packages/store/src/index";
 import SunIcon from "@/packages/ui/src/atoms/icons/sunIcon";
 import MoonIcon from "@/packages/ui/src/atoms/icons/moonIcon";
-import { TBaseElement } from "@/packages/types/src/ui/base.type";
+import { IBaseElement } from "@/packages/types/src/base.type";
 import { useTheme, ThemeProvider as NextThemeProvider } from "next-themes";
 
-function ThemeProvider({ children }: Pick<TBaseElement, "children">) {
+function ThemeProvider({ children }: Pick<IBaseElement, "children">) {
   return (
     <NextThemeProvider
       attribute="class"

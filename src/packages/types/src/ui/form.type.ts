@@ -1,3 +1,3 @@
 import { FormHTMLAttributes } from "react";
 
-export interface TForm extends FormHTMLAttributes<HTMLFormElement> {}
+export interface IForm extends FormHTMLAttributes<HTMLFormElement> {}

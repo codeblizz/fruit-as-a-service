@@ -1,6 +1,6 @@
 import { DefaultJWT } from "next-auth/jwt";
 import { DefaultSession } from "next-auth";
-import { PayloadType } from '@/types/auth.type';
+import { TPayloadType } from '@/types/auth.type';
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -10,7 +10,7 @@ declare module "next-auth" {
     provider?: string;
     error: string | undefined;
     locale: string | undefined;
-    payload: PayloadType["payload"];
+    payload: TPayloadType["payload"];
     accessToken: string | undefined;
     refreshToken: string | undefined;
   }
@@ -26,6 +26,6 @@ declare module "next-auth/jwt" {
     id_token?: string;
     accessToken: string;
     refreshToken: string;
-    payload: PayloadType["payload"];
+    payload: TPayloadType["payload"];
   }
 }

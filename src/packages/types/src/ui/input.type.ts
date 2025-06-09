@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from "react";
 
-export interface TInput extends InputHTMLAttributes<HTMLInputElement> {
+export interface IInput extends InputHTMLAttributes<HTMLInputElement> {
   placeholderClassName: string;
 }

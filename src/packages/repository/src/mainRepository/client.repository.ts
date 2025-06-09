@@ -1,12 +1,12 @@
 import createAxiosClients from "@/packages/helpers/src/libs/axiosClients";
-import { ClientMainRepositoryInterface } from "@/packages/types/src/repository.type";
+import { IClientMainRepository } from "@/packages/types/src/repository.type";
 
 // Create and Destructure Axios Clients Instance
 const { nextAxiosClient } = createAxiosClients();
 
 const ClientMainRepository = <T>(
   resource: string
-): ClientMainRepositoryInterface => ({
+): IClientMainRepository => ({
   // Define the methods for the client repository
   get: async (payload: Record<string, unknown>): Promise<T[]> => {
     const response = await nextAxiosClient.get(`/api/${resource}`, {

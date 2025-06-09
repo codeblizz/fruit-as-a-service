@@ -1,7 +1,7 @@
 import React from "react";
-import { ErrorProps } from "@/packages/types/src/utils.type";
+import { IErrorProps } from "@/packages/types/src/utils.type";
 
-function AppGlobalError({ error, reset }: ErrorProps) {
+function AppGlobalError({ error, reset }: IErrorProps) {
   return (
     <html lang="en">
       <body>

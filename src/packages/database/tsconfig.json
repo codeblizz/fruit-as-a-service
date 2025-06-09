@@ -1,0 +1,9 @@
+{
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+      "lib": ["esnext"],
+    },
+    "include": ["**/*.ts", "../types/index.d.ts"],
+    "exclude": ["node_modules"]
+  }
+  

@@ -1,29 +1,30 @@
-export interface CustomError extends Exclude<Error, "stack"> {
+export interface ICustomError extends Omit<Error, "stack"> {
   code?: number | undefined;
 }
 
-export interface ErrorProps {
+export interface IErrorProps {
   error: Error,
   reset: () => void;
 }
 
-export interface AppReturnType {
+export interface IAppReturnType {
   status: boolean;
   message: string;
   statusCode?: number;
 }
 
-export type ToastState = {
-  toast: Toast;
-  clearToast: () => void;
-  updateToast: (isOpen: boolean, message: string, className: string) => void;
-}
-
-export type Toast = {
+export interface IToast {
   isOpen: boolean;
   message: string;
   className: string;
 };
+
+export type TToastState = {
+  toast: IToast;
+  clearToast: () => void;
+  updateToast: (isOpen: boolean, message: string, className: string) => void;
+}
+
 
 export const URLResource = {
   SSO: "sso",
@@ -34,4 +35,4 @@ export const URLResource = {
   F_SERVICE: "fService"
 } as const;
 
-export type UnionFromURLResource = (typeof URLResource)[keyof typeof URLResource];
+export type TUnionFromURLResource = (typeof URLResource)[keyof typeof URLResource];

@@ -1,8 +1,8 @@
-import { AppReturnType } from "@/packages/types/src/utils.type";
-import { ClientMainRepositoryInterface } from "@/packages/types/src/repository.type";
+import { IAppReturnType } from "@/packages/types/src/utils.type";
+import { IClientMainRepository } from "@/packages/types/src/repository.type";
 
 // App Project User type
-export type AppUser = {
+export type TAppUser = {
   email: string;
   fullName: string;
   username: string;
@@ -20,59 +20,59 @@ export type AppUser = {
 };
 
 // Token NextAuth type
-export type AuthToken = {
+export type TAuthToken = {
   error: string | null;
   accessToken: string | null;
   refreshToken: string | null;
 };
 
 // Omitting `type` property for user details
-export type UserDetail = Omit<AppUser, "type">;
+export type TUserDetail = Omit<TAppUser, "type">;
 
 // Represents the zustand state of a single user
-export type UserState = {
-  user: UserDetail;
+export type TUserState = {
+  user: TUserDetail;
   clearUser: () => void;
-  updateUser: (user: UserDetail) => void;
+  updateUser: (user: TUserDetail) => void;
 };
 // Sign In `type` property for user details
-export type SignInType = Pick<AppUser, "email"> & { password: string };
+export type TSignIn = Pick<TAppUser, "email"> & { password: string };
 
 // Sign Up `type` property for user details
-export type SignUpType = Pick<
-  AppUser,
+export type TSignUp = Pick<
+  TAppUser,
   "email" | "fullName" | "agreement"
 > & { password: string };
 
-export type PayloadType = {
-  payload: AuthUserReturnType
+export type TPayloadType = {
+  payload: IAuthUserReturnType
   id: "error" | "success";
 }
 
 // Return `type` NextAuth User property and App Standard API
-export interface AuthUserReturnType extends AppReturnType {
+export interface IAuthUserReturnType extends IAppReturnType {
   statusText?: string;
-  user: AppUser;
+  user: TAppUser;
 }
 
 // OAUTH Provider type
-export type OauthProviderType = {
+export type TOauthProviderType = {
   clientId: string;
   clientSecret: string;
 };
 
-export type SsoDetailsType = {
-  payload: AppUser;
+export type TSsoDetailsType = {
+  payload: TAppUser;
   accessToken: string;
 };
 
-export type RefreshToken = { token: string };
+export type TRefreshToken = { token: string };
 
 export type TagType<T> = {
   [key: string]: (args: T) => Promise<T>;
 };
 
-export type CredentialType = {
+export type TCredentialType = {
   email: string;
   password: string;
   csrfToken: string;
@@ -81,25 +81,25 @@ export type CredentialType = {
   redirect: string | boolean;
 };
 
-export type AuthField = {
+export type TAuthField = {
   type: string;
   className: string;
   placeholder: string;
   name: "email" | "password" | "acceptTerms";
 };
 
-export type Login = {
+export type TLogin = {
   email: string;
   password: string;
 };
 
-export type Register = {
+export type TRegister = {
   acceptTerms: false;
-} & Login;
+} & TLogin;
 
 // Authentication Domain Interface
-export interface AuthInterface extends ClientMainRepositoryInterface {
-  signIn: (credentials: SignInType) => Promise<AuthUserReturnType>;
-  signUp: (payload: SignUpType) => Promise<AuthUserReturnType>;
+export interface IAuthInterface extends IClientMainRepository {
+  signIn: (credentials: TSignIn) => Promise<IAuthUserReturnType>;
+  signUp: (payload: TSignUp) => Promise<IAuthUserReturnType>;
   getRefreshToken: (payload: any) => Promise<unknown>;
 }

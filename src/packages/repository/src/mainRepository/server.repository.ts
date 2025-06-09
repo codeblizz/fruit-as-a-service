@@ -1,14 +1,14 @@
 "server-only";
 
 import createAxiosClients from "@/packages/helpers/src/libs/axiosClients";
-import { ServerMainRepositoryInterface } from "@/packages/types/src/repository.type";
+import { IServerMainRepository } from "@/packages/types/src/repository.type";
 
 // Create and Destructure Axios Server Instance
 const { nodeAxiosClient } = createAxiosClients();
 
 export const ServerMainRepository = <T>(
   resource: string
-): ServerMainRepositoryInterface => ({
+): IServerMainRepository => ({
   // Define the methods for the server repository
   get: (id: string, token: string): Promise<T[]> => {
     return nodeAxiosClient.get(`${resource}/${id}`, {

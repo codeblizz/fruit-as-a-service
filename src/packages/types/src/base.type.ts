@@ -13,14 +13,14 @@ import {
   UseFormHandleSubmit,
 } from "react-hook-form";
 
-export interface TBaseElement {
+export interface IBaseElement {
   id?: string;
   name: string;
   className: string;
   children?: ReactNode;
 }
 
-export interface TBaseHookForm<T extends FieldValues> {
+export interface IBaseHookForm<T extends FieldValues> {
   name: Path<T>;
   isDirty: boolean;
   watch: UseFormWatch<T>;

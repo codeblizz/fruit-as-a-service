@@ -1,7 +1,7 @@
 import { StateCreator } from "zustand";
-import { ToastState } from "@/packages/types/src/utils.type";
+import { TToastState } from "@/packages/types/src/utils.type";
 
-export const ToastSlice: StateCreator<ToastState> = (set) => ({
+export const ToastSlice: StateCreator<TToastState> = (set) => ({
   toast: { message: "", isOpen: false, className: "" },
   updateToast: (isOpen: boolean, message: string, className: string) => {
     set((state) => ({

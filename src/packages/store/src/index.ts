@@ -4,8 +4,8 @@ import { persist, devtools, createJSONStorage } from "zustand/middleware";
 // import env from "@/packages/config/env";
 import utils from "@/packages/helpers/src/utils";
 import { UserSlice } from "@/packages/store/src/userSlice";
-import { UserState } from "@/packages/types/src/auth.type";
-import { ToastState } from "@/packages/types/src/utils.type";
+import { TUserState } from "@/packages/types/src/auth.type";
+import { TToastState } from "@/packages/types/src/utils.type";
 import { ToastSlice } from "@/packages/store/src/toastSlice";
 import { LoaderSlice } from "@/packages/store/src/loaderSlice";
 import { LoaderState } from "@/packages/store/src/loaderSlice";
@@ -16,8 +16,8 @@ import { ModalSlice, ModalState } from "@/packages/store/src/modalSlice";
 import { useZustandContext } from "@/packages/providers/src/store.provider";
 
 // Define the combined Store type
-export type Store = UserState &
-  ToastState &
+export type Store = TUserState &
+  TToastState &
   ThemeState &
   ErrorState &
   LoaderState &

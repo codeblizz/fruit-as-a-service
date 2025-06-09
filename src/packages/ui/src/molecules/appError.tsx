@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ErrorProps } from "@/packages/types/src/utils.type";
+import { IErrorProps } from "@/packages/types/src/utils.type";
 
-export default function Error({ error, reset }: ErrorProps) {
+export default function Error({ error, reset }: IErrorProps) {
   
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-blend-color bg-[url('/images/fruit-platter-004.webp')]">

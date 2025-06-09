@@ -3,13 +3,13 @@
 import React from "react";
 import lib from "@/packages/helpers/src/libs";
 import { FieldValues, useController } from "react-hook-form";
-import { TBaseHookForm } from "@/packages/types/src/ui/base.type";
+import { IBaseHookForm } from "@/packages/types/src/ui/base.type";
 
 function ErrorField<T extends FieldValues>({
   name,
   control,
   className,
-}: Pick<TBaseHookForm<T>, "control" | "name"> & { className: string }) {
+}: Pick<IBaseHookForm<T>, "control" | "name"> & { className: string }) {
 
   const { fieldState } = useController({ control, name });
 

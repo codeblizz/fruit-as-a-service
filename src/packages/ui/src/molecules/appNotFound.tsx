@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-interface ErrorProps {
+interface IErrorProps {
   error: Error,
   reset: () => void;
 }
 
-export default function AppNotFound({ error, reset }: ErrorProps) {
+export default function AppNotFound({ error, reset }: IErrorProps) {
   const router = useRouter();
   console.log("error", error)
   

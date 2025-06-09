@@ -1,7 +1,7 @@
-import { ButtonHTMLAttributes, MouseEvent } from "react";
+import { ButtonHTMLAttributes, MouseEvent, ReactNode } from "react";
 
-export interface TButton extends ButtonHTMLAttributes<HTMLButtonElement> {
-  text: string;
+export interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode;
   isPending?: boolean;
 }
 

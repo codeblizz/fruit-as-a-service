@@ -1,11 +1,11 @@
 import { StateCreator } from "zustand";
 
 import CONSTANT from "@/packages/helpers/src/constants";
-import { UserDetail, UserState } from "@/packages/types/src/auth.type";
+import { TUserDetail, TUserState } from "@/packages/types/src/auth.type";
 
-export const UserSlice: StateCreator<UserState> = (set) => ({
+export const UserSlice: StateCreator<TUserState> = (set) => ({
   user: { ...CONSTANT.defaultUser },
-  updateUser: (user: UserDetail) =>
+  updateUser: (user: TUserDetail) =>
     set((state) => ({
       ...state,
       user: {

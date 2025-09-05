@@ -31,7 +31,7 @@
     --blueberry: hsl(249, 100%, 50%);
     --cherry: hsl(350, 98%, 49%);
     --coconut-shell: hsl(19, 42%, 42%);
-    --cantaloupe: hsl(7, 95%, 85%)4;
+    --cantaloupe: hsl(7, 95%, 85%);
     --cranberry: hsl(338, 100%, 31%);
     --dragon-fruit: hsl(343, 51%, 59%);
     --fig: hsl(338, 30%, 25%);
@@ -60,7 +60,36 @@
     --primary-text: hsl(0, 0%, 100%);
     --secondary-text: hsl(210, 6%, 63%);
     --tertiary-text: hsl(217, 89%, 76%);
+  }
 
+  html,
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    line-height: 1.6;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  }
+
+  * {
+    border-color: var(--quaternary);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
   }
 }
 
@@ -127,8 +156,11 @@
   --color-error: var(--raspberry);
   --color-error-100: var(--pomegranate);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface-primary: var(--background);
+  --color-surface-secondary: var(--quaternary);
+
+  --font-sans: var(--font-inter);
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -150,15 +182,6 @@
   } */
 }
 
-@layer base {
-  html,
-  body {
-    background: var(--fig);
-    color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
-  }
-}
-
 @layer utilities {
   input {
     [type="checkbox"]:checked {
@@ -173,7 +196,6 @@
       outline: 2px solid transparent;
       outline-offset: 0;
     }
-
     [type="checkbox"],
     [type="checkbox"]:checked,
     [type="checkbox"]:checked:hover,
@@ -192,5 +214,171 @@
 @layer components {
   main {
     @apply w-full min-w-72;
+  }
+
+  /* Professional Button Styles */
+  .btn-primary {
+    @apply bg-gradient-to-r from-apple-green to-kiwi text-primary-text font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-apple-green focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-gradient-to-r from-orange to-mango text-primary-text font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2;
+  }
+
+  .btn-outline {
+    @apply border-2 border-apple-green text-apple-green bg-transparent font-semibold px-6 py-3 rounded-lg hover:bg-apple-green hover:text-primary-text transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-apple-green focus:ring-offset-2;
+  }
+
+  /* Professional Card Styles */
+  .card {
+    @apply bg-surface-primary rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-quaternary backdrop-blur-sm;
+  }
+
+  .card-elevated {
+    @apply card transform hover:scale-[1.02] hover:-translate-y-1;
+  }
+
+  /* Professional Form Styles */
+  .form-input {
+    @apply w-full px-4 py-3 border border-quaternary rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-all duration-200 bg-surface-secondary text-foreground placeholder-secondary-text;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-foreground mb-2;
+  }
+
+  /* Professional Navigation Styles */
+  .nav-link {
+    @apply relative text-foreground hover:text-secondary transition-colors duration-200 font-medium after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-secondary after:transition-all after:duration-300 hover:after:w-full;
+  }
+
+  .nav-link.active {
+    @apply text-secondary after:w-full;
+  }
+
+  /* Professional Section Styles */
+  .section-padding {
+    @apply py-16 md:py-24 px-4;
+  }
+
+  .container {
+    @apply max-w-7xl mx-auto;
+  }
+
+  /* Professional Typography */
+  .heading-1 {
+    @apply text-4xl md:text-6xl font-bold text-foreground leading-tight;
+  }
+
+  .heading-2 {
+    @apply text-3xl md:text-5xl font-bold text-foreground leading-tight;
+  }
+
+  .heading-3 {
+    @apply text-2xl md:text-4xl font-semibold text-foreground leading-tight;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-apple-green via-orange to-strawberry bg-clip-text text-transparent;
+  }
+
+  /* Professional Loading States */
+  .skeleton {
+    @apply animate-pulse bg-quaternary rounded;
+  }
+
+  .spinner {
+    @apply animate-spin rounded-full border-2 border-quaternary border-t-secondary;
+  }
+
+  /* Professional Hover Effects */
+  .hover-lift {
+    @apply transition-all duration-300 hover:transform hover:scale-105 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-secondary/25;
+  }
+
+  /* Professional Fruit Theme Gradients */
+  .gradient-fresh {
+    @apply bg-gradient-to-br from-apple-green/10 via-kiwi/10 to-lime/10;
+  }
+
+  .gradient-citrus {
+    @apply bg-gradient-to-br from-orange/10 via-lemon/10 to-mango/10;
+  }
+
+  .gradient-berry {
+    @apply bg-gradient-to-br from-strawberry/10 via-raspberry/10 to-cherry/10;
+  }
+
+  /* Professional Animation Classes */
+  .fade-in {
+    @apply animate-[fadeIn_0.6s_ease-out];
+  }
+
+  .slide-up {
+    @apply animate-[slideUp_0.6s_ease-out];
+  }
+
+  .slide-up-delayed {
+    @apply animate-[slideUp_0.6s_ease-out_0.3s_both];
+  }
+
+  .bounce-gentle {
+    @apply animate-[bounceGentle_2s_ease-in-out_infinite];
+  }
+
+  /* Professional Accessibility */
+  .sr-only {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  }
+
+  /* Professional Dark Mode Support */
+  @media (prefers-color-scheme: dark) {
+    .card {
+      @apply bg-primary/90 border-primary/30;
+    }
+    
+    .form-input {
+      @apply bg-primary/50 border-primary/30;
+    }
+  }
+}
+
+/* Professional Keyframe Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Professional Responsive Design */
+@media (max-width: 768px) {
+  .heading-1 {
+    @apply text-3xl;
+  }
+  
+  .heading-2 {
+    @apply text-2xl;
+  }
+  
+  .section-padding {
+    @apply py-12 px-4;
   }
 }

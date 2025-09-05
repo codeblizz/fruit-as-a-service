@@ -3,6 +3,7 @@
 import React from "react";
 import Image, { ImageProps } from "next/image";
 import { TImageType } from "@/packages/types/src/ui/image.type";
+
 function NextImage({
   src,
   alt,

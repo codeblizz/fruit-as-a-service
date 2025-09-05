@@ -9,6 +9,7 @@ const envClientSchema = z.object({
 });
 
 const envServerSchema = z.object({
+  ALLOWED_ORIGINS: z.string(),
   AUTH_SECRET: z.string().min(1, { message: "value is empty" }),
   PAYPAL_API_BASE: z.string().min(1, { message: "value is empty" }),
   STRIPE_SECRET_KEY: z.string().min(1, { message: "value is empty"}),

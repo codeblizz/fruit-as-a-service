@@ -1,6 +1,11 @@
 import { StateCreator } from "zustand";
 import { IAppReturnType } from "@/packages/types/src/utils.type";
 
+export interface IAppReturnType {
+  status: boolean;
+  message: string;
+  statusCode?: number;
+}
 export type ErrorType = IAppReturnType | Record<string, string>;
 
 export type ErrorState = {

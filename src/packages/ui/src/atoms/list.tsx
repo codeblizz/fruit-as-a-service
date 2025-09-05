@@ -24,16 +24,22 @@ function List({
     <ul className={className}>
       {list.map((li: string, index: number) => {
         const active = selected === li;
-        const selectedSubMenuClass = active ? "bg-mango text-tertiary-text text-extrabold" : "";
+        const selectedSubMenuClass = active
+          ? "bg-pear text-extrabold"
+          : "";
         return isLink ? (
-          <NextLink key={index} href={`${path + utils.formatQuery({ selected: li, active: true })}`}>
+          <NextLink
+            key={index}
+            href={`${path + utils.formatQuery({ selected: li, active: true })}`}
+            className={lib.cn(active ? "text-primary" : "")}
+          >
             <li className={lib.cn([liClass, selectedSubMenuClass])}>{li}</li>
           </NextLink>
         ) : (
           <li className={lib.cn([liClass, selectedSubMenuClass])} key={index}>
             {li}
           </li>
-        )
+        );
       })}
     </ul>
   );

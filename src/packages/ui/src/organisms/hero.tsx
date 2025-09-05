@@ -1,91 +1,44 @@
 "use client";
 
 import React from "react";
-import lib from "@/packages/helpers/src/libs";
 import NextLink from "@/packages/ui/src/atoms/link";
-import Button from "@/packages/ui/src/atoms/button";
-import NextImage from "@/packages/ui/src/atoms/image";
 import Section from "@/packages/ui/src/atoms/section";
-import Fragment from "@/packages/ui/src/atoms/fragment";
-import Paragraph from "@/packages/ui/src/atoms/paragraph";
-import Skeleton from "@/packages/ui/src/molecules/skeleton";
-import { THeroLabel, THeroType } from "@/packages/types/src/ui/image.type";
 
-export default function Hero({
-  href,
-  texts,
-  width,
-  height,
-  hasLink,
-  imgClass,
-  imageSrc,
-  className,
-  textClass,
-  isLoading,
-  buttonText,
-  onClickButton,
-}: THeroType) {
+export default function HeroSection() {
   return (
-    <Section className={lib.cn(["relative", className])}>
-      {isLoading ? (
-        <Skeleton
-          rows={8}
-          columns={1}
-          showCircle={false}
-          className={lib.cn(["", imgClass])}
-        />
-      ) : (
-        <NextImage
-          alt="hero"
-          width={width}
-          height={height}
-          priority={true}
-          className={imgClass}
-          style={{ objectFit: "cover" }}
-          src={imageSrc ? imageSrc : "/images/noImage.webp"}
-        />
-      )}
-      {isLoading ? null : (
-        <Section className="absolute w-full flex flex-col justify-center items-center -space-y-1 md:space-y-2 mdx:space-y-6 top-[10%] sm:top-[16%] md:top-[22%] lg:top-[24%] xl:top-[28%]">
-          <Fragment className="w-full text-quaternary flex flex-col justify-center space-y-1 md:space-y-4 mdx:space-y-6 items-center">
-            {Array.isArray(texts) ? (
-              texts.map((text: THeroLabel, idx: number) => (
-                <Paragraph
-                  key={idx}
-                  className={lib.cn(
-                    "w-full overflow-x-hidden text-ellipsis text-nowrap mdx:left-[22%] text-center",
-                    text.labelClass
-                  )}
-                >
-                  {text.label}
-                </Paragraph>
-              ))
-            ) : (
-              <Paragraph className={textClass}>{texts}</Paragraph>
-            )}
-          </Fragment>
-          <Fragment className="inline-flex justify-center items-center w-full py-4">
-            {buttonText &&
-              (hasLink ? (
-                <NextLink
-                  href={href}
-                  className={
-                    "flex flex-col border text-quaternary justify-center bg-cranberry items-center text-center whitespace-nowrap text-sm rounded-2xl px-3 md:px-5 h-5 md:text-md md:h-8"
-                  }
-                >
-                  {buttonText}
-                </NextLink>
-              ) : (
-                <Button
-                  onClick={onClickButton}
-                  className="flex flex-col border justify-center items-center text-center whitespace-nowrap text-sm rounded-2xl px-3 md:px-5 h-5 md:text-md md:h-8"
-                >
-                  {buttonText}
-                </Button>
-              ))}
-          </Fragment>
-        </Section>
-      )}
+    <Section className="relative w-full min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-quaternary to-background">
+      <div className="absolute inset-0 bg-[url('/images/fruit-platter-002.webp')] bg-cover bg-center bg-no-repeat opacity-20"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-apple-green/20 via-transparent to-orange/20"></div>
+      <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
+        <div className="fade-in">
+          <h1 className="text-5xl md:text-7xl font-bold text-gradient mb-6">
+            Fresh Fruits
+          </h1>
+          <h2 className="text-3xl md:text-5xl font-semibold text-primary mb-8">
+            Delivered Daily
+          </h2>
+          <p className="text-xl md:text-2xl text-secondary-text mb-12 max-w-3xl mx-auto leading-relaxed">
+            Experience the finest selection of farm-fresh fruits delivered straight to your door. 
+            Premium quality, unbeatable freshness, exceptional service.
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center slide-up-delayed">
+          <NextLink
+            href="/fruits/buyer"
+            className="group relative px-8 py-4 bg-gradient-to-r from-apple-green to-kiwi text-primary-text font-semibold text-lg rounded-full shadow-2xl hover:shadow-apple-green/50 transition-all duration-300 transform hover:scale-105 min-w-[200px]"
+          >
+            <span className="relative z-10">🛒 Start Shopping</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-kiwi to-apple-green opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
+          </NextLink>
+          <NextLink
+            href="/fruits/seller"
+            className="group relative px-8 py-4 bg-gradient-to-r from-orange to-mango text-primary-text font-semibold text-lg rounded-full shadow-2xl hover:shadow-orange/50 transition-all duration-300 transform hover:scale-105 min-w-[200px]"
+          >
+            <span className="relative z-10">🌱 Sell Your Fruits</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-mango to-orange opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
+          </NextLink>
+        </div>
+      </div>
     </Section>
   );
 }

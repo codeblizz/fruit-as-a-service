@@ -26,5 +26,8 @@
     "@types/react-dom": "^19.1.2",
     "react": "^19.1.0",
     "tailwindcss": "^4.1.4"
+  },
+  "dependencies": {
+    "framer-motion": "^11.13.4"
   }
 }

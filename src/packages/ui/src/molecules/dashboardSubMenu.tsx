@@ -26,7 +26,11 @@ function DashBoardSubMenuAccordion({
         path={`/dashboard/fruits/${menuName?.toLowerCase() ?? ""}`}
         className={lib.cn([
           "w-[80%] overflow-y-auto transition-all duration-700 ease-in-out px-1 border-2 border-plum",
-          menuName === null && isActive && selected && values.type.includes(selected) || menuName === menu
+          (menuName === null &&
+            isActive &&
+            selected &&
+            values.type.includes(selected)) ||
+          menuName === menu
             ? "flex flex-col -gap-y-2"
             : "hidden",
         ])}

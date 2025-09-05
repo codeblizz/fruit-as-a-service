@@ -1,22 +1,23 @@
 "use client";
 
 import React from "react";
-import { StarHalfIcon, StarIcon } from "lucide-react";
+import lib from "@/packages/helpers/src/libs";
+import { LucideStar, LucideStarHalf } from "lucide-react";
 import CONSTANTS from "@/packages/helpers/src/constants";
 
-function StarRating({ rating = 0 }: { rating: number }) {
+function StarRating({ className, rating = 0 }: { className: string; rating: number }) {
   return CONSTANTS.ratingArray.map((r, idx) =>
     r <= rating ? (
-      <StarHalfIcon
+      <LucideStar
         key={idx}
-        className="inline-flex flex-row size-2"
         style={{ fill: "text-secondary" }}
+        className={lib.cn("inline-flex flex-row", className)}
       />
     ) : (
-      <StarIcon
+      <LucideStarHalf
         key={idx}
-        className="inline-flex flex-row size-2"
         style={{ fill: "text-secondary" }}
+        className={lib.cn("inline-flex flex-row", className)}
       />
     )
   );

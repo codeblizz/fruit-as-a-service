@@ -1,9 +1,9 @@
 import AuthRepository from "@/packages/repository/src/auth.repository";
 import RepositoryFactory from "@/packages/repository/src/factory.repository";
 import {
-  IAuthInterface,
   TSignIn,
   TSignUp,
+  IAuthInterface,
 } from "@/packages/types/src/auth.type";
 
 export function AuthService<T>(urlResource: string) {

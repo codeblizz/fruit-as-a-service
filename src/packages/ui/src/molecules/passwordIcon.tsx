@@ -21,7 +21,7 @@ function PasswordIcon({
       className={className}
       aria-label={showPassword ? "Hide password" : "Show password"}
     >
-      {showPassword ? <EyeClosedIcon /> : <EyeIcon />}
+      {showPassword ? <EyeClosedIcon className="size-4" /> : <EyeIcon className="size-4" />}
     </button>
   ) : null;
 }

@@ -12,10 +12,11 @@ function ThemeProvider({ children }: Pick<IBaseElement, "children">) {
   return (
     <NextThemeProvider
       attribute="class"
-      enableSystem={true}
+      enableSystem={false}
       defaultTheme="light"
+      disableTransitionOnChange
+      suppressHydrationWarning
     >
-      {" "}
       {children}
     </NextThemeProvider>
   );

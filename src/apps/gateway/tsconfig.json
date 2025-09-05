@@ -1,8 +1,15 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "lib": ["esnext"]
+    "lib": ["esnext"],
+    "outDir": "./dist",
+    "target": "esnext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "esModuleInterop": true,
+    "strict": true,
+    "sourceMap": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../../packages/types/index.d.ts", "../../packages/config/env.ts"],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts", "../../packages/types/index.d.ts", "../../packages/config/env.ts"],
+  "exclude": ["node_modules", "dist"]
 }

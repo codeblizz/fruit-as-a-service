@@ -2,11 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-interface IErrorProps {
-  error: Error,
-  reset: () => void;
-}
+import { IErrorProps } from "@/packages/types/src/utils.type";
 
 export default function AppNotFound({ error, reset }: IErrorProps) {
   const router = useRouter();

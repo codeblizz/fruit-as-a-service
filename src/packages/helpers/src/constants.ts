@@ -1,7 +1,7 @@
-import { Register } from "@/packages/types/src/auth.type";
-import { AuthField } from "@/packages/types/src/auth.type";
+import { TRegister } from "@/packages/types/src/auth.type";
+import { TAuthField } from "@/packages/types/src/auth.type";
 import { Store, Truck, Hotel, Factory } from "lucide-react";
-import { FruitItem } from "@/packages/types/src/fruits.type";
+import { IFruitItem } from "@/packages/types/src/fruits.type";
 
 const CONSTANT = {
   defaultCurrency: "N",
@@ -119,7 +119,7 @@ const CONSTANT = {
     },
   },
   defaultLogin: { email: "", password: "" },
-  getDefaultSignUp: function (): Register {
+  getDefaultSignUp: function (): TRegister {
     return { ...this.defaultLogin, acceptTerms: false };
   },
   InputAuthObjects: [
@@ -141,7 +141,7 @@ const CONSTANT = {
       className: "w-3 h-3",
       placeholder: "Accept Terms & Conditions",
     },
-  ] as AuthField[],
+  ] as TAuthField[],
   fruitMenu: {
     categories: {
       Berries: {
@@ -181,7 +181,173 @@ const CONSTANT = {
     { id: "2", name: "Banana", price: 80, image: "🍌", unit: "dozen" },
     { id: "3", name: "Orange", price: 120, image: "🍊", unit: "kg" },
     { id: "4", name: "Mango", price: 150, image: "🥭", unit: "kg" },
-  ] as FruitItem[],
+  ] as IFruitItem[],
+  HTTP_STATUS: {
+    OK: 200,
+    CREATED: 201,
+    BAD_REQUEST: 400,
+    UNAUTHORIZED: 401,
+    FORBIDDEN: 403,
+    NOT_FOUND: 404,
+    INTERNAL_SERVER_ERROR: 500
+  },
+  PAYMENT_STATUSES: {
+    PENDING: 'pending',
+    PROCESSING: 'processing',
+    COMPLETED: 'completed',
+    FAILED: 'failed',
+    REFUNDED: 'refunded',
+    CANCELLED: 'cancelled'
+  },
+  CURRENCIES: {
+    USD: 'USD',
+    EUR: 'EUR',
+    GBP: 'GBP',
+    NGN: 'NGN',
+    ZAR: 'ZAR'
+  },
+  priceCardDetails: [
+    {
+      "price": 450,
+      "rating": 3,
+      "title": "2kg Strawberry-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 280,
+      "rating": 4,
+      "title": "1kg Banana-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 750,
+      "rating": 2,
+      "title": "5kg Raspberry-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 550,
+      "rating": 4,
+      "title": "3kg Orange-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 4,
+      "title": "2kg Orange-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 2,
+      "title": "2kg Orange-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 3,
+      "title": "2kg Orange-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 4,
+      "title": "2kg Orange-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 3,
+      "title": "2kg Orange-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 2,
+      "title": "2kg Orange-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 2,
+      "title": "2kg Orange-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 4,
+      "title": "2kg Orange-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 3,
+      "title": "2kg Orange-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 850,
+      "rating": 3,
+      "title": "2kg Fig-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 550,
+      "rating": 2,
+      "title": "2kg Lemon-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 2,
+      "title": "2kg Lime-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 2,
+      "title": "2kg Pineapple-US",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 2,
+      "title": "2kg Plum-SA",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 2,
+      "title": "2kg Mango-MEX",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    },
+    {
+      "price": 450,
+      "rating": 2,
+      "title": "2kg Apple-IND",
+      "sellerName": "Simpson Global Inc.",
+      "description": "A distribution company that specializes in fresh produce and quality fruits."
+    }
+  ]  
 };
 
 export default CONSTANT;

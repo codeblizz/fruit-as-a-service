@@ -1,17 +1,19 @@
 import { JWT } from "next-auth/jwt";
 import { AxiosResponse } from "axios";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 import CONSTANT from "@/packages/helpers/src/constants";
 import { ErrorType } from "@/packages/store/src/errorSlice";
 import { AuthService } from "@/packages/services/src/auth/auth.service";
-import { AuthToken, RefreshToken } from "@/packages/types/src/auth.type";
-import { URLResource, UnionFromURLResource, CustomError } from "@/packages/types/src/utils.type";
+import { TAuthToken, TRefreshToken } from "@/packages/types/src/auth.type";
+import { URLResource, TUnionFromURLResource, ICustomError } from "@/packages/types/src/utils.type";
 
 const utils = {
-  isUnionFromURLResource: function(value: string): value is UnionFromURLResource {
-    return Object.values(URLResource).includes(value as UnionFromURLResource)
+  isTUnionFromURLResource: function(value: string): value is TUnionFromURLResource {
+    return Object.values(URLResource).includes(value as TUnionFromURLResource)
   },
   customError: function (message: string, code?: number) {
-    const error = new Error(message) as CustomError;
+    const error = new Error(message) as ICustomError;
     error.code = code ?? undefined;
     return error;
   },
@@ -74,9 +76,9 @@ const utils = {
     };
   },
   refreshAccessToken: async function (
-    refreshToken: RefreshToken
-  ): Promise<AuthToken> {
-    let token = {} as AuthToken;
+    refreshToken: TRefreshToken
+  ): Promise<TAuthToken> {
+    let token = {} as TAuthToken;
 
     try {
       const { data } = await AuthService("refreshToken").getRefreshToken(
@@ -96,6 +98,32 @@ const utils = {
       };
     }
   },
+  asyncHandler: async function<T>(
+    fn: () => Promise<T>
+  ): Promise<[T | null, Error | null]> {
+    try {
+      const result = await fn();
+      return [result, null];
+    } catch (error) {
+      return [null, error instanceof Error ? error : new Error(String(error))];
+    }
+  },
+  formatCurrency: function(amount: number, currency: string = 'USD'): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency
+    }).format(amount);
+  },
+  generateId: function(prefix: string = ''): string {
+    return `${prefix}${Date.now().toString(36)}${Math.random().toString(36).substring(2, 9)}`;
+  }
 };
+
+/**
+ * Merges Tailwind CSS classes with proper conflict resolution
+ */
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export default utils;

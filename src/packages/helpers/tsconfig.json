@@ -4,12 +4,12 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "preserve",
     "target": "esnext",
-    "module": "esnext",
+    "module": "nodenext",
     "declaration": true,
     "sourceMap": true,
     "esModuleInterop": true,
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "plugins": [
       {
         "name": "next"

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @plugin "tailwind-gradient-mask-image";
-@source "../../../../packages/ui/**/*.{js,ts,tsx,jsx}";
-@source "../../../../packages/providers/**/*.{js,ts,tsx,jsx}";
+@source "../../../../packages/ui/src/**/*.{js,ts,tsx,jsx}";
+@source "../../../../packages/providers/src/**/*.{js,ts,tsx,jsx}";
 
 @layer base {
   :root {
@@ -28,7 +28,7 @@
     --blueberry: hsl(249, 100%, 50%);
     --cherry: hsl(350, 98%, 49%);
     --coconut-shell: hsl(19, 42%, 42%);
-    --cantaloupe: hsl(7, 95%, 85%)4;
+    --cantaloupe: hsl(7, 95%, 85%);
     --cranberry: hsl(338, 100%, 31%);
     --dragon-fruit: hsl(343, 51%, 59%);
     --fig: hsl(338, 30%, 25%);
@@ -58,6 +58,37 @@
     --secondary-text: hsl(210, 6%, 63%);
     --tertiary-text: hsl(217, 89%, 76%);
 
+    --test: #0abc137a;
+  }
+
+  html,
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    line-height: 1.6;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  }
+
+  * {
+    border-color: var(--quaternary);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
   }
 }
 
@@ -153,10 +184,10 @@
 @layer utilities {
   input {
     [type="checkbox"]:checked {
-      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23262626' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%0abc137a' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
     }
     [type="radio"]:checked {
-      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23262626' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%0abc137a' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
     }
     [type="checkbox"],
     [type="radio"] {

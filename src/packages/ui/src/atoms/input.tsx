@@ -1,9 +1,10 @@
 "use client";
 
+import Section from "./section";
 import React, { useState } from "react";
 import lib from "@/packages/helpers/src/libs";
 import Label from "@/packages/ui/src/atoms/label";
-import { TInput } from "@/packages/types/src/ui/input.type";
+import { IInput } from "@/packages/types/src/ui/input.type";
 import ErrorField from "@/packages/ui/src/molecules/errorField";
 import PasswordIcon from "@/packages/ui/src/molecules/passwordIcon";
 import { TButtonMouseEvent } from "@/packages/types/src/ui/button.type";
@@ -20,7 +21,7 @@ function Input<T extends FieldValues>({
   className,
   placeholder,
   placeholderClassName,
-}: TInput & UseControllerProps<T>) {
+}: IInput & UseControllerProps<T>) {
   const isPassword = type === "password";
   const isCheckbox = type === "checkbox";
   const [focus, setFocus] = useState(false);
@@ -34,9 +35,9 @@ function Input<T extends FieldValues>({
       className={lib.cn([
         !isCheckbox
           ? focus
-            ? "inline-block absolute -translate-y-[60%] text-center bg-quaternary transition ease-in-out duration-100 text-secondary text-xs px-1 z-10 origin-0"
+            ? "inline-block absolute -translate-y-[60%] text-center transition-all ease-in-out duration-900 text-xs z-50 origin-0"
             : "hidden"
-          : "text-slate-700 cursor-pointer text-xs overflow-hidden text-ellipsis text-nowrap",
+          : "cursor-pointer text-primary-text text-xs overflow-hidden text-ellipsis text-nowrap",
         placeholderClassName,
       ])}
     >
@@ -51,9 +52,9 @@ function Input<T extends FieldValues>({
   }
 
   return (
-    <section className={lib.cn(["flex flex-col relative", "w-full"])}>
+    <Section className={lib.cn(["relative flex flex-col w-full"])}>
       {isCheckbox ? (
-        <section className="inline-flex items-center justify-start gap-x-1 md:gap-x-2 w-full flex-nowrap">
+        <Section className="inline-flex items-center justify-start gap-x-1 w-full flex-nowrap">
           <input
             {...field}
             id={id}
@@ -69,10 +70,10 @@ function Input<T extends FieldValues>({
             ])}
           />
           <InputLabelField />
-          <ErrorField<T> className="relative" control={control} name={name} />
-        </section>
+          <ErrorField<T> className="absolute" control={control} name={name} />
+        </Section>
       ) : (
-        <>
+        <div className="">
           <InputLabelField />
           <input
             {...field}
@@ -88,20 +89,20 @@ function Input<T extends FieldValues>({
             placeholder={focus ? "" : placeholder}
             type={isPassword && showPassword ? "text" : type}
             className={lib.cn([
-              "rounded-lg px-2 h-12 text-sm ring ring-slate-400 placeholder:italic placeholder:text-xs focus:outline-none",
+              "rounded-lg w-full px-2 h-12 text-sm ring ring-slate-400 placeholder:italic placeholder:text-xs focus:outline-none",
               className,
             ])}
           />
-          <ErrorField<T> className="" control={control} name={name} />
+          <ErrorField<T> className="absolute left-0 bottom-0" control={control} name={name} />
           <PasswordIcon
             isPassword={isPassword}
             onClick={onShowPassword}
             showPassword={showPassword}
-            className="absolute top-4 right-3 cursor-pointer"
+            className="absolute top-4 cursor-pointer right-2 text-primary-text"
           />
-        </>
+        </div>
       )}
-    </section>
+    </Section>
   );
 }
 

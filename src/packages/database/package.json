@@ -1,16 +1,28 @@
 {
   "name": "@codeblizz/database",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Database utilities for Fruit-as-a-Service",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
+    "db:seed": "ts-node prisma/seed.ts",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.10.0"
+  },
   "devDependencies": {
-    "@prisma/client": "^6.7.0",
-    "prisma": "^6.7.0"
+    "@types/node": "^20.11.0",
+    "prisma": "^5.10.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.3"
   }
 }

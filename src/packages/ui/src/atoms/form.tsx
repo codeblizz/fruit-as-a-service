@@ -2,9 +2,9 @@
 
 import React from "react";
 import lib from "@/packages/helpers/src/libs";
-import { TForm } from "@/packages/types/src/ui/form.type";
+import { IForm } from "@/packages/types/src/ui/form.type";
 
-function Form({ name, children, className, onSubmit }: TForm) {
+function Form({ name, children, className, onSubmit }: IForm) {
   return (
     <form
       name={name}

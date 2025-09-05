@@ -3,9 +3,9 @@
 import React from "react";
 import lib from "@/packages/helpers/src/libs";
 import Fragment from "@/packages/ui/src/atoms/fragment";
-import { TBaseElement } from "@/packages/types/src/ui/base.type";
+import { IBaseElement } from "@/packages/types/src/base.type";
 
-export interface CardType extends TBaseElement {}
+export interface CardType extends IBaseElement {}
 
 function Card({ className, children, id, name }: CardType) {
   return (

@@ -18,7 +18,7 @@ public final class SecurityConstants {
 
     public static final Set<String> PRIVILEGED_ROLE = Set.of(UserRole.SUPER.name(), UserRole.ADMIN.name());
 
-    public static final Set<String> ALLOWED_ADMIN_STAFF_ROLES = Set.of(
+    public static final Set<String> ALLOWED_STAFF_ROLES = Set.of(
             UserRole.MANAGER.name(),
             UserRole.STAFF.name());
 }

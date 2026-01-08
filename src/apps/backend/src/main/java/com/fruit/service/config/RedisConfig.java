@@ -1,48 +1,82 @@
-// package com.fruit.service.config;
+package com.fruit.service.config;
 
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.data.redis.connection.RedisConnectionFactory;
-// import org.springframework.data.redis.core.RedisTemplate;
-// import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-// import org.springframework.data.redis.serializer.StringRedisSerializer;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.hibernate7.Hibernate7Module;
 
-// import com.fasterxml.jackson.databind.ObjectMapper;
-// import com.fasterxml.jackson.datatype.hibernate5.jakarta.Hibernate5JakartaModule;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-// @Configuration
-// public class RedisConfig {
+import java.time.Duration;
 
-    // @Bean
-    // public ObjectMapper objectMapper() {
-    //     ObjectMapper mapper = new ObjectMapper();
+@Configuration
+@EnableCaching
+public class RedisConfig {
 
-    //     Hibernate5JakartaModule hibernateModule = new Hibernate5JakartaModule();
-    //     hibernateModule.enable(Hibernate5JakartaModule.Feature.FORCE_LAZY_LOADING);
+    @Bean
+    public ObjectMapper redisObjectMapper() {
+        PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+                .allowIfBaseType(Object.class)
+                .build();
 
-    //     mapper.registerModule(hibernateModule);
-    //     mapper.findAndRegisterModules();
+        ObjectMapper mapper = new ObjectMapper();
+        
+        mapper.registerModule(new JavaTimeModule());
+        
+        mapper.registerModule(new Hibernate7Module());
 
-    //     return mapper;
-    // }
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        
+        mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        
+        return mapper;
+    }
 
-    // @Bean
-    // public RedisTemplate<Object, Object> redisTemplate(
-    //         RedisConnectionFactory connectionFactory,
-    //         ObjectMapper objectMapper) {
+    @Bean
+    public GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer(ObjectMapper redisObjectMapper) {
+        return new GenericJackson2JsonRedisSerializer(redisObjectMapper);
+    }
 
-    //     RedisTemplate<Object, Object> template = new RedisTemplate<>();
-    //     template.setConnectionFactory(connectionFactory);
+    @Bean
+    public RedisTemplate<Object, Object> redisTemplate(
+            RedisConnectionFactory connectionFactory,
+            GenericJackson2JsonRedisSerializer jsonSerializer) {
 
-    //     GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+        RedisTemplate<Object, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
 
-    //     template.setKeySerializer(new StringRedisSerializer());
-    //     template.setValueSerializer(jsonSerializer);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
 
-    //     template.setHashKeySerializer(new StringRedisSerializer());
-    //     template.setHashValueSerializer(jsonSerializer);
+        template.setValueSerializer(jsonSerializer);
+        template.setHashValueSerializer(jsonSerializer);
 
-    //     template.afterPropertiesSet();
-    //     return template;
-    // }
-// }
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public RedisCacheConfiguration cacheConfiguration(GenericJackson2JsonRedisSerializer jsonSerializer) {
+        return RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofHours(1))
+                .disableCachingNullValues()
+                .serializeKeysWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer));
+    }
+}

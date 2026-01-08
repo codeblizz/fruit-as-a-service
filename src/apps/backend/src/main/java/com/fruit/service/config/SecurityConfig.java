@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.security.web.access.AccessDeniedHandler;
 
 import com.fruit.service.security.JwtAuthenticationFilter;
 import com.fruit.service.security.RateLimitingFilter;
@@ -53,26 +52,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(rateLimitingFilter, JwtAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health", "/auth/**", "/swagger-ui.html", "/swagger-ui/**",
                                 "/v3/api-docs/**")
                         .permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint((request, response, authException) -> {
                             resolver.resolveException(request, response, null, authException);
-                        }).accessDeniedHandler(accessDeniedHandler()));
+                        }).accessDeniedHandler((request, response, accessDeniedException) -> {
+                            resolver.resolveException(request, response, null, accessDeniedException);
+                        }));
         return http.build();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return (request, response, accessDeniedException) -> {
-            resolver.resolveException(request, response, null, accessDeniedException);
-        };
     }
 }

@@ -6,13 +6,16 @@ import { IErrorProps } from "@/packages/types/src/utils.type";
 
 export default function AppNotFound({ error, reset }: IErrorProps) {
   const router = useRouter();
-  console.log("error", error)
-  
+
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-blend-color bg-[url('/images/fruit-platter-004.webp')]">
-      <section className="flex flex-col justify-center md:min-w-fit md:min-h-fit items-center text-center text-wrap gap-y-4 font-san border-indigo-400 p-10 rounded-2xl bg-white/30 text-black">
-        <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold">Not Found</p>
-        <p className="font-bold text-xl sm:text-2xl md:text-3xl">Could not find requested resource</p>
+      <section className="flex flex-col justify-center md:min-w-fit md:min-h-fit items-center text-center text-wrap gap-y-4 font-san border-indigo-400 p-10 rounded-2xl bg-ghost-apple/30 text-black">
+        <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold">
+          Not Found
+        </p>
+        <p className="font-bold text-xl sm:text-2xl md:text-3xl">
+          Could not find requested resource
+        </p>
         <p className="text-semibold text-lg sm:text-xl md:text-2xl">
           Need help further down the links below
         </p>

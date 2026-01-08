@@ -1,6 +1,7 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "lib": ["esnext"],
   },
   "include": ["**/*.ts", "../../packages/types/next-auth.d.ts"],

@@ -3,12 +3,19 @@
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "preserve",
+    "ignoreDeprecations": "6.0",
     "plugins": [
       {
         "name": "next"
       }
     ]
   },
-  "include": ["**/*.ts", "**/*.tsx", "../../packages/types/next-auth.d.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../packages/**/*.ts",
+    "../packages/**/*.tsx",
+    "../types/next-auth.d.ts"
+  ],
   "exclude": ["node_modules"]
 }

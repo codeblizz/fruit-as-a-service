@@ -1,41 +1,67 @@
-"use client";
+// import { z } from "zod";
 
-import { z } from "zod";
-import utils from "@/packages/helpers/src/utils";
+// const envClientSchema = z.object({
+//   NEXT_PUBLIC_PAYPAL_CLIENT_ID: z
+//   .string()
+//   .min(1, { message: "Value is empty" }),
+//   NEXT_PUBLIC_ENV: z
+//   .enum(["development", "staging", "production"])
+//   .default("development"),
+// });
 
-const envClientSchema = z.object({
-  PUBLIC_NEXT_URL: z.string().min(1, { message: "value is empty" }).url(),
-  PUBLIC_NEXT_ENV: z.enum(["development", "staging"]).default("development"),
-});
+// const envServerSchema = z.object({
+//   NEXTAUTH_URL: z.string().min(1, { message: "Value is empty" }).url(),
+//   GOOGLE_CLIENT_ID: z.string().min(1, { message: "Value is empty" }),
+//   GOOGLE_CLIENT_SECRET: z.string().min(1, { message: "Value is empty" }),
+//   FACEBOOK_CLIENT_ID: z.string().min(1, { message: "Value is empty" }),
+//   FACEBOOK_CLIENT_SECRET: z.string().min(1, { message: "Value is empty" }),
+//   NEXTAUTH_SECRET: z.string().min(1, { message: "Value is empty" }),
+//   BACKEND_BASE_URL: z.string().min(1, { message: "Value is empty" }).url(),
+// });
 
-const envServerSchema = z.object({
-  ALLOWED_ORIGINS: z.string(),
-  AUTH_SECRET: z.string().min(1, { message: "value is empty" }),
-  PAYPAL_API_BASE: z.string().min(1, { message: "value is empty" }),
-  STRIPE_SECRET_KEY: z.string().min(1, { message: "value is empty"}),
-  GOOGLE_CLIENT_ID: z.string().min(1, { message: "value is empty" }),
-  PAYPAL_CLIENT_ID: z.string().min(1, { message: "value is empty" }),
-  DATABASE_URL: z.string().min(1, { message: "value is empty" }).url(),
-  NODE_BASE_URL: z.string().min(1, { message: "value is empty" }).url(),
-  PAYSTACK_SECRET_KEY: z.string().min(1, { message: "value is empty" }),
-  PAYPAL_CLIENT_SECRET: z.string().min(1, { message: "value is empty" }),
-  GOOGLE_CLIENT_SECRET: z.string().min(1, { message: "value is empty" }),
-  STRIPE_WEBHOOK_SECRET: z.string().min(1, { message: "value is empty" }),
-  PAYSTACK_BASE_URL: z.string().min(1, { message: "value is empty" }).url(),
-});
+// export function validateEnv<T extends z.ZodSchema>(
+//   schema: T,
+//   env: Record<string, string | undefined> = typeof process !== "undefined"
+//     ? process.env
+//     : {}
+// ): z.infer<T> {
+//   try {
+//     return schema.parse(env);
+//   } catch (error) {
+//     if (error instanceof z.ZodError) {
+//       const missingVars = error.issues.map(
+//         (err) => `${err.path.join(".")}: ${err.message}`
+//       );
 
-export type EnvType = z.infer<typeof envServerSchema & typeof envClientSchema>;
-export function validateEnv() {
-  if(typeof window === "undefined") { 
-    const parsedEnv = envServerSchema.safeParse(process.env);
-    if (parsedEnv.error) {
-      console.error("Environment variable validation failed:", parsedEnv.error.issues);
-      throw utils.customError("Invalid environment variable");
-    }
-    return parsedEnv.data;
-  } else return envClientSchema.safeParse(process.env).data;
-} 
+//       console.error("\n--- Environment Validation Failed ---");
+//       console.error(missingVars.join("\n"));
+//       console.error("-------------------------------------\n");
 
-const env = validateEnv();
+//       throw new Error(
+//         `Environment validation failed. Please check your .env files and ensure all required variables are set.`
+//       );
+//     }
+//     throw error;
+//   }
+// }
 
-export default env;
+// // Module-level cache to prevent re-parsing
+// let clientEnvCache: z.infer<typeof envClientSchema> | undefined;
+// let serverEnvCache: z.infer<typeof envServerSchema> | undefined;
+
+// export function getClientEnv() {
+//   if (!clientEnvCache) {
+//     clientEnvCache = validateEnv(envClientSchema);
+//   }
+//   return clientEnvCache;
+// }
+
+// export function getServerEnv() {
+//   if (!serverEnvCache) {
+//     serverEnvCache = validateEnv(envServerSchema);
+//   }
+//   return serverEnvCache;
+// }
+
+// export type WebEnv = z.infer<typeof envClientSchema>;
+// export type ServerEnv = z.infer<typeof envServerSchema>;

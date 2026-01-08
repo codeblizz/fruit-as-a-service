@@ -1,27 +1,25 @@
-import createAxiosClients from "@/packages/helpers/src/libs/axiosClients";
+import { AxiosRequestConfig } from "axios";
+import axiosServer from "@/packages/helpers/src/libs/axiosServer";
 import { IClientMainRepository } from "@/packages/types/src/repository.type";
 
-// Create and Destructure Axios Clients Instance
-const { nextAxiosClient } = createAxiosClients();
-
-const ClientMainRepository = <T>(
-  resource: string
-): IClientMainRepository => ({
-  // Define the methods for the client repository
+const ClientMainRepository = <T>(resource: string): IClientMainRepository => ({
   get: async (payload: Record<string, unknown>): Promise<T[]> => {
-    const response = await nextAxiosClient.get(`/api/${resource}`, {
+    const proxyClient = await axiosServer();
+    const response = await proxyClient.get(`/api/${resource}`, {
       params: { ...payload },
     });
     return response.data;
   },
 
-  post: async (payload: unknown): Promise<T[]> => {
-    const response = await nextAxiosClient.post(`/api/${resource}`, payload);
+  post: async (payload: AxiosRequestConfig<unknown>): Promise<T[]> => {
+    const proxyClient = await axiosServer();
+    const response = await proxyClient.post(`/api/${resource}`, payload);
     return response.data;
   },
 
-  update: async (id: number | string, payload: unknown): Promise<T> => {
-    const response = await nextAxiosClient.put(
+  update: async (id: number | string, payload: AxiosRequestConfig<unknown>): Promise<T> => {
+    const proxyClient = await axiosServer();
+    const response = await proxyClient.put(
       `/api/${resource}/${id}`,
       payload
     );
@@ -29,7 +27,8 @@ const ClientMainRepository = <T>(
   },
 
   delete: async (id?: number | string): Promise<T> => {
-    const response = await nextAxiosClient.delete(`/api/${resource}/${id}`);
+    const proxyClient = await axiosServer();
+    const response = await proxyClient.delete(`/api/${resource}/${id}`);
     return response.data;
   },
 });

@@ -1,11 +1,15 @@
 {
-    "cSpell.words": [
-        "csvg",
-        "faas",
-        "flutterwave",
-        "Infographics",
-        "Paystack",
-        "turbopack"
-    ],
-    "typescript.tsdk": "node_modules/typescript/lib"
+  "cSpell.words": [
+    "csvg",
+    "faas",
+    "flutterwave",
+    "Infographics",
+    "Paystack",
+    "turbopack"
+  ],
+  "css.lint.unknownAtRules": "ignore",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "java.debug.settings.onBuildFailureProceed": true,
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.updateBuildConfiguration": "automatic"
 }

@@ -1,0 +1,63 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "FruitServiceApplication",
+      "request": "launch",
+      "mainClass": "com.fruit.service.FruitServiceApplication",
+      "projectName": "service"
+    },
+    // -----------------------------------------------------------------
+    // 1. DEDICATED CLIENT CONFIGS (Required for Full Stack attachment)
+    // -----------------------------------------------------------------
+    {
+      "name": "Next.js: Debug Admin Client (Port 3001)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3001",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack://_N_E/*": "${webRoot}/*"
+      }
+    },
+    // -----------------------------------------------------------------
+    // 3. ADMIN APP DEBUG (Server + Client Compound)
+    // -----------------------------------------------------------------
+    {
+      "name": "Next.js: Admin Full Stack Debug (Server)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/src/apps/admin",
+      "runtimeExecutable": "/Users/codeblizz/.nvm/versions/node/v22.21.1/bin/node",
+      "runtimeArgs": [
+        "--inspect",
+        "./node_modules/next/dist/bin/next",
+        "dev",
+        "-p",
+        "3001"
+      ],
+      "serverReadyAction": {
+        "action": "startDebugging",
+        "pattern": "ready on",
+        "name": "Next.js: Debug Admin Client (Port 3001)"
+      },
+      "env": {
+        "PORT": "3001"
+      },
+      "envFile": "${workspaceFolder}/src/.env",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    // -----------------------------------------------------------------
+    // 4. MANUAL ATTACH CONFIGURATION (Fallback for nvm issues)
+    // -----------------------------------------------------------------
+    {
+      "name": "Next.js: Attach to Running Server",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

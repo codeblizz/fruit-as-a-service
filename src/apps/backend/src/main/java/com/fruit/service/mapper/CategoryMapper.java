@@ -11,7 +11,8 @@ public class CategoryMapper {
         return new CategoryResponse(
                 entity.getId(),
                 entity.getName(),
-                entity.getDescription());
+                entity.getDescription(),
+                entity.getKinds());
     }
 
     public static List<CategoryResponse> mapToResponseDtoList(List<CategoryEntity> entities) {

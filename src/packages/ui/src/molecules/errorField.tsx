@@ -11,16 +11,19 @@ function ErrorField<T extends FieldValues>({
   className,
 }: Pick<IBaseHookForm<T>, "control" | "name"> & { className: string }) {
 
-  const { fieldState } = useController({ control, name });
+  const {
+    fieldState: { error },
+  } = useController({ control, name });
 
-  return fieldState.error ? (
-    <span role="alert"
+  return error ? (
+    <span
+      role="alert"
       className={lib.cn([
-        "text-[11px] text-error overflow-hidden text-ellipsis",
+        "text-[11px] text-cherry font-ghost-apple drop-shadow-[0_1.2px_1.2px_rgba(255,255,255,0.8)] overflow-hidden text-ellipsis",
         className,
       ])}
     >
-      {fieldState?.error?.message}
+      {error?.message}
     </span>
   ) : null;
 }

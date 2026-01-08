@@ -16,6 +16,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./src",
+    "ignoreDeprecations": "6.0",
     "jsx": "react-jsx",
     "paths": {
       "@/*": ["./*"],

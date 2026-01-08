@@ -2,6 +2,9 @@
 @plugin "tailwind-gradient-mask-image";
 @source "../../../../packages/ui/src/**/*.{js,ts,tsx,jsx}";
 @source "../../../../packages/providers/src/**/*.{js,ts,tsx,jsx}";
+/* @source "@codeblizz/styles/content";
+@source "@codeblizz/providers/content";
+@source "@codeblizz/ui/content"; */
 
 @layer base {
   :root {
@@ -22,7 +25,9 @@
     --quaternary-alpha: hsla(220, 3%, 82%, 0.5);
 
     --apple-red: hsl(344, 100%, 37%);
+    --ghost-apple: hsl(0, 0%, 97%);
     --apple-green: hsl(103, 43%, 49%);
+    --black-diamond-apple: hsl(349, 30%, 24%);
     --banana: hsl(59, 100%, 74%);
     --blackberry: hsl(328, 47%, 18%);
     --blueberry: hsl(249, 100%, 50%);
@@ -30,11 +35,13 @@
     --coconut-shell: hsl(19, 42%, 42%);
     --cantaloupe: hsl(7, 95%, 85%);
     --cranberry: hsl(338, 100%, 31%);
+    --pineberry: hsl(344, 46%, 89%);
     --dragon-fruit: hsl(343, 51%, 59%);
     --fig: hsl(338, 30%, 25%);
     --grape-purple: hsl(291, 64%, 33%);
     --grape-green: hsl(76, 56%, 52%);
     --grape-fruit: hsl(1, 98%, 66%);
+    --grape-black: hsl();
     --guava: hsl(348, 83%, 75%);
     --kiwi: hsl(91, 76%, 57%);
     --lemon: hsl(65, 100%, 50%);
@@ -47,18 +54,24 @@
     --passion-fruit: hsl(0, 55%, 26%);
     --peach: hsl(24, 100%, 74%);
     --pear: hsl(64, 43%, 62%);
+    --blackcurrant: hsl(278, 100%, 2%);
     --pineapple: hsl(39, 76%, 61%);
     --plum : hsl(300, 47%, 75%);
+    --black-plum: hsl(300, 6%, 21%);
+    --black-cherry: hsl(341, 86%, 16%);
     --pomegranate: hsl(350, 80%, 37%);
     --raspberry: hsl(339, 74%, 45%);
     --strawberry: hsl(356, 41%, 46%);
     --watermelon: hsl(350, 96%, 71%);
+    --black-prunes: hsl();
 
     --primary-text: hsl(0, 0%, 100%);
     --secondary-text: hsl(210, 6%, 63%);
     --tertiary-text: hsl(217, 89%, 76%);
+    --accent: hsl(207, 15%, 86%);
+    --muted: hsl(210, 13%, 94%);
+    --card: hsl(210, 4%, 72%);
 
-    --test: #0abc137a;
   }
 
   html,
@@ -80,9 +93,12 @@
     letter-spacing: -0.025em;
   }
 
-  /* Smooth scrolling */
-  html {
+  html,
+  body {
+    background: var(--background);
+    color: var(--foreground);
     scroll-behavior: smooth;
+    font-family: Arial, Helvetica, sans-serif;
   }
 
   /* Focus styles for accessibility */
@@ -97,20 +113,30 @@
   --color-foreground: var(--foreground);
 
   --color-primary: var(--primary);
+  --color-primary-alpha: var(--primary-alpha);
+
   --color-secondary: var(--secondary);
+  --color-secondary-alpha: var(--secondary-alpha);
+
   --color-tertiary: var(--tertiary);
-  --color-quaternary: var(--quaternary);
+  --color-tertiary-alpha: var(--tertiary-alpha);
   --color-tertiary-prime: var(--tertiary-prime);
+
+  --color-quaternary: var(--quaternary);
+  --color-quaternary-alpha: var(--quaternary-alpha);;
 
   --color-primary-text: var(--primary-text);
   --color-tertiary-text: var(--tertiary-text);
   --color-secondary-text: var(--secondary-text);
   
   --color-orange: var(--orange);
+  --color-ghost-apple: var(--ghost-apple);
   --color-pineapple: var(--pineapple);
+  --color-blackcurrant: var(--blackcurrant);
   --color-strawberry: var(--strawberry);
   --color-apple-red: var(--apple-red);
   --color-apple-green: var(--apple-green);
+  --color-black-diamond-apple: var(--black-diamond-apple);
   --color-banana: var(--banana);
   --color-blackberry: var(--blackberry);
   --color-blueberry: var(--blueberry);
@@ -118,11 +144,13 @@
   --color-coconut-shell: var(--coconut-shell);
   --color-cantaloupe: var(--cantaloupe);
   --color-cranberry: var(--cranberry);
+  --color-pineberry: var(--pineberry);
   --color-dragon-fruit: var(--dragon-fruit);
   --color-fig: var(--fig);
   --color-grape-purple: var(--grape-purple);
   --color-grape-green: var(--grape-green);
   --color-grape-fruit: var(--grape-fruit);
+  --color-grape-black: var(--grape-black);
   --color-guava: var(--guava);
   --color-kiwi: var(--kiwi);
   --color-lemon: var(--lemon);
@@ -137,17 +165,23 @@
   --color-pear: var(--pear);
   --color-pineapple: var(--pineapple);
   --color-plum : var(--plum);
+  --color-black-plum: var(--black-plum);
   --color-pomegranate: var(--pomegranate);
   --color-raspberry: var(--raspberry);
   --color-strawberry: var(--strawberry);
   --color-watermelon: var(--watermelon);
+  --color-black-cherry: var(--black-cherry);
+  --color-black-prunes: var(--black-prunes);
 
-  --color-error: var(--raspberry);
-  --color-error-100: var(--pomegranate);
+  --color-error: var(--apple-red);
+  --color-success: var(--apple-green);
 
   --color-primary-text: var(--primary-text);
   --color-secondary-text: var(--secondary-text);
   --color-tertiary-text: var(--tertiary-text);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -170,15 +204,6 @@
   /* nav {
     background-color: var(--color-primary);
   } */
-}
-
-@layer base {
-  html,
-  body {
-    background: var(--background);
-    color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
-  }
 }
 
 @layer utilities {

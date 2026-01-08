@@ -7,6 +7,7 @@ import SunIcon from "@/packages/ui/src/atoms/icons/sunIcon";
 import MoonIcon from "@/packages/ui/src/atoms/icons/moonIcon";
 import { IBaseElement } from "@/packages/types/src/base.type";
 import { useTheme, ThemeProvider as NextThemeProvider } from "next-themes";
+import { useEffect, useState } from "react";
 
 function ThemeProvider({ children }: Pick<IBaseElement, "children">) {
   return (
@@ -15,7 +16,6 @@ function ThemeProvider({ children }: Pick<IBaseElement, "children">) {
       enableSystem={false}
       defaultTheme="light"
       disableTransitionOnChange
-      suppressHydrationWarning
     >
       {children}
     </NextThemeProvider>
@@ -25,6 +25,16 @@ function ThemeProvider({ children }: Pick<IBaseElement, "children">) {
 function ThemeToggle(className: { className: string }) {
   const { theme, setTheme } = useTheme();
   const { setDarkTheme } = useCreateStore((state) => state);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
   let isDark = theme === "dark";
 
   return (

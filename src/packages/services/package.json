@@ -10,6 +10,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@codeblizz/repository": "workspace:*"
+    "@codeblizz/repository": "workspace:*",
+    "@codeblizz/helpers": "workspace:*",
+    "@codeblizz/ui": "workspace:*",
+    "server-only": "^0.0.1"
   }
 }

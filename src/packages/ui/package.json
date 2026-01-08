@@ -28,6 +28,10 @@
     "tailwindcss": "^4.1.4"
   },
   "dependencies": {
-    "framer-motion": "^11.13.4"
+    "framer-motion": "^11.13.4",
+    "recharts": "^3.6.0"
+  },
+  "exports": {
+    "./content": "./src/**/*.{js,ts,jsx,tsx}"
   }
 }

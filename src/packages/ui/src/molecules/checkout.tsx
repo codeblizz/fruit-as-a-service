@@ -4,16 +4,15 @@ import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import Form from "@/packages/ui/src/atoms/form";
 import Input from "@/packages/ui/src/atoms/input";
-import Card from "@/packages/ui/src/molecules/card";
-import Button from "@/packages/ui/src/atoms/button";
-import { useCreateStore } from "@/packages/store/src";
 import Section from "@/packages/ui/src/atoms/section";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState, useTransition } from "react";
 import Fragment from "@/packages/ui/src/atoms/fragment";
+import { Button } from "@/packages/ui/src/atoms/button";
 import Paragraph from "@/packages/ui/src/atoms/paragraph";
 import { useSearchParams, useRouter } from "next/navigation";
 import PaymentService from "@/packages/services/src/payments";
+import { Card } from "@/packages/ui/src/molecules/card";
 import PayPalButtons from "@/packages/ui/src/molecules/paypalButton";
 import PayPalScriptProvider from "@/packages/providers/src/paypal.provider";
 import {
@@ -33,7 +32,6 @@ export default function Checkout() {
   const [isPending, startTransition] = useTransition();
   const orderAmount = searchParams.get("amount") || "0.00";
   const paymentIntentId = searchParams.get("payment_intent");
-  const { loader, setLoader } = useCreateStore((state) => state);
   const [paymentMethod, setPaymentMethod] =
     useState<PaymentMethod["type"]>("stripe");
 
@@ -51,7 +49,6 @@ export default function Checkout() {
   const onSubmit = async (data: PaymentFormData) => {
     try {
       let paymentMethod = {} as PaymentMethodCreation;
-      setLoader(true);
       setError(undefined);
       // Create payment method
       startTransition(async () => {
@@ -81,15 +78,13 @@ export default function Checkout() {
       router.replace("/order/success");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Payment failed");
-    } finally {
-      setLoader(false);
     }
   };
 
   if (session || !paymentIntentId) {
     return (
       <Fragment className="flex min-h-screen items-center justify-center">
-        <Card name="" className="p-8">
+        <Card className="p-8">
           <Paragraph className="text-2xl font-bold mb-4">
             {"Invalid checkout session"}
           </Paragraph>
@@ -115,12 +110,11 @@ export default function Checkout() {
   // Handle PayPal error
   const handlePayPalError = (error: Error) => {
     setError(error.message || "PayPal payment failed");
-    setLoader(false);
   };
 
   return (
     <Fragment className="flex flex-col items-center p-8">
-      <Card name="" className="w-full max-w-2xl p-8">
+      <Card className="w-full max-w-2xl p-8">
         <Paragraph className="text-3xl font-bold mb-8">{"Checkout"}</Paragraph>
         <Section className="mb-6">
           <Paragraph className="text-xl font-semibold mb-4">
@@ -158,7 +152,7 @@ export default function Checkout() {
                 {"Payment Information"}
               </Paragraph>
               <Input
-                placeholderClassName=""
+                labelClassName=""
                 control={control}
                 name="cardNumber"
                 placeholder="Card Number"
@@ -166,21 +160,21 @@ export default function Checkout() {
               />
               <Section className="grid grid-cols-3 gap-4">
                 <Input
-                  placeholderClassName=""
+                  labelClassName=""
                   control={control}
                   name="expMonth"
                   placeholder="MM"
                   className="w-full"
                 />
                 <Input
-                  placeholderClassName=""
+                  labelClassName=""
                   control={control}
                   name="expYear"
                   placeholder="YYYY"
                   className="w-full"
                 />
                 <Input
-                  placeholderClassName=""
+                  labelClassName=""
                   control={control}
                   name="cvc"
                   placeholder="CVC"
@@ -193,21 +187,21 @@ export default function Checkout() {
                 {"Billing Information"}
               </Paragraph>
               <Input
-                placeholderClassName=""
+                labelClassName=""
                 control={control}
                 name="name"
                 placeholder="Full Name"
                 className="w-full"
               />
               <Input
-                placeholderClassName=""
+                labelClassName=""
                 control={control}
                 name="email"
                 placeholder="Email"
                 className="w-full"
               />
               <Input
-                placeholderClassName=""
+                labelClassName=""
                 control={control}
                 name="address.line1"
                 placeholder="Address"
@@ -215,14 +209,14 @@ export default function Checkout() {
               />
               <Section className="grid grid-cols-2 gap-4">
                 <Input
-                  placeholderClassName=""
+                  labelClassName=""
                   control={control}
                   name="address.city"
                   placeholder="City"
                   className="w-full"
                 />
                 <Input
-                  placeholderClassName=""
+                  labelClassName=""
                   control={control}
                   name="address.state"
                   placeholder="State"
@@ -231,14 +225,14 @@ export default function Checkout() {
               </Section>
               <Section className="grid grid-cols-2 gap-4">
                 <Input
-                  placeholderClassName=""
+                  labelClassName=""
                   control={control}
                   name="address.postalCode"
                   placeholder="Postal Code"
                   className="w-full"
                 />
                 <Input
-                  placeholderClassName=""
+                  labelClassName=""
                   control={control}
                   name="address.country"
                   placeholder="Country"
@@ -250,7 +244,7 @@ export default function Checkout() {
             <Button
               name="pay"
               type="submit"
-              isPending={loader}
+              loading={isPending}
               className="w-full"
             >
               {"Complete Payment"}

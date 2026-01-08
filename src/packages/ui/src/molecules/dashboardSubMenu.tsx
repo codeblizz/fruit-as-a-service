@@ -21,21 +21,21 @@ function DashBoardSubMenuAccordion({
       <List
         key={idx}
         isLink={true}
-        list={values.type}
+        list={values.kinds}
         selected={selected}
         path={`/dashboard/fruits/${menuName?.toLowerCase() ?? ""}`}
         className={lib.cn([
-          "w-[80%] overflow-y-auto transition-all duration-700 ease-in-out px-1 border-2 border-plum",
+          "w-full overflow-y-auto transition-all duration-700 ease-in-out px-1",
           (menuName === null &&
             isActive &&
             selected &&
-            values.type.includes(selected)) ||
+            values.kinds.includes(selected)) ||
           menuName === menu
             ? "flex flex-col -gap-y-2"
             : "hidden",
         ])}
         liClass={lib.cn([
-          "text-[12px] focus:text-[14px] focus:h-6 text-center cursor-pointer bg-mulberry w-full rounded-md h-5 px-3 inline-flex items-center justify-center",
+          "text-[12px] focus:text-[14px] focus:h-6 pl-5 cursor-pointer w-full rounded-md h-5 inline-flex items-center justify-start hover:text-apple-green/70 hover:bg-apple-green/5 transition-all",
         ])}
       />
     ) : null;

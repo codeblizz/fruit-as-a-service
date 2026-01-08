@@ -16,7 +16,7 @@ const Paragraph = ({
   ...rest
 }: IParagraph) => {
   return (
-    <p className={lib.cn(["text-base", className])} onClick={onClick} {...rest}>
+    <p className={lib.cn(["text-base text-foreground", className])} onClick={onClick} {...rest}>
       {children}
     </p>
   );

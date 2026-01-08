@@ -1,27 +1,25 @@
 import { StateCreator } from "zustand";
-import { IAppReturnType } from "@/packages/types/src/utils.type";
+import { TErrorDetails } from "@/packages/types/src/utils.type";
 
-export interface IAppReturnType {
-  status: boolean;
-  message: string;
-  statusCode?: number;
+export interface IErrorState {
+  appError: TErrorDetails | null;
+  setAppError: (eror: TErrorDetails) => void;
+  clearAppError: () => void;
 }
-export type ErrorType = IAppReturnType | Record<string, string>;
 
-export type ErrorState = {
-  error: ErrorType;
-  clearError: () => void;
-  updateError: (error: ErrorType) => void;
-};
-
-export const ErrorSlice: StateCreator<ErrorState> = (set) => ({
-  error: {} as ErrorType,
-  updateError: (error: ErrorType) => {
+export const ErrorSlice: StateCreator<IErrorState> = (set) => ({
+  appError: {
+    statusCode: 500,
+    message: "",
+    status: false,
+  },
+  setAppError: (appError: TErrorDetails) =>
     set((state) => ({
       ...state,
-      error: error,
-    }));
-  },
-  clearError: () =>
-    set(() => ({ error: {} })),
+      appError: {
+        ...state.appError,
+        ...appError,
+      },
+    })),
+  clearAppError: () => set(() => ({ appError: null })),
 });

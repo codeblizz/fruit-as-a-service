@@ -1,0 +1,361 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication and user management
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String    // Hashed password
+  role          Role      @default(CUSTOMER)
+  emailVerified DateTime?
+  image         String?
+  
+  // Address information
+  address       String?
+  city          String?
+  state         String?
+  postalCode    String?
+  country       String?
+  phone         String?
+  
+  // Related data
+  carts         Cart[]
+  orders        Order[]   // Direct relation to orders
+  subscriptions Subscription[]
+  
+  // New relations
+  preferences   UserPreferences?
+  reviews       FruitReviews[]
+  deliveries    DeliverySchedule[] @relation("DriverDeliveries")
+  loyaltyProgram LoyaltyProgram?
+  inventoryLogs InventoryLog[] @relation("InventoryLogs")
+  wishlist      Wishlist[]
+  notifications Notification[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// User roles
+enum Role {
+  ADMIN
+  SELLER
+  CUSTOMER
+}
+
+// Fruit model for inventory management
+model Fruit {
+  id          String      @id @default(cuid())
+  name        String
+  description String
+  price       Int         // Price in cents
+  stock       Int         // Available quantity
+  imageUrl    String?
+  category    String?
+  seasonal    Boolean     @default(false)
+  organic     Boolean     @default(false)
+  
+  // Shopping cart items relation
+  cartItems   CartItem[]
+  
+  // Order items relation (through OrderItem)
+  orderItems  OrderItem[]
+  
+  // New relations
+  nutrition   FruitNutrition?
+  reviews     FruitReviews[]
+  inventoryLogs InventoryLog[]
+  wishlist    Wishlist[]
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+// Shopping Cart model
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  @@index([userId])
+}
+
+// Cart Item model
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  fruitId   String
+  quantity  Int
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  fruit     Fruit    @relation(fields: [fruitId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([cartId])
+  @@index([fruitId])
+}
+
+// Enhanced Order model with shipping information
+model Order {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  userEmail     String
+  status        String      @default("pending") // pending, processing, delivered, cancelled
+  total         Int
+  type          String      @default("one-time") // one-time, subscription
+  items         OrderItem[]
+  
+  // Payment information
+  paymentId     String?
+  paymentStatus String?     @default("pending") // pending, completed, failed
+  paymentMethod String?     // paypal, stripe, etc.
+  
+  // Shipping information
+  shippingAddress String?
+  shippingCity    String?
+  shippingState   String?
+  shippingZip     String?
+  shippingCountry String?
+  trackingNumber  String?
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Subscription relationship
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+  subscriptionId String?
+  
+  // Delivery scheduling
+  delivery      DeliverySchedule?
+
+  @@index([userId])
+  @@index([userEmail])
+  @@index([subscriptionId])
+}
+
+// Enhanced OrderItem model with fruit relationship
+model OrderItem {
+  id       String @id @default(cuid())
+  orderId  String
+  fruitId  String
+  name     String
+  quantity Int
+  price    Int
+  
+  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fruit    Fruit  @relation(fields: [fruitId], references: [id])
+
+  @@index([orderId])
+  @@index([fruitId])
+}
+
+model SubscriptionPlan {
+  id            String         @id @default(cuid())
+  name          String
+  description   String
+  price         Int
+  features      String[]
+  frequency     String         @default("monthly") // monthly, weekly, bi-weekly
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id                   String           @id @default(cuid())
+  userId               String
+  user                 User             @relation(fields: [userId], references: [id])
+  userEmail            String
+  planId               String
+  plan                 SubscriptionPlan @relation(fields: [planId], references: [id])
+  status               String           @default("active") // active, paused, cancelled
+  gatewaySubscriptionId String          @unique
+  nextBillingDate      DateTime
+  orders               Order[]
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([userEmail])
+  @@index([planId])
+}
+
+// User preferences for personalization
+model UserPreferences {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id])
+  dietaryRestrictions String[]
+  allergies          String[]
+  favoriteCategories String[]
+  priceRange         Json     // {min: number, max: number}
+  deliveryTime       String?  // preferred delivery time
+  notifications      Json     // notification preferences
+  language           String   @default("en")
+  theme              String   @default("light")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+// Enhanced fruit model with nutrition info
+model FruitNutrition {
+  id             String   @id @default(cuid())
+  fruitId        String   @unique
+  fruit          Fruit    @relation(fields: [fruitId], references: [id])
+  calories       Float    // per 100g
+  protein        Float    // grams per 100g
+  carbs          Float    // grams per 100g
+  fiber          Float    // grams per 100g
+  sugar          Float    // grams per 100g
+  fat            Float    // grams per 100g
+  vitamins       Json     // vitamin content
+  minerals       Json     // mineral content
+  healthBenefits String[] // list of health benefits
+  shelfLife      Int?     // days
+  bestSeason     String[] // optimal seasons
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// Fruit reviews and ratings
+model FruitReviews {
+  id        String   @id @default(cuid())
+  fruitId   String
+  userId    String
+  fruit     Fruit    @relation(fields: [fruitId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  rating    Int      @db.SmallInt // 1-5 stars
+  review    String?
+  images    String[] // review images
+  verified  Boolean  @default(false) // verified purchase
+  helpful   Int      @default(0) // helpful votes
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([fruitId, userId])
+  @@index([fruitId])
+  @@index([userId])
+  @@index([rating])
+}
+
+// Delivery scheduling
+model DeliverySchedule {
+  id          String    @id @default(cuid())
+  orderId     String    @unique
+  order       Order     @relation(fields: [orderId], references: [id])
+  scheduledAt DateTime
+  timeSlot    String    // e.g., "9AM-12PM"
+  status      String    @default("scheduled") // scheduled, in_transit, delivered, failed
+  driverId    String?
+  driver      User?     @relation("DriverDeliveries", fields: [driverId], references: [id])
+  notes       String?
+  latitude    Float?
+  longitude   Float?
+  estimatedAt DateTime?
+  deliveredAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([orderId])
+  @@index([driverId])
+  @@index([status])
+}
+
+// Loyalty program
+model LoyaltyProgram {
+  id              String @id @default(cuid())
+  userId          String @unique
+  user            User   @relation(fields: [userId], references: [id])
+  points          Int    @default(0)
+  tier            String @default("bronze") // bronze, silver, gold, platinum
+  totalSpent      Int    @default(0) // in cents
+  referralCode    String @unique
+  referredBy      String?
+  referralRewards Int    @default(0)
+  lifetimePoints  Int    @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([tier])
+  @@index([referralCode])
+}
+
+// Inventory tracking
+model InventoryLog {
+  id        String   @id @default(cuid())
+  fruitId   String
+  fruit     Fruit    @relation(fields: [fruitId], references: [id])
+  type      String   // "restock", "sale", "waste", "adjustment"
+  quantity  Int      // positive for addition, negative for reduction
+  reason    String?
+  userId    String?  // staff member who made the change
+  user      User?    @relation("InventoryLogs", fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([fruitId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+// Wishlist/Favorites
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String
+  fruitId   String
+  user      User     @relation(fields: [userId], references: [id])
+  fruit     Fruit    @relation(fields: [fruitId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, fruitId])
+  @@index([userId])
+  @@index([fruitId])
+}
+
+// Notifications
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // "order", "delivery", "promotion", "system"
+  title     String
+  message   String
+  data      Json?    // additional data
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([read])
+  @@index([type])
+  @@index([createdAt])
+}
+
+// Analytics events
+model AnalyticsEvent {
+  id         String   @id @default(cuid())
+  userId     String?
+  sessionId  String?
+  event      String   // event name
+  properties Json?    // event properties
+  timestamp  DateTime @default(now())
+  userAgent  String?
+  ipAddress  String?
+
+  @@index([userId])
+  @@index([event])
+  @@index([timestamp])
+}

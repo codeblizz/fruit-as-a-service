@@ -1,32 +1,40 @@
 {
-  "$schema": "https://json.schemastore.org/package.json",
-  "name": "admin",
+  "name": "@faas/admin",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "lint": "next lint",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "dev": "next dev --turbopack",
     "lint:fix": "next lint --fix"
   },
   "dependencies": {
-    "next": "^15.3.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "next-auth": "^4.24.11",
+    "@codeblizz/auth": "workspace:*",
+    "@codeblizz/config": "workspace:*",
+    "@codeblizz/helpers": "workspace:*",
+    "@codeblizz/providers": "workspace:*",
+    "@codeblizz/services": "workspace:*",
+    "@codeblizz/store": "workspace:*",
+    "@codeblizz/types": "workspace:*",
+    "@codeblizz/ui": "workspace:*",
+    "axios": "^1.9.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
+    "next": "^15.3.1",
+    "next-auth": "^4.24.11",
+    "next-themes": "^0.4.6",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.1",
     "zod": "^3.24.3",
-    "zustand": "^5.0.3",
-    "@codeblizz/ui": "workspace:*",
-    "@codeblizz/types": "workspace:*"
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "tailwindcss": "^4.1.4",
     "@tailwindcss/postcss": "^4.1.4",
     "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2"
+    "@types/react-dom": "^19.1.2",
+    "tailwind-gradient-mask-image": "^1.2.0",
+    "tailwindcss": "^4.1.4"
   }
 }

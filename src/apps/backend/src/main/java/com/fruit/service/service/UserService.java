@@ -9,16 +9,19 @@ import com.fruit.service.util.SecurityConstants;
 import com.fruit.service.exception.ApiException;
 import com.fruit.service.exception.RoleAssignmentException;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -33,20 +36,17 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean isUserExist(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
     @Transactional
-    @Cacheable(value = "createManagerOrStaffProfileCache", key = "#signupRequest")
+    @Caching(put = { @CachePut(value = "user", key = "#result.id") }, evict = {
+            @CacheEvict(value = "user", key = "'allUsers'") })
     public String createManagerOrStaffProfile(SignupRequest signupRequest) {
         if (userRepository.findByEmail(signupRequest.email()).isPresent()) {
             throw new ApiException("User profile with email " + signupRequest.email() +
                     " already exists.", HttpStatus.CONFLICT);
         }
         String requestedRole = signupRequest.role().toUpperCase();
-        if (!SecurityConstants.PRIVILEGED_ROLE.contains(requestedRole)) {
-            throw new RoleAssignmentException("Invalid role specified for admin/staff creation.");
+        if (!SecurityConstants.ALLOWED_STAFF_ROLES.contains(requestedRole)) {
+            throw new RoleAssignmentException("Invalid role specified for staff/manager creation.");
         }
         UserEntity newUser = new UserEntity();
         newUser.setEmail(signupRequest.email());
@@ -57,30 +57,39 @@ public class UserService {
         newUser.getRoles().add(requestedRole);
         newUser.setTermsAccepted(true);
         newUser.setCreatedAt(Instant.now());
-        newUser.setBusinessName("Internal Business Staff/Admin");
+        newUser.setBusinessName("Internal Business Staff/Manager");
         userRepository.save(newUser);
-        return "Admin/Staff user created successfully";
+        return "Staff/Manager user created successfully";
     }
 
-    @Cacheable(value = "userProfileByIdCache", key = "#userId")
+    @Cacheable(value = "user", key = "#userId")
+    @Transactional(readOnly = true)
     public UserEntity findUserProfileById(UUID userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
-    @Cacheable(value = "userProfileByEmailCache", key = "#email")
+    @Cacheable(value = "user", key = "#email")
+    @Transactional(readOnly = true)
     public UserEntity findUserProfileByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
 
-    @Cacheable(value = "userProfileByRoleCache", key = "#userRole")
+    @Cacheable(value = "user", key = "#userRole")
+    @Transactional(readOnly = true)
     public UserEntity findUserProfileByRole(String userRole) {
         return userRepository.findByRoles(userRole).orElse(null);
     }
 
+    @Cacheable(value = "users", key = "'allUsers'")
+    @Transactional(readOnly = true)
+    public List<UserEntity> findAllUsers() {
+        return userRepository.findAll();
+    }
+
     @Transactional
-    @CacheEvict(value = "updateUserCache", key = "#userId")
-    @Cacheable(value = "updateUserCache", key = "#userId")
+    @Caching(put = { @CachePut(value = "user", key = "#result.id") }, evict = {
+            @CacheEvict(value = "users", key = "'allUsers'") })
     public UserEntity updateUser(UUID userId, UpdateUserRequest userRequest) {
         UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("User profile not found"));
@@ -90,9 +99,15 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @CacheEvict(value = "deleteUserCache", key = "#userId")
-    public String deleteUser(Long userId) {
-        userRepository.deleteById(userId);
+    // @Modifying
+    @Transactional
+    // @Query("DELETE FROM User u WHERE u.id = :id")
+    @Caching(evict = {
+            @CacheEvict(value = "user", key = "#userId"),
+            @CacheEvict(value = "users", key = "'allUsers'")
+    })
+    public String deleteUser(UUID userId) {
+        userRepository.deleteByUserId(userId);
         return "User with ID " + userId + " has been deleted.";
     }
 

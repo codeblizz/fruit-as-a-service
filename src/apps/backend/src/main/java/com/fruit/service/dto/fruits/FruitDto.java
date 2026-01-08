@@ -7,5 +7,5 @@ public record FruitDto(
         Long id,
         String name,
         String color,
-        Double price) {
+        Double price)  {
 }

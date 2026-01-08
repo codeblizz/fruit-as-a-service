@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,25 +44,10 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    private static record UserExistResponse(Boolean isUserExist) {
-    };
-
     @Autowired
     public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
-    }
-
-    @GetMapping("/exist/{username}")
-    @Operation(summary = "Retrieve a User by its ID", description = "Provides details about a specific fruit in inventory.")
-    @ApiResponse(responseCode = "200", description = "User found successfully")
-    @ApiResponse(responseCode = "404", description = "User not found for the given ID")
-    public ResponseEntity<AppApiResponse<UserExistResponse>> isUserExist(@NotEmpty @PathVariable String email) {
-        Boolean isExist = this.userService.isUserExist(email);
-        UserExistResponse hasUser = new UserExistResponse(isExist);
-        AppApiResponse<UserExistResponse> response = AppApiResponseMapper.mapOkResponse(
-                "User found successful", hasUser);
-        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/profile/user-id/{userId}")
@@ -93,7 +79,23 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/profile/list")
+    @Operation(summary = "Get a list of all users")
+    @ApiResponse(responseCode = "200", description = "Users successfully listed.")
+    @ApiResponse(responseCode = "400", description = "Invalid user data (Validation failure).")
+    @ApiResponse(responseCode = "403", description = "Access denied (Insufficient permissions).")
+    @ApiResponse(responseCode = "409", description = "User already exists (Conflict).")
+    public ResponseEntity<AppApiResponse<List<UserProfileResponse>>> getAllCategories() {
+        List<UserEntity> entities = userService.findAllUsers();
+        AppApiResponse<List<UserProfileResponse>> response = AppApiResponseMapper.mapToApiResponse(
+            HttpStatus.OK,
+            "User list successful",
+            userMapper.mapToUserProfileResponseToList(entities),
+        null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/profile/role/{role}")
     @Operation(summary = "Retrieve a user profile by its email", description = "Provides details about a specific user.")
     @ApiResponse(responseCode = "200", description = "User profile found successfully")
     @ApiResponse(responseCode = "404", description = "User profile not found for the given email")
@@ -112,13 +114,13 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/admin/")
+    @PostMapping("/create")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER')")
     @Operation(summary = "Create User Manager/Staff profile", description = "Create User Manager/Staff profile")
     @ApiResponse(responseCode = "200", description = "User Manager/Staff profile created successfully")
     @ApiResponse(responseCode = "404", description = "User Manager/Staff profile creation failed!")
     public ResponseEntity<AppApiResponse<Void>> createManagerOrStaffProfile(
-            @Valid @PathVariable SignupRequest signupRequest) {
+            @Valid @RequestBody SignupRequest signupRequest) {
         String message = userService.createManagerOrStaffProfile(signupRequest);
         AppApiResponse<Void> response = AppApiResponseMapper.mapToApiResponse(
                 HttpStatus.OK,
@@ -148,7 +150,7 @@ public class UserController {
     @Operation(summary = "Delete a user by its user id", description = "Delete details of a specific user.")
     @ApiResponse(responseCode = "200", description = "User deleted successfully")
     @ApiResponse(responseCode = "404", description = "Fruit not found for the given ID")
-    public ResponseEntity<AppApiResponse<Void>> deleteUser(@NotEmpty @PathVariable Long userId) {
+    public ResponseEntity<AppApiResponse<Void>> deleteUser(@NotEmpty @PathVariable UUID userId) {
         String message = this.userService.deleteUser(userId);
         AppApiResponse<Void> response = AppApiResponseMapper.mapToApiResponse(
                 HttpStatus.NO_CONTENT,

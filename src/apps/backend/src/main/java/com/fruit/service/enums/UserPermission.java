@@ -16,5 +16,6 @@ public enum UserPermission {
     READ_PROFILE,
     WRITE_REPORTS,
     VIEW_REPORTS,
-    ALL_ACCESS
+    ALL_ACCESS,
+    VIEW_TRANSACTIONS,
 }

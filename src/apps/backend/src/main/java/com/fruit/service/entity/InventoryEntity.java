@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -30,6 +31,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Table(name = "inventory")
@@ -51,6 +54,9 @@ public class InventoryEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "fruit_id", nullable = false)
+    @JsonBackReference(value = "fruit-inventory")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private FruitEntity fruit;
 
     @Column(nullable = false)

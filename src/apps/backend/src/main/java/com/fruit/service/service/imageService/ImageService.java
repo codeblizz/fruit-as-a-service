@@ -8,10 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fruit.service.util.ImageUtils;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
+// import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+// import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -39,12 +39,18 @@ public class ImageService {
             System.out.println("File size exceeds limit. Starting optimization for: " + file.getOriginalFilename());
             return uploadOptimizedImage(file);
         } else {
-            try (java.io.InputStream inputStream = file.getInputStream()) {
-                return storageService.uploadImage(inputStream, file.getOriginalFilename())
-                        .orElseThrow(() -> new IOException("CDN upload failed to return a valid URL."));
-            } catch (IOException e) {
-                throw new RuntimeException("Error processing file stream for upload.", e);
-            }
+            // Convert to byte array immediately to avoid "Unrecognized file parameter"
+            // stream errors
+            byte[] fileBytes = file.getBytes();
+            return storageService.uploadImage(fileBytes, file.getOriginalFilename())
+                    .orElseThrow(() -> new IOException("CDN upload failed to return a valid URL."));
+            // try (java.io.InputStream inputStream = file.getInputStream()) {
+            // return storageService.uploadImage(inputStream, file.getOriginalFilename())
+            // .orElseThrow(() -> new IOException("CDN upload failed to return a valid
+            // URL."));
+            // } catch (IOException e) {
+            // throw new RuntimeException("Error processing file stream for upload.", e);
+            // }
         }
     }
 
@@ -52,9 +58,14 @@ public class ImageService {
         BufferedImage originalImage = ImageIO.read(file.getInputStream());
         String formatName = ImageUtils.getFileExtension(file.getOriginalFilename());
         BufferedImage processedImage = ImageUtils.resizeImage(originalImage, targetWidth);
-        try (ByteArrayOutputStream os = ImageUtils.writeImageToStream(processedImage, formatName);
-                InputStream optimizedInputStream = new ByteArrayInputStream(os.toByteArray())) {
-            return storageService.uploadImage(optimizedInputStream, file.getOriginalFilename())
+        // try (ByteArrayOutputStream os = ImageUtils.writeImageToStream(processedImage, formatName);
+        //         InputStream optimizedInputStream = new ByteArrayInputStream(os.toByteArray())) {
+        //     return storageService.uploadImage(optimizedInputStream, file.getOriginalFilename())
+        //             .orElseThrow(() -> new IOException("CDN upload failed for optimized image."));
+        // }
+        try (ByteArrayOutputStream os = ImageUtils.writeImageToStream(processedImage, formatName)) {
+            byte[] optimizedBytes = os.toByteArray();
+            return storageService.uploadImage(optimizedBytes, file.getOriginalFilename())
                     .orElseThrow(() -> new IOException("CDN upload failed for optimized image."));
         }
     }

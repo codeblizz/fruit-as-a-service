@@ -1,5 +1,7 @@
 package com.fruit.service.mapper;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.fruit.service.dto.users.UserProfileResponse;
@@ -26,5 +28,11 @@ public class UserMapper {
                 entity.isVerified(),
                 entity.isLocked(),
                 entity.isTwoFactorEnabled());
+    }
+
+    public List<UserProfileResponse> mapToUserProfileResponseToList(List<UserEntity> entities) {
+        return entities.stream()
+        .map(new UserMapper()::mapToUserProfileResponse)
+        .toList();
     }
 }

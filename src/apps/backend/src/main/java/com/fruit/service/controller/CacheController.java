@@ -3,6 +3,8 @@ package com.fruit.service.controller;
 import java.lang.IllegalArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -23,14 +25,16 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin/cache")
-@PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+@PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER')")
 @Validated
 public class CacheController {
     private final CacheManager cacheManager;
+    private RedisConnectionFactory connectionFactory;
 
     @Autowired
-    public CacheController(CacheManager cacheManager) {
+    public CacheController(CacheManager cacheManager, RedisConnectionFactory connectionFactory) {
         this.cacheManager = cacheManager;
+        this.connectionFactory = connectionFactory;
     }
 
     private org.springframework.cache.Cache getCache(String cacheName) {
@@ -62,8 +66,13 @@ public class CacheController {
     public ResponseEntity<AppApiResponse<String>> flushAllCaches() {
         cacheManager.getCacheNames()
                 .forEach(cacheName -> Objects.requireNonNull(cacheManager.getCache(cacheName)).clear());
+
+        try (RedisConnection connection = connectionFactory.getConnection()) {
+            connection.serverCommands().flushDb();
+        }
+
         AppApiResponse<String> response = AppApiResponseMapper.mapOkResponse(
-                "All application caches flushed successfully.", null);
+                "All physical Redis data and app caches flushed successfully.", null);
         return ResponseEntity.ok(response);
     }
 

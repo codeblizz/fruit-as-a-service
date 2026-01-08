@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/categories")
+@RequestMapping("/fruits/categories")
 @Tag(name = "Category Management API", description = "Endpoints for managing fruit categories.")
 public class CategoryController {
 
@@ -35,28 +35,28 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "Get a list of all categories")
-    @ApiResponse(responseCode = "201", description = "Category successfully created.")
+    @ApiResponse(responseCode = "200", description = "Category successfully listed.")
     @ApiResponse(responseCode = "400", description = "Invalid category data (Validation failure).")
     @ApiResponse(responseCode = "403", description = "Access denied (Insufficient permissions).")
     @ApiResponse(responseCode = "409", description = "Category already exists (Conflict).")
     public ResponseEntity<AppApiResponse<List<CategoryResponse>>> getAllCategories() {
-        List<CategoryEntity> entities = categoryService.findAllCategories();
+        List<CategoryResponse> categoryResponse = categoryService.findAllCategories();
         AppApiResponse<List<CategoryResponse>> response = AppApiResponseMapper.mapToApiResponse(
-            HttpStatus.OK,
-            "Category list successful",
-            CategoryMapper.mapToResponseDtoList(entities),
-        null);
+                HttpStatus.OK,
+                "Category list successful",
+                categoryResponse,
+                null);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get a category by its ID")
+    @Operation(summary = "Get a category by its name")
     @ApiResponse(responseCode = "201", description = "Category successfully created.")
     @ApiResponse(responseCode = "400", description = "Invalid category data (Validation failure).")
     @ApiResponse(responseCode = "403", description = "Access denied (Insufficient permissions).")
     @ApiResponse(responseCode = "409", description = "Category already exists (Conflict).")
-    public ResponseEntity<AppApiResponse<CategoryResponse>> getCategoryById(@Valid @PathVariable Long id) {
-        CategoryEntity entity = categoryService.getCategoryEntityById(id);
+    public ResponseEntity<AppApiResponse<CategoryResponse>> getCategoryById(@Valid @PathVariable String name) {
+        CategoryEntity entity = categoryService.findCategoryByName(name);
         AppApiResponse<CategoryResponse> response = AppApiResponseMapper.mapToApiResponse(
                 HttpStatus.OK,
                 "Category fetched successfully",
@@ -66,17 +66,18 @@ public class CategoryController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER')")
     @Operation(summary = "Create a new category")
     @ApiResponse(responseCode = "201", description = "Category successfully created.")
     @ApiResponse(responseCode = "400", description = "Invalid category data (Validation failure).")
     @ApiResponse(responseCode = "403", description = "Access denied (Insufficient permissions).")
     @ApiResponse(responseCode = "409", description = "Category already exists (Conflict).")
-    public ResponseEntity<AppApiResponse<CategoryResponse>> createCategory(@Valid @RequestBody CreateCategoryRequest request) {
+    public ResponseEntity<AppApiResponse<CategoryResponse>> createCategory(
+            @Valid @RequestBody CreateCategoryRequest request) {
         CategoryEntity newEntity = categoryService.createCategory(request);
         AppApiResponse<CategoryResponse> response = AppApiResponseMapper.mapToApiResponse(
                 HttpStatus.CREATED,
-                "Category fetched successfully",
+                "Category created successfully",
                 CategoryMapper.mapToResponseDto(newEntity),
                 null);
         return ResponseEntity.ok(response);
@@ -84,35 +85,35 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER')")
     @Operation(summary = "Update an existing category")
     @ApiResponse(responseCode = "201", description = "Category successfully created.")
     @ApiResponse(responseCode = "400", description = "Invalid category data (Validation failure).")
     @ApiResponse(responseCode = "403", description = "Access denied (Insufficient permissions).")
     @ApiResponse(responseCode = "409", description = "Category already exists (Conflict).")
-    public ResponseEntity<AppApiResponse<CategoryResponse>> updateCategory(@Valid @PathVariable Long id,
+    public ResponseEntity<AppApiResponse<CategoryResponse>> updateCategory(@Valid @PathVariable String name,
             @Valid @RequestBody CreateCategoryRequest request) {
-        CategoryEntity updatedEntity = categoryService.updateCategory(id, request);
+        CategoryEntity updatedEntity = categoryService.updateCategory(name, request);
         AppApiResponse<CategoryResponse> response = AppApiResponseMapper.mapToApiResponse(
                 HttpStatus.CREATED,
-                "Category fetched successfully",
+                "Category updated successfully",
                 CategoryMapper.mapToResponseDto(updatedEntity),
                 null);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER')")
     @Operation(summary = "Delete a category by its ID")
     @ApiResponse(responseCode = "204", description = "Category deleted successfully")
     @ApiResponse(responseCode = "400", description = "Invalid category data (Validation failure).")
     @ApiResponse(responseCode = "403", description = "Access denied (Insufficient permissions).")
     @ApiResponse(responseCode = "409", description = "Category already exists (Conflict).")
     public ResponseEntity<AppApiResponse<Void>> deleteCategory(@Valid @PathVariable Long id) {
-        categoryService.deleteCategory(id);
+        String message = categoryService.deleteCategoryById(id);
         AppApiResponse<Void> response = AppApiResponseMapper.mapToApiResponse(
                 HttpStatus.NO_CONTENT,
-                "Category deleted successfully",
+                message,
                 null,
                 null);
         return ResponseEntity.ok(response);

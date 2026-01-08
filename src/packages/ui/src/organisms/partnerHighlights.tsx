@@ -4,10 +4,10 @@ import React from "react";
 import { Fade } from "react-awesome-reveal";
 import lib from "@/packages/helpers/src/libs";
 import Span from "@/packages/ui/src/atoms/span";
-import Card from "@/packages/ui/src/molecules/card";
 import Section from "@/packages/ui/src/atoms/section";
 import CONSTANT from "@/packages/helpers/src/constants";
 import Paragraph from "@/packages/ui/src/atoms/paragraph";
+import { Card } from "@/packages/ui/src/molecules/card";
 
 function PartnerHighlights() {
   const partnerHighLightDetails = CONSTANT.partnerHighLightDetails;
@@ -19,10 +19,7 @@ function PartnerHighlights() {
         }
       </Paragraph>
       <Fade duration={1000} cascade delay={100} direction="up">
-        <Card
-          name="partner"
-          className="flex w-full h-full gap-x-2 bg-quaternary p-2"
-        >
+        <Card className="flex w-full h-full gap-x-2 bg-quaternary p-2">
           {partnerHighLightDetails.map((item, index) => (
             <Section
               className={lib.cn([

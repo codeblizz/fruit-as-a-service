@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { QuoteIcon } from "lucide-react";
 import { Fade } from "react-awesome-reveal";
 import lib from "@/packages/helpers/src/libs";
-import Card from "@/packages/ui/src/molecules/card";
 import Section from "@/packages/ui/src/atoms/section";
 import Fragment from "@/packages/ui/src/atoms/fragment";
 import CONSTANT from "@/packages/helpers/src/constants";
 import Paragraph from "@/packages/ui/src/atoms/paragraph";
 import Pagination from "@/packages/ui/src/organisms/pagination";
+import { Card } from "@/packages/ui/src/molecules/card";
 import { ArrowLeftCircle, ArrowRightCircle } from "lucide-react";
 function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -43,7 +43,6 @@ function Testimonials() {
                 index === currentIndex && (
                   <Card
                     key={index}
-                    name="quote"
                     className="relative bg-quaternary w-full min-h-full snap-center snap-always snap-x gap-y-2 p-4 border-none flex flex-col justify-center items-start"
                   >
                     <QuoteIcon className="absolute stroke-1 stroke-quaternary fill-passion-fruit top-5 md:top-3 right-3 float-right size-4 sm:size-5 md:size-6" />

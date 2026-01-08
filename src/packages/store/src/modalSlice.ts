@@ -15,7 +15,7 @@ export type ModalState = {
 
 export const ModalSlice: StateCreator<ModalState> = (set) => ({
   modal: {
-    title: "",
+    title: "",  
     message: "",
     isOpen: false,
     status: false,

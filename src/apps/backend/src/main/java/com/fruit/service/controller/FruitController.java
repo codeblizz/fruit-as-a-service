@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import com.fruit.service.dto.AppApiResponse;
-import com.fruit.service.dto.fruits.CreateFruitRequest;
+import com.fruit.service.dto.fruits.AddFruitRequest;
 import com.fruit.service.dto.fruits.FruitDetails;
-import com.fruit.service.entity.FruitEntity;
 import com.fruit.service.mapper.AppApiResponseMapper;
 import com.fruit.service.service.FruitService;
 
@@ -43,31 +43,17 @@ public class FruitController {
         this.fruitService = fruitService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     @Operation(summary = "Retrieve all available fruits", description = "Provides a list of all fruits in inventory.")
     @ApiResponse(responseCode = "200", description = "Fruits retrieved successfully")
-    public ResponseEntity<AppApiResponse<List<FruitDetails>>> findAllFruits(@Valid @RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<AppApiResponse<List<FruitDetails>>> findAllFruits(
+            @Valid @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         List<FruitDetails> fruits = fruitService.findAllFruits(page, size);
         AppApiResponse<List<FruitDetails>> response = AppApiResponseMapper.mapToApiResponse(
                 HttpStatus.OK,
                 "Fruits retrieved successfully",
                 fruits,
-                null);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/history")
-    @Operation(summary = "Retrieve fruit history", description = "Provides the history of fruits in inventory.")
-    @ApiResponse(responseCode = "200", description = "Fruit history retrieved successfully")
-    @ApiResponse(responseCode = "404", description = "No fruit history found")
-    public ResponseEntity<AppApiResponse<List<FruitEntity>>> getFruitHistory(@Valid @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        List<FruitEntity> fruitHistory = fruitService.getFruitHistory(page, size);
-        AppApiResponse<List<FruitEntity>> response = AppApiResponseMapper.mapToApiResponse(
-                HttpStatus.OK,
-                "Fruit history retrieved successfully",
-                fruitHistory,
                 null);
         return ResponseEntity.ok(response);
     }
@@ -86,27 +72,27 @@ public class FruitController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(consumes = { "multipart/form-data" })
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "Create a new fruit entry")
-    @ApiResponse(responseCode = "201", description = "Fruit created successfully")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER')")
+    @Operation(summary = "Add a new fruit entry")
+    @ApiResponse(responseCode = "201", description = "Fruit addede successfully")
     @ApiResponse(responseCode = "400", description = "Invalid input data")
-    public ResponseEntity<AppApiResponse<FruitDetails>> createFruit(@RequestPart("request") @Valid CreateFruitRequest request,
-            @RequestPart("imageFile") MultipartFile imageFile) {
-        if (imageFile.isEmpty()) {
-            return ResponseEntity.badRequest().body(null);
+    public ResponseEntity<AppApiResponse<FruitDetails>> addFruit(
+            @RequestPart("request") AddFruitRequest request,
+            @RequestPart("images") List<MultipartFile> images) {
+
+        if (images == null || images.size() < 4) {
+            throw new IllegalArgumentException("At least four images is required for a fruit entry.");
         }
-        FruitDetails createdFruit = fruitService.createNewFruit(request, imageFile);
-        AppApiResponse<FruitDetails> response = AppApiResponseMapper.mapToApiResponse(
-                HttpStatus.CREATED,
-                "Fruit created successfully",
-                createdFruit,
-                null);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        FruitDetails addedFruit = fruitService.addNewFruit(request, images);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(AppApiResponseMapper.mapToApiResponse(HttpStatus.CREATED, "Fruit variety added to inventory!",
+                        addedFruit, null));
     }
 
-    @PutMapping("/update")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER')")
     @Operation(summary = "Update an existing fruit entry")
     @ApiResponse(responseCode = "200", description = "Fruit updated successfully")
     @ApiResponse(responseCode = "404", description = "Invalid input data or fruit not found")
@@ -122,7 +108,7 @@ public class FruitController {
     }
 
     @DeleteMapping("/{fruitId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER')")
     @Operation(summary = "Delete a fruit entry")
     @ApiResponse(responseCode = "204", description = "Fruit deleted successfully")
     @ApiResponse(responseCode = "404", description = "Fruit not found for the given ID")

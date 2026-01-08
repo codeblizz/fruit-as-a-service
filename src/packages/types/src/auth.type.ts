@@ -1,23 +1,8 @@
-import { IAppReturnType } from "@/packages/types/src/utils.type";
+import { SVGProps } from "react";
+import { AxiosResponse } from "axios";
+import { AppUser } from "./user.type";
 import { IClientMainRepository } from "@/packages/types/src/repository.type";
-
-// App Project User type
-export type TAppUser = {
-  email: string;
-  fullName: string;
-  username: string;
-  agreement: boolean;
-  profilePic: string;
-  roles: {
-    user: number;
-    admin: number;
-  };
-  permissions: {
-    user: number;
-    admin: number;
-  };
-  type: "credentials" | "oauth";
-};
+import { DistributivePick } from "./utils.type";
 
 // Token NextAuth type
 export type TAuthToken = {
@@ -26,53 +11,60 @@ export type TAuthToken = {
   refreshToken: string | null;
 };
 
-// Omitting `type` property for user details
-export type TUserDetail = Omit<TAppUser, "type">;
-
-// Represents the zustand state of a single user
-export type TUserState = {
-  user: TUserDetail;
-  clearUser: () => void;
-  updateUser: (user: TUserDetail) => void;
+export type TSignIn = Pick<AppUser, "email"> & {
+  password: string;
+  rememberMe?: boolean;
 };
-// Sign In `type` property for user details
-export type TSignIn = Pick<TAppUser, "email"> & { password: string };
 
-// Sign Up `type` property for user details
-export type TSignUp = Pick<
-  TAppUser,
-  "email" | "fullName" | "agreement"
-> & { password: string };
+export type SignUp = Pick<
+  AppUser,
+  "email" | "firstName" | "lastName" | "businessName" | "termsAccepted"
+> & {
+  password: string;
+};
 
-export type TPayloadType = {
-  payload: IAuthUserReturnType
-  id: "error" | "success";
-}
+export type PayloadType = {
+  payload: IAuthUserReturnType;
+  id: string;
+};
 
 // Return `type` NextAuth User property and App Standard API
-export interface IAuthUserReturnType extends IAppReturnType {
-  statusText?: string;
-  user: TAppUser;
+export interface IAuthUserReturnType {
+  status: number;
+  message: string;
+  timestamp: string;
+  metadata: Record<string, unknown> | null;
+  data:
+    | ({
+        accessToken: string;
+        refreshToken: string;
+        type: string;
+      } & AppUser)
+    | { userId: string };
 }
 
+export type AuthUserSignUpReturnType = Omit<IAuthUserReturnType, "data"> & {
+  data: DistributivePick<IAuthUserReturnType["data"], "userId">;
+};
+
 // OAUTH Provider type
-export type TOauthProviderType = {
+export type OauthProviderType = {
   clientId: string;
   clientSecret: string;
 };
 
-export type TSsoDetailsType = {
-  payload: TAppUser;
+export type SsoDetailsType = {
+  payload: AppUser;
   accessToken: string;
 };
 
-export type TRefreshToken = { token: string };
+export type RefreshToken = { token: string };
 
 export type TagType<T> = {
   [key: string]: (args: T) => Promise<T>;
 };
 
-export type TCredentialType = {
+export type CredentialType = {
   email: string;
   password: string;
   csrfToken: string;
@@ -81,25 +73,35 @@ export type TCredentialType = {
   redirect: string | boolean;
 };
 
-export type TAuthField = {
+export type AuthField = {
   type: string;
   className: string;
   placeholder: string;
-  name: "email" | "password" | "acceptTerms";
+  name:
+    | "email"
+    | "password"
+    | "termsAccepted"
+    | "businessName"
+    | "firstName"
+    | "lastName";
 };
 
-export type TLogin = {
-  email: string;
-  password: string;
-};
+export type EmailType = "VERIFICATION" | "PASSWORD_RESET" | "NOTIFICATION";
 
-export type TRegister = {
-  acceptTerms: false;
-} & TLogin;
+export interface IEmailConfigItem {
+  icon: React.ComponentType<SVGProps<SVGSVGElement>>;
+  title: string;
+  description: string;
+  nextSteps: string[];
+  ctaText: string;
+  ctaLink: string;
+  secondaryLinkText: string;
+  secondaryLinkAction: () => void;
+}
 
-// Authentication Domain Interface
 export interface IAuthInterface extends IClientMainRepository {
-  signIn: (credentials: TSignIn) => Promise<IAuthUserReturnType>;
-  signUp: (payload: TSignUp) => Promise<IAuthUserReturnType>;
-  getRefreshToken: (payload: any) => Promise<unknown>;
+  signIn: (credentials: TSignIn) => Promise<AxiosResponse<IAuthUserReturnType>>;
+  signUp: (payload: SignUp) => Promise<AxiosResponse<AuthUserSignUpReturnType>>;
+  getRefreshToken: (payload: any) => Promise<AxiosResponse<unknown>>;
+  verifyToken: (token: string) => Promise<unknown>;
 }

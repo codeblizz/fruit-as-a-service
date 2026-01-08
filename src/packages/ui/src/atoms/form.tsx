@@ -10,8 +10,8 @@ function Form({ name, children, className, onSubmit }: IForm) {
       name={name}
       onSubmit={onSubmit}
       className={lib.cn([
-        "border border-plum rounded-lg p-10 bg-gradient-to-br from-quaternary via-guava to-yellow-100",
-        className
+        "border border-apple-green rounded-lg p-10",
+        className,
       ])}
     >
       {children}

@@ -2,27 +2,33 @@ import { createStore, useStore as useZustandStore } from "zustand";
 import { persist, devtools, createJSONStorage } from "zustand/middleware";
 
 // import env from "@/packages/config/env";
+import { UserSlice } from "./userSlice";
+import { ToastSlice } from "./toastSlice";
 import utils from "@/packages/helpers/src/utils";
-import { UserSlice } from "@/packages/store/src/userSlice";
-import { TUserState } from "@/packages/types/src/auth.type";
+import { ThemeSlice, ThemeState } from "./themeSlice";
+import { ModalSlice, ModalState } from "./modalSlice";
+import { ErrorSlice, IErrorState } from "./errorSlice";
+import { TFruitState, FruitSlice } from "./fruitSlice";
+import { LoaderSlice, LoaderState } from "./loaderSlice";
+import { TUserState } from "@/packages/types/src/user.type";
+import { CountrySlice, TCountryState } from "./countrySlice";
 import { TToastState } from "@/packages/types/src/utils.type";
-import { ToastSlice } from "@/packages/store/src/toastSlice";
-import { LoaderSlice } from "@/packages/store/src/loaderSlice";
-import { LoaderState } from "@/packages/store/src/loaderSlice";
-import { MiscSlice, MiscState } from "@/packages/store/src/miscSlice";
-import { ThemeSlice, ThemeState } from "@/packages/store/src/themeSlice";
-import { ErrorSlice, ErrorState } from "@/packages/store/src/errorSlice";
-import { ModalSlice, ModalState } from "@/packages/store/src/modalSlice";
 import { useZustandContext } from "@/packages/providers/src/store.provider";
+import {
+  DashboardSlice,
+  DashboardState,
+} from "./dashboardSlice";
 
 // Define the combined Store type
 export type Store = TUserState &
   TToastState &
   ThemeState &
-  ErrorState &
   LoaderState &
   ModalState &
-  MiscState;
+  TFruitState &
+  IErrorState &
+  TCountryState &
+  DashboardState;
 
 // Initialize the Zustand store
 export const initializeStore = (preloadedState: Partial<Store> = {}) => {
@@ -34,10 +40,12 @@ export const initializeStore = (preloadedState: Partial<Store> = {}) => {
           ...UserSlice(set, get, api),
           ...ThemeSlice(set, get, api),
           ...ToastSlice(set, get, api),
-          ...ErrorSlice(set, get, api),
           ...LoaderSlice(set, get, api),
           ...ModalSlice(set, get, api),
-          ...MiscSlice(set, get, api),
+          ...CountrySlice(set, get, api),
+          ...DashboardSlice(set, get, api),
+          ...ErrorSlice(set, get, api),
+          ...FruitSlice(set, get, api),
         }),
         {
           name: "app-store",
@@ -46,9 +54,9 @@ export const initializeStore = (preloadedState: Partial<Store> = {}) => {
         }
       ),
       {
-        enabled: process.env.PUBLIC_NEXT_ENV !== "production"
+        enabled: process.env.PUBLIC_NEXT_ENV !== "production",
       }
-    ),
+    )
   );
 };
 

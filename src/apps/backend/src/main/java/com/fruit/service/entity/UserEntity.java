@@ -9,6 +9,7 @@ import java.util.UUID;
 // import org.hibernate.annotations.ParamDef;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
@@ -33,7 +34,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.Instant;
 
-@EntityListeners(org.springframework.data.jpa.domain.support.AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "users")
 @Data

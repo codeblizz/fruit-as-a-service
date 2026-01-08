@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.security.core.AuthenticationException;
+import io.jsonwebtoken.ExpiredJwtException;
 
 import com.fruit.service.util.JwtUtil;
 
@@ -47,38 +48,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = null;
         String jwt = null;
 
-        if (header != null && header.startsWith("Bearer ")) {
-            jwt = header.substring(7);
-            if (blacklistService.isTokenBlacklisted(jwt)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token invalidated");
-                AuthenticationException ex = new BadCredentialsException("Token invalidated/blacklisted");
-                resolver.resolveException(request, response, null, ex);
-                return;
-            }
-            try {
+        try {
+            if (header != null && header.startsWith("Bearer ")) {
+                jwt = header.substring(7);
+    
+                if (blacklistService.isTokenBlacklisted(jwt)) {
+                    throw new BadCredentialsException("Token invalidated or blacklisted");
+                }
                 username = jwtUtil.getUserNameFromJwtToken(jwt);
-            } catch (Exception e) {
-                // Handle token expiration/invalidity
-                AuthenticationException ex = new BadCredentialsException("Invalid or expired token", e);
-                resolver.resolveException(request, response, null, ex);
             }
-        }
-
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-
-            if (jwtUtil.validateJwtToken(jwt, userDetails)) { 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
-                AuthenticationException ex = new BadCredentialsException("Token validation failed");
-                resolver.resolveException(request, response, null, ex);
-                return;
+    
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+    
+                if (jwtUtil.validateJwtToken(jwt, userDetails)) { 
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    throw new BadCredentialsException("Token validation failed");
+                }
             }
+            filterChain.doFilter(request, response);
+        } catch(ExpiredJwtException e) {
+            resolver.resolveException(request, response, null, new BadCredentialsException("JWT token has expired", e));
+        } catch(AuthenticationException | io.jsonwebtoken.JwtException e) {
+            resolver.resolveException(request, response, null, e);
+        } catch(Exception e) {
+            resolver.resolveException(request, response, null, e);
         }
-
-        filterChain.doFilter(request, response);
     }
 }
+

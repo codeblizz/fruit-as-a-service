@@ -52,12 +52,11 @@ public class AuthController {
         this.authService = authService;
     }
 
-    private static record SignupResponse(UUID userId) {
-    };
+    private static record SignupResponse(UUID userId) {};
 
     @PostMapping("/signup")
     @Operation(summary = "Sign up a new account", description = "Provides details about a new account creation.")
-    @ApiResponse(responseCode = "200", description = "Account created! Please check your email for verification.")
+    @ApiResponse(responseCode = "201", description = "Account created! Please check your email for verification.")
     @ApiResponse(responseCode = "404", description = "Fruit not found for the given ID")
     public ResponseEntity<AppApiResponse<SignupResponse>> signUp(@Valid @RequestBody SignupRequest signupRequest) {
         UUID userId = authService.signUp(signupRequest);
@@ -75,7 +74,9 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "Sign in successfully")
     @ApiResponse(responseCode = "401", description = "UnAuthorized User")
     public ResponseEntity<AppApiResponse<JwtResponse>> signIn(@Valid @RequestBody SigninRequest signinRequest) {
+        System.out.println("Sign-in request received for username: " + signinRequest.email());
         JwtResponse jwtResponse = authService.signIn(signinRequest);
+        System.out.println("Generated JWT Token: " + jwtResponse.accessToken());
         AppApiResponse<JwtResponse> response = AppApiResponseMapper.mapToApiResponse(
                 HttpStatus.OK,
                 "Sign in successful",

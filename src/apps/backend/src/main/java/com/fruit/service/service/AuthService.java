@@ -18,7 +18,7 @@ import com.fruit.service.util.EmailUtil;
 import com.fruit.service.util.JwtUtil;
 import com.fruit.service.util.SecurityConstants;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Collections;

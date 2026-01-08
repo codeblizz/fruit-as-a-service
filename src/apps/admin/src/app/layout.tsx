@@ -1,12 +1,15 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { getServerSession } from "next-auth";
+import Toast from "@/packages/ui/src/molecules/toast";
 import NavBar from "@/packages/ui/src/molecules/navBar";
+import Footer from "@/packages/ui/src/organisms/footer";
+import AuthGuard from "@/packages/ui/src/organisms/authGuard";
 import { authOptions } from "@/packages/auth/src/authOptions";
 import StoreProvider from "@/packages/providers/src/store.provider";
 import { ThemeProvider } from "@/packages/providers/src/theme.provider";
 import SessionProvider from "@/packages/providers/src/session.provider";
-import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,15 +24,15 @@ export const metadata: Metadata = {
   keywords: [
     "faas",
     "banana",
-    "orange", 
+    "orange",
     "capital",
     "funding",
     "nigeria",
     "payment",
-    "pineapple", 
+    "pineapple",
     "e-commerce",
     "strawberry",
-    "fruit vendor", 
+    "fruit vendor",
     "online store",
     "fruit delivery",
   ],
@@ -40,8 +43,16 @@ export const metadata: Metadata = {
       { url: "/favicon-32x32.svg", sizes: "32x32", type: "image/svg+xml" },
     ],
     apple: [
-      { url: "/android-chrome-192x192.svg", sizes: "192x192", type: "image/svg+xml" },
-      { url: "/android-chrome-512x512.svg", sizes: "512x512", type: "image/svg+xml" },
+      {
+        url: "/android-chrome-192x192.svg",
+        sizes: "192x192",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/android-chrome-512x512.svg",
+        sizes: "512x512",
+        type: "image/svg+xml",
+      },
     ],
   },
   manifest: "/manifest.json",
@@ -54,13 +65,17 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession(authOptions);
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <StoreProvider>
           <SessionProvider session={session}>
             <ThemeProvider>
-              <NavBar />
-              {children}
+              <AuthGuard>
+                <NavBar />
+                {children}
+                <Toast />
+                <Footer />
+              </AuthGuard>
             </ThemeProvider>
           </SessionProvider>
         </StoreProvider>

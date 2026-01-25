@@ -9,6 +9,7 @@ public enum UserPermission {
     DELETE_USERS,
     READ_ORDERS,
     WRITE_ORDERS,
+    MANAGE_FRUITS,
     MANAGE_ORDERS,
     DELETE_ORDERS,
     READ_CACHE,

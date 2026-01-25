@@ -58,6 +58,7 @@ public class FruitEntity implements Serializable {
     private String commonName;
     private String originCountry;
     private String description;
+    private Number rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)

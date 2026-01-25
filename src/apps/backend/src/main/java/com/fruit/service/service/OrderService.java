@@ -23,7 +23,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import com.fruit.service.repository.OrderRepository;
 import com.fruit.service.exception.InvalidOrderException;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
@@ -42,11 +42,11 @@ public class OrderService {
     @CacheEvict(value = "orderCache", allEntries = true)
     @Cacheable(value = "orderCache", key = "#currentUserId + '-' + #orderRequest.hashCode()")
     public OrderEntity placeOrder(UUID currentUserId, OrderRequest orderRequest) {
-        
+
         UserEntity user = userService.findUserProfileById(currentUserId);
-        if(user.equals(null)) 
+        if (user.equals(null))
             throw new ResourceNotFoundException("User not found: " + currentUserId);
-        
+
         OrderEntity order = new OrderEntity();
         order.setUser(user);
         order.setOrderDate(Instant.now());
@@ -57,12 +57,13 @@ public class OrderService {
 
         // Process Items, Reserve Stock, and Calculate Total
         for (OrderItemRequest itemRequest : orderRequest.items()) {
-            
+
             InventoryEntity inventory = inventoryService.findInventoryEntityById(itemRequest.inventoryId());
-            
+
             // Check stock availability
             if (inventory.getQuantityAvailable() < itemRequest.quantity()) {
-                throw new InvalidOrderException("Insufficient stock for ID " + inventory.getId() + ". Available: " + inventory.getQuantityAvailable());
+                throw new InvalidOrderException("Insufficient stock for ID " + inventory.getId() + ". Available: "
+                        + inventory.getQuantityAvailable());
             }
 
             // Reserve Stock (Crucial Transactional Step)
@@ -77,25 +78,26 @@ public class OrderService {
             orderItem.setInventoryItem(inventory);
             orderItem.setQuantityOrdered(itemRequest.quantity());
             orderItem.setUnitPriceAtOrder(inventory.getUnitPrice());
-            
+
             BigDecimal itemTotal = inventory.getUnitPrice().multiply(BigDecimal.valueOf(itemRequest.quantity()));
             totalAmount.updateAndGet(current -> current.add(itemTotal));
-            
+
             order.getItems().add(orderItem);
         }
 
         // Finalize and Save Order
         order.setTotalAmount(totalAmount.get());
-        
-        // The PaymentEntity must be created and linked here in a real application, 
+
+        // The PaymentEntity must be created and linked here in a real application,
         // typically involving a payment gateway call, but is skipped for this scope.
         // For now, we set the status to PAID to reflect successful intent.
-        order.setStatus(OrderStatus.PAID); 
-        
+        order.setStatus(OrderStatus.PAID);
+
         return orderRepository.save(order);
     }
 
     @Cacheable(value = "orderCache", key = "#currentUserId + '-' + #orderRequest.hashCode()")
+    @Transactional(readOnly = true)
     public OrderEntity findOrderById(UUID orderId) {
         return orderRepository.findOrderById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
@@ -104,8 +106,8 @@ public class OrderService {
     // @Transactional
     // @CacheEvict(value = "orderCache", key = "")
     // // public String updateOrderStatus(OrderEntity order, String status) {
-    // //     orderRepository.findOrderById(order.getId())
-    // //     return status;
+    // // orderRepository.findOrderById(order.getId())
+    // // return status;
     // // }
 
     @Transactional

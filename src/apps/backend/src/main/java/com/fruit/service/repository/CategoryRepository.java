@@ -16,7 +16,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
     boolean existsById(Long id);
 
     @Query("SELECT DISTINCT c FROM CategoryEntity c LEFT JOIN FETCH c.kinds")
-    List<CategoryEntity> findAllWithKinds();
+    List<CategoryEntity> findAllCategories();
 
     Optional<CategoryEntity> findByName(String name);
 }

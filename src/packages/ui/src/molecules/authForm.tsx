@@ -1,6 +1,7 @@
 "use client";
 
 import useAuth from "./hooks/useAuth";
+import Section from "../atoms/section";
 import React, { useTransition } from "react";
 import Form from "@/packages/ui/src/atoms/form";
 import Input from "@/packages/ui/src/atoms/input";
@@ -61,7 +62,6 @@ function AuthForm({ className }: { className: string }) {
           });
         }
       } catch (error) {
-        console.log("err AuthForm 1", error);
         const err = utils.formatError(error);
         updateToast(true, err.message, "text-error");
       }
@@ -72,7 +72,7 @@ function AuthForm({ className }: { className: string }) {
   useResetFields(isDirty, errors, reset);
 
   return (
-    <div
+    <Section
       className={cn(
         "h-auto flex items-center justify-center bg-gradient-to-br from-apple-green/5 via-ghost-apple/5 to-orange/5",
         isSigninPage ? "mt-5" : "mb-4",
@@ -266,14 +266,14 @@ function AuthForm({ className }: { className: string }) {
                   ? pathname.replace("/auth/signup", "/auth/signin")
                   : pathname.replace("/auth/signin", "/auth/signup")
               }
-              className="font-semibold text-fig hover:text-quaternary underline underline-offset-4 transition-colors duration-200"
+              className="font-semibold text-ghost-apple hover:underline hover:underline-offset-4 transition-colors duration-200"
             >
               {isSignupPage ? "Sign in here" : "Sign up here"}
             </NextLink>
           </div>
         </Card>
       </div>
-    </div>
+    </Section>
   );
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Button } from "../atoms/button";
 import useAuth from "../molecules/hooks/useAuth";
 import NextLink from "@/packages/ui/src/atoms/link";
 import Section from "@/packages/ui/src/atoms/section";
@@ -144,9 +145,9 @@ function Footer() {
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-1 rounded-lg bg-surface-primary text-blackcurrant placeholder-secondary-text border border-quaternary focus:ring-2 focus:ring-apple-green focus:border-transparent"
               />
-              <button className="btn-primary px-6 py-3 whitespace-nowrap">
+              <Button variant="ghost" className="px-6 py-3 whitespace-nowrap hover:text-ghost-apple hover:bg-apple-green/50">
                 Subscribe
-              </button>
+              </Button>
             </div>
           </div>
         </div>

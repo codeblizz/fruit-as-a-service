@@ -1,27 +1,75 @@
 import React from "react";
-import { ShoppingCart } from "lucide-react";
-import Section from "../../atoms/section";
-import { useSearchParams } from "next/navigation";
+import { cn } from "@/packages/helpers/src/utils";
+import { Button } from "@/packages/ui/src/atoms/button";
+import { ShoppingBag, ArrowRight } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-function FruitHeader() {
+function FruitHeader({
+  className = "",
+  subClassName = "",
+  title,
+  subTitle,
+  message,
+}: {
+  className?: string;
+  subTitle?: string;
+  title?: string;
+  message?: string;
+  subClassName?: string;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const selectSearchParam = searchParams.get("selected");
+  const selectSearchParam =
+    searchParams.get("selected") ||
+    pathname.replace(/\/|dashboard|fruits/g, " ").trim();
+
   return (
-    <Section className="space-y-6 animate-in fade-in duration-500">
-      <div className="bg-gradient-to-br from-peach via-quaternary to-peach/70 rounded-3xl p-8 text-white relative overflow-hidden">
-        <div className="relative z-10">
-          <h2 className="text-2xl font-bold text-blackcurrant capitalize">{`${selectSearchParam ?? "Fruit"} Inventories`}</h2>
-          <p
-            className="mt-2 max-w-md text-blackcurrant"
-            style={{ color: "#333333" }}
-          >
-            Manage your seasonal stock levels and distributor logistics from one
-            central hub.
+    <header
+      className={cn(
+        "bg-stone-900 rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl mb-12",
+        className
+      )}
+    >
+      <div
+        className={cn(
+          "relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8",
+          subClassName
+        )}
+      >
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <div className="bg-emerald-500 w-12 h-1 px-1 rounded-full" />
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-emerald-400">
+              {title}
+            </span>
+          </div>
+          <h1 className="text-4xl capitalize md:text-6xl font-serif font-medium leading-tight">
+            {selectSearchParam || "Fruit"}{" "}
+            <span className="italic text-emerald-400 font-normal">
+              {subTitle}
+            </span>
+          </h1>
+          <p className="text-stone-400 max-w-lg text-sm md:text-base font-light">
+            {message}
           </p>
         </div>
-        <ShoppingCart className="absolute right-[-20px] bottom-[-20px] w-48 h-48 opacity-10 rotate-12" />
+        <div className="flex flex-col gap-3">
+          <Button
+            variant="primary"
+            className="text-ghost-apple text-xs font-bold flex items-center gap-2 hover:text-white transition-colors group"
+            onClick={() => router.push("/dashboard/fruits")}
+          >
+            View all inventories{" "}
+            <ArrowRight
+              size={14}
+              className="group-hover:translate-x-1 transition-transform"
+            />
+          </Button>
+        </div>
       </div>
-    </Section>
+      <ShoppingBag className="absolute -right-20 -bottom-20 w-80 h-80 text-white/5 rotate-12 pointer-events-none" />
+    </header>
   );
 }
 

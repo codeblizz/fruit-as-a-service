@@ -81,6 +81,10 @@ const utils = {
     const dateNow = Math.floor(Date.now() / 1000);
     return dateNow > expiresAt;
   },
+  isValidObject: (fruit: Record<string, any>) => {
+    return Object.prototype.toString.call(fruit) === "[object Object]" && 
+           Object.keys(fruit).length > 0;
+  },
   getOAuthUser: function (token: JWT) {
     return {
       ...CONSTANT.defaultUser,

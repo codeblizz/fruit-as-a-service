@@ -1,34 +1,50 @@
 "use client";
 
-import React, { useState } from 'react';
-import NextImage from '../../atoms/image';
-import { useSession } from 'next-auth/react';
-import CONSTANT from '@/packages/helpers/src/constants';
+import React, { useCallback, useState, useTransition } from "react";
+import NextImage from "../../atoms/image";
+import { useSession } from "next-auth/react";
+import CONSTANT from "@/packages/helpers/src/constants";
 import DefaultProfileImage from "@/packages/assets/images/defaultProfileImage.svg";
-import { 
-  Edit3, 
-  MapPin, 
-  Mail, 
-  Phone, 
-  ShieldCheck, 
-  Award, 
-  Clock, 
+import {
+  Edit3,
+  MapPin,
+  Mail,
+  Phone,
+  ShieldCheck,
+  Award,
+  Clock,
   ChevronRight,
-  Camera
-} from 'lucide-react';
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
-} from 'recharts';
+  Camera,
+} from "lucide-react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { Button } from "../../atoms/button";
 
 const ProfileView = () => {
   const { data: session } = useSession();
+  const [isPending, startTransition] = useTransition();
+  const [selectedFile, setSelectedFile] = useState<any>([]);
+  const [imagePreview, setImagePreview] = useState<any>([]);
   const [isEditing, setIsEditing] = useState(false);
+
+  const handleImageChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = Array.from(e.target.files || []);
+      const blobObject = new Blob(file);
+      startTransition(() => {
+        setSelectedFile(file);
+        setImagePreview(URL.createObjectURL(blobObject));
+      });
+    },
+    []
+  );
 
   return (
     <div className="p-2 space-y-4 animate-in fade-in duration-500">
@@ -36,19 +52,32 @@ const ProfileView = () => {
       <section className="relative bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
         {/* Cover Pattern/Image */}
         <div className="h-32 md:h-48 bg-gradient-to-br from-apple-green via-kiwi to-apple-green opacity-90"></div>
-        
+
         <div className="px-6 pb-6">
           <div className="relative flex flex-col md:flex-row md:items-end -mt-12 md:-mt-16 gap-6">
             {/* Avatar */}
             <div className="relative group">
-              <NextImage 
+              <NextImage
                 src={session?.user.image ?? DefaultProfileImage}
-                alt="User Profile" 
+                alt="User Profile"
                 className="w-24 h-24 md:w-32 md:h-32 rounded-3xl object-cover border-4 border-white shadow-md bg-white"
               />
-              <button className="absolute inset-0 bg-black/20 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 rounded-3xl transition-opacity">
-                <Camera size={20} />
-              </button>
+              <Button
+                variant="link"
+                animation="none"
+                className="absolute size-full inset-0 bg-black/10 text-white focus-visible:ring-0 rounded-3xl transition-opacity"
+              >
+                <Camera
+                  size={20}
+                  className="opacity-0 group-hover:opacity-100"
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden cursor-pointer"
+                  onChange={handleImageChange}
+                />
+              </Button>
             </div>
 
             {/* Basic Info */}
@@ -68,14 +97,14 @@ const ProfileView = () => {
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex gap-3 pb-2">
-              <button 
+              <Button
                 onClick={() => setIsEditing(!isEditing)}
                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-tr from-apple-green via-primary to-kiwi text-ghost-apple rounded-xl hover:bg-slate-800 transition-all text-sm font-medium"
               >
-                <Edit3 size={16} /> {isEditing ? 'Save Changes' : 'Edit Profile'}
-              </button>
+                <Edit3 size={16} />{" "}
+                {isEditing ? "Save Changes" : "Edit Profile"}
+              </Button>
             </div>
           </div>
         </div>
@@ -92,8 +121,12 @@ const ProfileView = () => {
                   <Mail size={18} />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">Email</p>
-                  <p className="text-sm font-medium text-slate-700">{session?.user.email}</p>
+                  <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">
+                    Email
+                  </p>
+                  <p className="text-sm font-medium text-slate-700">
+                    {session?.user.email}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -101,8 +134,12 @@ const ProfileView = () => {
                   <Phone size={18} />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">Phone</p>
-                  <p className="text-sm font-medium text-slate-700">+234 (070) 41351234</p>
+                  <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">
+                    Phone
+                  </p>
+                  <p className="text-sm font-medium text-slate-700">
+                    +234 (070) 41351234
+                  </p>
                 </div>
               </div>
             </div>
@@ -127,8 +164,11 @@ const ProfileView = () => {
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
             <h3 className="font-bold text-lg mb-4">Integrations</h3>
             <div className="space-y-3">
-              {['Google Drive', 'Slack', 'Trello'].map((app) => (
-                <div key={app} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+              {["Google Drive", "Slack", "Trello"].map((app) => (
+                <div
+                  key={app}
+                  className="flex items-center justify-between p-3 bg-slate-50 rounded-xl"
+                >
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full bg-green-500"></div>
                     <span className="text-sm font-medium">{app}</span>
@@ -146,9 +186,10 @@ const ProfileView = () => {
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
             <h3 className="font-bold text-lg mb-2">About Me</h3>
             <p className="text-slate-600 leading-relaxed">
-              Passionate inventory strategist with over 8 years of experience in the fresh produce industry. 
-              Currently managing the Fruitly logistics chain, focusing on reducing waste through 
-              predictive analytics and real-time tracking systems.
+              Passionate inventory strategist with over 8 years of experience in
+              the fresh produce industry. Currently managing the Fruitly
+              logistics chain, focusing on reducing waste through predictive
+              analytics and real-time tracking systems.
             </p>
           </div>
 
@@ -157,42 +198,58 @@ const ProfileView = () => {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="font-bold text-lg">System Activity</h3>
-                <p className="text-sm text-slate-500">Your contributions over the last 7 days</p>
+                <p className="text-sm text-slate-500">
+                  Your contributions over the last 7 days
+                </p>
               </div>
               <select className="bg-slate-50 border-none rounded-lg text-xs font-bold p-2 outline-none cursor-pointer">
                 <option>Last Week</option>
                 <option>Last Month</option>
               </select>
             </div>
-            
+
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={CONSTANT.activityData}>
                   <defs>
-                    <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                    <linearGradient
+                      id="chartGradient"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis 
-                    dataKey="day" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{fill: '#94a3b8', fontSize: 12}}
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#f1f5f9"
+                  />
+                  <XAxis
+                    dataKey="day"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: "#94a3b8", fontSize: 12 }}
                     dy={10}
                   />
                   <YAxis hide />
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "16px",
+                      border: "none",
+                      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                    }}
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="activity" 
-                    stroke="#8b5cf6" 
+                  <Area
+                    type="monotone"
+                    dataKey="activity"
+                    stroke="#8b5cf6"
                     strokeWidth={3}
-                    fillOpacity={1} 
-                    fill="url(#chartGradient)" 
+                    fillOpacity={1}
+                    fill="url(#chartGradient)"
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -207,14 +264,18 @@ const ProfileView = () => {
                 <div className="text-2xl">🚀</div>
                 <div>
                   <h4 className="font-bold text-sm">Efficient Logger</h4>
-                  <p className="text-xs text-slate-500">1,000 logs processed in 1 month</p>
+                  <p className="text-xs text-slate-500">
+                    1,000 logs processed in 1 month
+                  </p>
                 </div>
               </div>
               <div className="flex gap-4 p-4 border border-slate-100 rounded-2xl hover:border-orange-200 transition-colors cursor-pointer">
                 <div className="text-2xl">🌱</div>
                 <div>
                   <h4 className="font-bold text-sm">Eco Contributor</h4>
-                  <p className="text-xs text-slate-500">Reduced waste by 15% in Q3</p>
+                  <p className="text-xs text-slate-500">
+                    Reduced waste by 15% in Q3
+                  </p>
                 </div>
               </div>
             </div>

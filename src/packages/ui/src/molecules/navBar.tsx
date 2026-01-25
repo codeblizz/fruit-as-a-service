@@ -64,6 +64,14 @@ function NavBar() {
     !isDashboard && !isAuthenticated && name === "Dashboard" ? "hidden" : "";
     return hideUnauthorizedDashboardView === "hidden";
   };
+
+  const showHiddenWhenUnauthenticated = (name: string): boolean => {
+    const hideWhenUnauthenticated =
+    !isAuthenticated && (name === "Cart" || name === "Sell Fruits")
+      ? "hidden"
+      : "";
+    return hideWhenUnauthenticated === "hidden";
+  }
   
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsMenuOpen(false));
 
@@ -137,6 +145,7 @@ function NavBar() {
                 {CONSTANT.navigationItems.map((item) => {
                   if (hasFruitWritePrivilege(item.name)) return null;
                   if (isDashboardAccessRestricted(item.name)) return null;
+                  if (showHiddenWhenUnauthenticated(item.name)) return null;
                   return (
                     <NextLink
                       key={item.name}
@@ -228,6 +237,7 @@ function NavBar() {
                 {CONSTANT.navigationItems.map((item) => {
                   if (hasFruitWritePrivilege(item.name)) return null;
                   if (isDashboardAccessRestricted(item.name)) return null;
+                  if (showHiddenWhenUnauthenticated(item.name)) return null;
                   return (
                     <NextLink
                       key={item.name}

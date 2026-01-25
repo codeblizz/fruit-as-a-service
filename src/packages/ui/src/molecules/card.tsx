@@ -17,7 +17,7 @@ const cardVariants = cva(
         gradient:
           "bg-gradient-to-br from-ghost-apple via-quaternary to-ghost-apple border-0",
         fruit:
-          "bg-gradient-to-br from-apple-green/10 via-ghost-apple to-orange/10 border-apple-green/20",
+          "bg-gradient-to-br from-ghost-green via-background to-white border-apple-green/20",
         premium:
           "bg-gradient-to-br from-orange/10 via-ghost-apple to-mango/10 border-orange/20 shadow-lg",
       },

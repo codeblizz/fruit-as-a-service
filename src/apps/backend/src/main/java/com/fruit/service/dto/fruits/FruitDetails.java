@@ -21,7 +21,7 @@ public record FruitDetails(
         @Schema(description = "Name of the associated category") String categoryName,
         List<InventoryDto> inventory,
         List<FruitImageDto> images,
-        Integer totalStock,
+        Integer currentStock,
         BigDecimal currentPrice) implements Serializable {
     private static final long serialVersionUID = 1L;
 }

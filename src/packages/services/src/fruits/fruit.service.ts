@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { IFruitInterface } from "@/packages/types/src/fruits.type";
+import { FruitDetails, IFruitInterface } from "@/packages/types/src/fruits.type";
 import { IApiResponseData } from "@/packages/types/src/utils.type";
 import FruitRepository from "@/packages/repository/src/fruit.repository";
 import RepositoryFactory from "@/packages/repository/src/factory.repository";
@@ -17,20 +17,20 @@ export default function FruitService<T>(urlResource: string) {
   return {
     ...fruitRepository,
     fetchAllFruits: async (): Promise<
-      AxiosResponse<IApiResponseData<FruitFormData[]>>
+      AxiosResponse<IApiResponseData<FruitDetails[]>>
     > => {
       return await api.fetchAllFruits();
     },
 
     fetchOneFruitById: async (
       fruitId: string
-    ): Promise<AxiosResponse<IApiResponseData<FruitFormData>>> => {
+    ): Promise<AxiosResponse<IApiResponseData<FruitDetails>>> => {
       return await api.fetchOneFruitById(fruitId);
     },
 
     fetchAllFruitByCategory: async (
       categoryId: string
-    ): Promise<AxiosResponse<IApiResponseData<FruitFormData[]>>> => {
+    ): Promise<AxiosResponse<IApiResponseData<FruitDetails[]>>> => {
       return await api.fetchAllFruitByCategory(categoryId);
     },
 
@@ -42,7 +42,7 @@ export default function FruitService<T>(urlResource: string) {
 
     addNewFruit: async (
       data: FormData
-    ): Promise<AxiosResponse<IApiResponseData<FruitFormData>>> => {
+    ): Promise<AxiosResponse<IApiResponseData<FruitDetails>>> => {
       return await api.addNewFruit(data);
     },
 

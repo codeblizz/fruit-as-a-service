@@ -23,6 +23,7 @@ function AuthGuard({ children }: AuthGuardProps) {
     showDelayedLoading,
     fetchAuthUserDetails,
     setShowDelayedLoading,
+    hasFruitManagementAccess,
     shouldShowDelayedLoading,
   } = useAuth();
 

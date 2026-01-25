@@ -11,7 +11,6 @@ function ImagePreviewer({
   handleImageChange,
 }: any) {
   const isActualImageLength = selectedFiles.length === MIN_IMAGES;
-  console.log("selectedFiles", selectedFiles.length);
   return (
     <div
       className={cn(

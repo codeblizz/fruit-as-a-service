@@ -2,14 +2,12 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { useSession } from "next-auth/react";
 import NextLink from "@/packages/ui/src/atoms/link";
 import Section from "@/packages/ui/src/atoms/section";
 import CONSTANT from "@/packages/helpers/src/constants";
 import { Fade, Zoom, Slide } from "react-awesome-reveal";
 import Paragraph from "@/packages/ui/src/atoms/paragraph";
 import HeroSection from "@/packages/ui/src/organisms/hero";
-import AuthForm from "@/packages/ui/src/molecules/authForm";
 import { Card } from "@/packages/ui/src/molecules/card";
 import { StarIcon, HeartIcon } from "lucide-react";
 
@@ -17,7 +15,7 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full bg-gradient-to-br from-ghost-apple via-quaternary to-ghost-apple">
       <HeroSection />
-      <section className="py-20 px-4 bg-gradient-to-tr from-kiwi/10 via-quaternary to-kiwi/20">
+      <Section className="py-20 px-4 bg-gradient-to-tr from-kiwi/10 via-quaternary to-kiwi/20">
         <div className="max-w-7xl mx-auto">
           <Fade direction="right" duration={1000}>
             <div className="text-center mb-16">
@@ -54,9 +52,9 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </Section>
       {/* Popular Fruits Section */}
-      <section className="py-20 px-4 bg-gradient-to-tl from-fig/20 via-cherry/10 to-fig/10">
+      <Section className="py-20 px-4 bg-gradient-to-tl from-fig/20 via-cherry/10 to-fig/10">
         <div className="max-w-7xl mx-auto">
           <Fade direction="left" duration={1000}>
             <div className="text-center mb-16">
@@ -87,9 +85,9 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
-      <section className="py-20 px-4 bg-graient-to-bl from-mulberry/20 via-plum/10 to-peach/20">
-        <div className="max-w-7xl mx-auto">
+      </Section>
+      <Section className="py-20 px-4 bg-graient-to-bl from-mulberry/20 via-plum/10 to-peach/20">
+        <Section className="max-w-7xl mx-auto">
           <Fade direction="right" duration={1000}>
             <div className="text-center mb-16">
               <h3 className="text-4xl md:text-5xl font-bold text-primary mb-4">
@@ -100,15 +98,16 @@ export default function Home() {
               </p>
             </div>
           </Fade>
-          <div className="grid grid-cols-1 md:flex overflow-auto w-full snap-x snap-mandatory scroll-smooth gap-y-5 md:gap-x-5">
+          <Section className="grid grid-cols-1 md:flex overflow-auto w-full snap-x snap-mandatory no-scrollbar gap-y-5 md:gap-x-5">
             {CONSTANT.testimonialsB.map((testimonial, index) => (
               <Slide
                 key={index}
+                triggerOnce
                 direction="right"
                 delay={index * 200}
-                className="h-72"
+                className="max-h-56 overflow-y-auto md:min-w-[200px] shadow-xl hover:shadow-3xl snap-start"
               >
-                <Card className="p-4 min-h-full b-gradient-to-br rounded-3xl from-ghost-apple to-quaternary hover:shadow-2xl transition-all duration-300">
+                <motion.div whileHover={{ scale: 1.1, shadow: "10px" }} className="p-4 min-h-full b-gradient-to-br rounded-3xl from-ghost-apple to-quaternary transition-all duration-300">
                   <div className="flex items-center mb-4">
                     <div className="text-3xl mr-3">{testimonial.fruit}</div>
                     <div className="flex text-banana">
@@ -123,14 +122,14 @@ export default function Home() {
                   <p className="font-semibold text-primary">
                     - {testimonial.name}
                   </p>
-                </Card>
+                </motion.div>
               </Slide>
             ))}
-          </div>
-        </div>
-      </section>
-      <section className="py-20 px-4 bg-gradient-to-r from-apple-green/10 via-orange/10 to-strawberry/10">
-        <div className="max-w-4xl mx-auto text-center">
+          </Section>
+        </Section>
+      </Section>
+      <Section className="py-20 px-4 bg-gradient-to-r from-apple-green/10 via-orange/10 to-strawberry/10">
+        <Section className="max-w-4xl mx-auto text-center">
           <Fade direction="left" duration={1000}>
             <motion.div
               whileHover={{ scale: 1.02 }}
@@ -153,8 +152,8 @@ export default function Home() {
               </NextLink>
             </motion.div>
           </Fade>
-        </div>
-      </section>
+        </Section>
+      </Section>
     </main>
   );
 }

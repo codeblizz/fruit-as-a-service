@@ -122,31 +122,9 @@ public class FruitService {
                         fruit.setImages(imageEntities);
                 }
 
-                // List<FruitImageEntity> imageEntities = imageFiles.parallelStream()
-                // .map(file -> {
-                // if (file.isEmpty()) {
-                // throw new IllegalArgumentException(
-                // "One of the provided image files is empty.");
-                // }
-                // try {
-                // String imageUrl = imageService.uploadImage(file);
-
-                // FruitImageEntity imgEntity = new FruitImageEntity();
-                // imgEntity.setImageUrl(imageUrl);
-                // imgEntity.setFruit(fruit);
-                // return imgEntity;
-                // } catch (IOException e) {
-                // throw new ImageUploadException(
-                // "Could not upload image: " + file.getOriginalFilename(),
-                // e);
-                // }
-                // })
-                // .collect(Collectors.toList());
-                // fruit.setImages(imageEntities);
-
                 InventoryEntity initialBatch = InventoryEntity.builder()
                                 .fruit(fruit)
-                                .quantityAvailable(request.initialStock())
+                                .quantityAvailable(request.currentStock())
                                 .unitPrice(request.unitPrice())
                                 .harvestDate(request.harvestDate())
                                 .expiryDate(request.expiryDate())

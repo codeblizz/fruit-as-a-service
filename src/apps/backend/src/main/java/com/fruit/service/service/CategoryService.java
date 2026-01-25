@@ -48,7 +48,7 @@ public class CategoryService {
     @Cacheable(value = "categories", key = "'allCategories'")
     @Transactional(readOnly = true)
     public List<CategoryResponse> findAllCategories() {
-        List<CategoryEntity> entities = categoryRepository.findAllWithKinds();
+        List<CategoryEntity> entities = categoryRepository.findAllCategories();
         return CategoryMapper.mapToResponseDtoList(entities);
     }
 

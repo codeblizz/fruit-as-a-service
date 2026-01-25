@@ -20,7 +20,6 @@ export async function POST(req: NextRequest) {
     })) as unknown as AxiosResponse;
     return NextResponse.json(result.data);
   } catch (err: unknown) {
-    console.log("err route nextjs", err);
     return NextResponse.json(utils.formatError(err));
   }
 }

@@ -1,15 +1,25 @@
 import React from "react";
-import Section from "../../atoms/section";
-import NextLink from "../../atoms/link";
+import { useSession } from "next-auth/react";
+import { cn } from "@/packages/helpers/src/utils";
+import NextLink from "@/packages/ui/src/atoms/link";
+import Section from "@/packages/ui/src/atoms/section";
 import { usePathname, useSearchParams } from "next/navigation";
+import useAuth from "../../molecules/hooks/useAuth";
 
-function FruitBreadCrumb() {
+function FruitBreadCrumb({ className }: { className?: string }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { hasFruitManagementAccess } = useAuth();
   const selectSearchParam = searchParams.get("selected");
   const fruitCategory = pathname.replace(/\/|dashboard|fruits/g, " ").trim();
+
   return (
-    <Section className="flex w-full flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <Section
+      className={cn(
+        "flex w-full flex-col sm:flex-row sm:items-center justify-between gap-4",
+        className
+      )}
+    >
       <div className="flex flex-1 bg-blackcurrant items-center space-x-2 px-4">
         <NextLink
           href="/dashboard"
@@ -40,20 +50,22 @@ function FruitBreadCrumb() {
           </>
         )}
       </div>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <NextLink
-          href="/dashboard/fruits/category/create"
-          className="bg-gradient-to-tr from-apple-green via-primary to-kiwi text-ghost-apple px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all"
-        >
-          + Create Fruits Category
-        </NextLink>
-        <NextLink
-          href="/dashboard/fruits/add"
-          className="bg-gradient-to-tr from-apple-green via-primary to-kiwi text-ghost-apple px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all"
-        >
-          + Add Fruits
-        </NextLink>
-      </div>
+      {hasFruitManagementAccess && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <NextLink
+            href="/dashboard/fruits/category/new"
+            className="bg-gradient-to-tr from-apple-green via-primary to-kiwi text-ghost-apple px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all"
+          >
+            + Create Fruits Category
+          </NextLink>
+          <NextLink
+            href="/dashboard/fruits/new"
+            className="bg-gradient-to-tr from-apple-green via-primary to-kiwi text-ghost-apple px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all"
+          >
+            + Add Fruits
+          </NextLink>
+        </div>
+      )}
     </Section>
   );
 }

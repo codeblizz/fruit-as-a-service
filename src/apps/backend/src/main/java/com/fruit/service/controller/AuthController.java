@@ -76,7 +76,7 @@ public class AuthController {
     public ResponseEntity<AppApiResponse<JwtResponse>> signIn(@Valid @RequestBody SigninRequest signinRequest) {
         System.out.println("Sign-in request received for username: " + signinRequest.email());
         JwtResponse jwtResponse = authService.signIn(signinRequest);
-        System.out.println("Generated JWT Token: " + jwtResponse.accessToken());
+        System.out.println("Sign In Successful: " + jwtResponse.userId());
         AppApiResponse<JwtResponse> response = AppApiResponseMapper.mapToApiResponse(
                 HttpStatus.OK,
                 "Sign in successful",

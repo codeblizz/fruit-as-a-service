@@ -22,6 +22,7 @@ export default function useAuth() {
   const [codeDigits, setCodeDigits] = useState(
     Array(CONSTANT.VERIFICATION_CODE_LENGTH).fill("")
   );
+  const hasFruitManagementAccess = session?.user.permissions.includes("MANAGE_FRUITS");
   const [verificationStatus, setVerificationStatus] = useState("idle"); // idle, loading, success, error
   const [message, setMessage] = useState("");
   const isSigninPage = pathname.includes("signin");
@@ -175,6 +176,7 @@ export default function useAuth() {
     setShowDelayedLoading,
     isEmailNotificationPage,
     shouldShowDelayedLoading,
+    hasFruitManagementAccess,
     handlers: { handleSubmitManual, setCodeDigits },
   };
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import Span from "../../atoms/span";
 import Section from "../../atoms/section";
 import { Button } from "../../atoms/button";
@@ -9,7 +11,6 @@ import CONSTANT from "@/packages/helpers/src/constants";
 import NavItem from "@/packages/ui/src/molecules/navItems";
 import { useRouter, useSearchParams } from "next/navigation";
 import useDashboard from "../../molecules/hooks/useDashboard";
-import useAuth from "@/packages/ui/src/molecules/hooks/useAuth";
 import { ChevronLeft, ChevronRight, LogOutIcon } from "lucide-react";
 import DashBoardSubMenuAccordion from "../../molecules/dashboardSubMenu";
 import AppLogoComponent from "@/packages/ui/src/molecules/appLogoComponent";
@@ -21,7 +22,7 @@ function MainLeftSideDashboard() {
   const selected = searchParams.get("selected");
   const [isPending, startTransition] = useTransition();
   const isActive = searchParams.get("active") === "true";
-  const [toggleMainMenu, setToggleMainMenu] = useState(false);
+  const [toggleMainMenu, setToggleMainMenu] = useState(true);
   const [menuName, setMenuName] = useState<null | string>(null);
   const {
     activeTab,
@@ -89,16 +90,12 @@ function MainLeftSideDashboard() {
                 setActiveTab(item.id);
                 setMobileOpen(false);
                 setToggleMainMenu(!toggleMainMenu);
-                item.id === "overview"
-                  ? router.push(`/dashboard`)
-                  : item.id === "manage-fruits"
-                  ? router.push(`/dashboard/fruits/manage`)
-                  : router.push(`/dashboard/${item.id}`);
+                router.push(item.path);
               }}
             >
               {toggleMainMenu &&
-                activeTab === "fruits" &&
-                item.id === "fruits" && (
+                activeTab === "manage-fruits" &&
+                item.id === "manage-fruits" && (
                   <Section className="w-full flex justify-center items-center">
                     <Section className="flex item-center justify-center h-auto w-[90%] rounded-xl border-l border-r border-gray-100">
                       <Section className="flex flex-col item-center justify-center gap-y-1 h-full w-full">

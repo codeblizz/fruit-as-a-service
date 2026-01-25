@@ -34,16 +34,26 @@ const nextConfig: NextConfig = {
   // },
   /* config options here */
 
-    transpilePackages: [
-      '@codeblizz/ui',
-      '@codeblizz/providers',
-      '@codeblizz/helpers',
-      '@codeblizz/auth',
-      '@codeblizz/config',
-      '@codeblizz/services',
-      '@codeblizz/store',
-      '@codeblizz/types',
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
     ],
+  },
+
+  transpilePackages: [
+    "@codeblizz/ui",
+    "@codeblizz/providers",
+    "@codeblizz/helpers",
+    "@codeblizz/auth",
+    "@codeblizz/config",
+    "@codeblizz/services",
+    "@codeblizz/store",
+    "@codeblizz/types",
+  ],
 };
 
 export default nextConfig;

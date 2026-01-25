@@ -153,7 +153,6 @@ export default function VerifyPage() {
                   type="button"
                   className="text-sm text-fig hover:text-coconut-shell cursor-pointer font-medium transition duration-150"
                   onClick={() => {
-                    console.log("Resend code requested.");
                     setMessage("New code requested. Check your inbox.");
                     // In a real application, this would trigger a `resendVerificationEmail` service call.
                   }}

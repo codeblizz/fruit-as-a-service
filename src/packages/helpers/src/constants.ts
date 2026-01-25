@@ -241,6 +241,7 @@ const CONSTANT = {
     {
       id: "overview",
       hasSubItems: false,
+      path: "/dashboard",
       label: "Overview",
       icon: LayoutDashboard,
       permission: "READ_FRUITS",
@@ -249,6 +250,7 @@ const CONSTANT = {
       id: "profile",
       hasSubItems: false,
       label: "Profile",
+      path: "/dashboard/profile",
       icon: Users,
       permission: "READ_PROFILE",
     },
@@ -256,6 +258,7 @@ const CONSTANT = {
       id: "manage-fruits",
       hasSubItems: true,
       label: "Manage Fruits",
+      path: "/dashboard/fruits",
       icon: ShoppingCartIcon,
       permission: "WRITE_FRUITS",
     },
@@ -263,6 +266,7 @@ const CONSTANT = {
       id: "analytics",
       hasSubItems: false,
       label: "Analytics",
+      path: "/dashboard/analytics",
       icon: PieChart,
       permission: "READ_FRUITS",
     },
@@ -270,6 +274,7 @@ const CONSTANT = {
       id: "transactions",
       hasSubItems: false,
       label: "Transactions",
+      path: "/dashboard/transactions",
       icon: Wallet,
       permission: "READ_FRUITS",
     },
@@ -277,6 +282,7 @@ const CONSTANT = {
       id: "schedule",
       hasSubItems: false,
       label: "Schedule",
+      path: "/dashboard/schedule",
       icon: Calendar,
       permission: "READ_FRUITS",
     },
@@ -284,6 +290,7 @@ const CONSTANT = {
       id: "performance",
       hasSubItems: false,
       label: "Performance",
+      path: "/dashboard/performance",
       icon: TrendingUp,
       permission: "READ_FRUITS",
     },
@@ -360,7 +367,7 @@ const CONSTANT = {
       type: "text",
     },
     {
-      id: "initialStock",
+      id: "currentStock",
       label: "Stock Quantity",
       placeholder: "e.g., 150",
       icon: Leaf,
@@ -634,12 +641,48 @@ const CONSTANT = {
       href: "/fruits/buyer",
       icon: ShoppingCartIcon,
     },
-    { name: "Dashboard", href: "/dashboard", icon: null },
-    { name: "Add Fruits", href: "/fruits/add", icon: null },
     { name: "Sell Fruits", href: "/fruits/seller", icon: null },
+    { name: "Dashboard", href: "/dashboard", icon: null },
     { name: "About", href: "/about", icon: null },
     { name: "Contact", href: "/contact", icon: null },
+    { name: "FAQ", href: "/faqs", icon: null },
   ],
+  faqData: {
+    'Delivery': [
+      {
+        question: "How long does delivery take?",
+        answer: "We pride ourselves on 'Field-to-Fridge' speed. Most orders placed before 2 PM are delivered within 24-48 hours. During peak harvest seasons, some specialty items may take an additional day to ensure they are picked at perfect ripeness."
+      },
+      {
+        question: "Do you deliver to my area?",
+        answer: "Currently, we serve most major metropolitan areas and their surrounding suburbs. You can enter your zip code at the top of our Market page to verify specific delivery availability for your neighborhood."
+      },
+      {
+        question: "Can I track my harvest in real-time?",
+        answer: "Absolutely. Once your order leaves the farm, you'll receive a tracking link via SMS. You can see your driver's progress and an estimated arrival window accurate to within 15 minutes."
+      }
+    ],
+    'Refunds': [
+      {
+        question: "What is your refund policy for perishables?",
+        answer: "Our 'Freshness Guarantee' means if any item arrives bruised, wilted, or below your expectations, we will issue a full credit or refund immediately. Just snap a photo within 24 hours of delivery and upload it via the app."
+      },
+      {
+        question: "How long do refunds take to process?",
+        answer: "Store credits are instant. If you prefer a refund to your original payment method, it typically appears on your statement within 3-5 business days depending on your bank."
+      }
+    ],
+    'Bulk Orders': [
+      {
+        question: "Do you offer wholesale or bulk pricing?",
+        answer: "Yes! For restaurants, catering services, or large events, we offer bulk tiers. Orders exceeding $500 qualify for a dedicated account manager and volume discounts ranging from 10% to 25%."
+      },
+      {
+        question: "How do I place a bulk order for an event?",
+        answer: "Navigate to our 'Bulk & Wholesale' portal or contact our concierge team. We recommend placing event orders at least 7 days in advance to ensure the farm can reserve the necessary harvest volume."
+      }
+    ]
+  } as any,
   features: [
     {
       icon: ShoppingCartIcon,
@@ -925,7 +968,7 @@ const CONSTANT = {
     description: "",
     images: [],
     unitPrice: "0.00",
-    initialStock: "0",
+    currentStock: "0",
     categoryName: "",
     harvestDate: "",
     expiryDate: "",
@@ -972,7 +1015,7 @@ const CONSTANT = {
     description: "Premium crunchy and sweet apples from the autumn harvest.",
     categoryName: "Pomes",
     unitPrice: 2.5,
-    initialStock: 100,
+    currentStock: 100,
     harvestDate: "2023-10-01",
     expiryDate: "2023-11-01",
     supplier: "Northwest Orchard Co.",
@@ -985,7 +1028,7 @@ const CONSTANT = {
       "Known as the King of Mangoes, these are incredibly rich, creamy, and non-fibrous.",
     categoryName: "Tropical",
     unitPrice: 4.75,
-    initialStock: 50,
+    currentStock: 50,
     harvestDate: "2024-03-15",
     expiryDate: "2024-04-10",
     supplier: "Ratnagiri Farms Ltd.",
@@ -998,7 +1041,7 @@ const CONSTANT = {
       "Premium sweet strawberries, hand-picked for uniform size and deep red color.",
     categoryName: "Berries",
     unitPrice: 3.25,
-    initialStock: 200,
+    currentStock: 200,
     harvestDate: "2024-05-01",
     expiryDate: "2024-05-12",
     supplier: "Huelva Sun Growers",

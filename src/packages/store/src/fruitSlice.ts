@@ -4,31 +4,42 @@ import {
   FruitFormData,
   FruitInventory,
 } from "@/packages/helpers/src/validations/fruits.validate";
+import { FruitDetails } from "@/packages/types/src/fruits.type";
 
 export interface TFruitState {
-  fruits: FruitFormData[];
+  fruits: Array<FruitDetails>;
   inventories: FruitInventory[];
   categories: FruitCategory[];
-  addFruit: (s: FruitFormData) => void;
-  updateFruits: (fruit: FruitFormData[]) => void;
+  addFruit: (fruit: FruitDetails) => void;
+  updateFruits: (fruit: FruitDetails[]) => void;
   updateFruitInventories: (inventories: FruitInventory[]) => void;
   updateFruitCategories: (categories: FruitCategory[]) => void;
   removeFruit: (fruitId: string) => void;
 }
 
-const defaultFruitState: FruitFormData = {
+export const defaultFruitState: FruitDetails = {
   botanicalName: "",
   commonName: "",
   originCountry: "",
   description: "",
-  unitPrice: 0.0,
-  initialStock: 0,
-  harvestDate: "",
-  expiryDate: "",
-  batchNumber: "",
-  supplier: "",
+  currentStock: 0,
   categoryName: "",
-  images: [],
+  rating: 0,
+  fruitId: "",
+  images: [{ imageUrl: "" }],
+  inventory: [{
+    status: "OUT_OF_STOCK",
+    createdAt: "",
+    inventoryId: "",
+    quantityReserved: 0,
+    updatedAt: "",
+    unitPrice: 0.0,
+    harvestDate: "",
+    expiryDate: "",
+    supplier: "",
+    batchNumber: "",
+    quantityAvailable: 0,
+  }]
 };
 
 export const FruitSlice: StateCreator<TFruitState> = (set) => ({
@@ -41,15 +52,15 @@ export const FruitSlice: StateCreator<TFruitState> = (set) => ({
     },
   ],
   inventories: [],
-  addFruit: (fruit: FruitFormData) =>
+  addFruit: (fruit: FruitDetails) =>
     set((state) => ({
       ...state,
       fruits: [...state.fruits, fruit],
     })),
-  updateFruits: (newFruits: FruitFormData[]) =>
+  updateFruits: (newFruits: FruitDetails[]) =>
     set((state) => ({
       ...state,
-      fruit: newFruits,
+      fruits: newFruits,
     })),
   updateFruitInventories: (newInventories: FruitInventory[]) =>
     set((state) => ({

@@ -10,24 +10,33 @@ import { ZodType } from "zod";
 import { AxiosResponse } from "axios";
 import utils from "@/packages/helpers/src/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateStore } from "@/packages/store/src";
+import { Store, useCreateStore } from "@/packages/store/src";
 import CONSTANT from "@/packages/helpers/src/constants";
-import { useState, useEffect, useCallback, useTransition, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useTransition,
+  useRef,
+} from "react";
 import FruitService from "@/packages/services/src/fruits/fruit.service";
 import {
   FruitFormData,
   FruitCategory,
   FruitInventory,
 } from "@/packages/helpers/src/validations/fruits.validate";
+import { FruitDetails } from "@/packages/types/src/fruits.type";
+import { useValidList } from "./useValidFruitDetails";
 
 export const revalidate = 60;
 
-export default function useFruit<T extends FieldValues, S extends ZodType>(
-  defaultValues: DefaultValues<T>,
-  schema: S
-) {
+export default function useFruit<
+  T extends FieldValues,
+  S extends ZodType<any, any>
+>(defaultValues: DefaultValues<T>, schema: S) {
   const hasInitialized = useRef(false);
   const [isPending, startTransition] = useTransition();
+
   const {
     toast,
     fruits,
@@ -39,9 +48,11 @@ export default function useFruit<T extends FieldValues, S extends ZodType>(
     inventories,
     updateFruitCategories,
     updateFruitInventories,
-  } = useCreateStore((state) => state);
-  const [selectedFiles, setSelectedFiles] = useState<any>([]);
-  const [imagePreviews, setImagePreviews] = useState<any>([]);
+  } = useCreateStore((state: Store) => state);
+
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
   const isSuccess = toast.message.includes("success");
   const MIN_IMAGES = CONSTANT.ADD_FRUIT_MIN_IMAGES;
 
@@ -60,141 +71,107 @@ export default function useFruit<T extends FieldValues, S extends ZodType>(
 
   const watchedKinds = watch("kinds");
   const watchedCommonName = watch("commonName");
-  const fruitCategoryLength = categories.length;
-  const fruitLength = fruits.length;
-  const fruitInventoryLength = inventories.length;
 
-  useEffect(() => {
-    if (isSubmitSuccessful && isSuccess) {
-      reset();
-    }
-  }, [isSubmitSuccessful, reset]);
+  const isNotFruitDefaultState = useCallback((fruit: FruitDetails) => {
+    return (
+      fruit.commonName?.trim() !== "" || fruit.botanicalName?.trim() !== ""
+    );
+  }, []);
+
+  const validFruits = useValidList<FruitDetails>(
+    fruits,
+    isNotFruitDefaultState
+  );
+  const validCategories = useValidList<FruitCategory>(categories);
+  const validInventories = useValidList<FruitInventory>(inventories);
+
+  const fruitLength = validFruits.length;
+  const fruitCategoryLength = validCategories.length;
+  const fruitInventoryLength = validInventories.length;
+
+  // ---------------- FETCHERS ----------------
 
   const fetchFruitCategories = useCallback(async () => {
     try {
       const response = await FruitService("categories").fetchFruitCategories();
       const { status, message, data } = response.data;
-      if (status !== 200) {
-        throw new Error("Failed to fetch fruit categories.");
-      }
-      updateToast(true, message, "text-success");
+      if (status !== 200) throw new Error(message);
       updateFruitCategories(data);
     } catch (error) {
       const { message } = utils.formatError(error);
-      updateToast(true, message || "An error occurred", "text-error");
+      updateToast(true, message || "Failed to load categories", "text-error");
       throw error;
     }
-  }, []);
+  }, [updateFruitCategories, updateToast]);
 
   const fetchAllFruits = useCallback(async () => {
     try {
       const response = (await FruitService<FruitFormData>(
         "fruits"
       ).fetchAllFruits()) as unknown as AxiosResponse;
-      console.log(
-        "******* UseFruit Fetch All Fruits Response ********",
-        response
-      );
       const { status, message, data } = response.data;
-      if (status !== 200) {
-        throw new Error("Failed to fetch fruit categories.");
-      }
-      updateToast(true, message, "text-success");
+      if (status !== 200) throw new Error(message);
       updateFruits(data);
-    } catch (err) {
-      throw new Error("Failed to load fruits. Please check connection.");
+    } catch (error) {
+      const { message } = utils.formatError(error);
+      updateToast(true, message || "Failed to load fruits.", "text-error");
     }
-  }, [updateFruits]);
+  }, [updateFruits, updateToast]);
 
-  const fetchAllFruitInventories = useCallback(() => {
-    startTransition(async () => {
-      try {
-        const response = await FruitService<FruitInventory>(
-          "inventories"
-        ).fetchAllFruitInventories();
-        const { status, message, data } = response.data;
-        if (status !== 200) {
-          throw new Error("Failed to fetch fruit inventories.");
-        }
-        updateFruitInventories(data);
-      } catch (err) {
-        throw new Error(
-          "Failed to load fruit inventories. Please check connection."
-        );
-      }
-    });
-  }, []);
+  const fetchAllFruitInventories = useCallback(async () => {
+    try {
+      const response = await FruitService<FruitInventory>(
+        "inventories"
+      ).fetchAllFruitInventories();
+      const { status, message, data } = response.data;
+      if (status !== 200) throw new Error(message);
+      updateFruitInventories(data);
+    } catch (error) {
+      const { message } = utils.formatError(error);
+      updateToast(true, message || "Failed to load fruit inventories.", "text-error");
+    }
+  }, [updateFruitInventories]);
 
-  useEffect(() => {
-    if (hasInitialized.current) return;
-    hasInitialized.current = true;
-
-    const initData = async () => {
-      startTransition(async () => {
-        try {
-          await Promise.allSettled([
-            fruitCategoryLength === 0
-              ? fetchFruitCategories()
-              : Promise.resolve(),
-            fruitLength === 0
-              ? fetchAllFruits()
-              : Promise.resolve(),
-            fruitInventoryLength === 0
-              ? fetchAllFruitInventories()
-              : Promise.resolve(),
-          ]);
-        } catch (error) {
-          updateToast(
-            true,
-            "Limited data may be available due to connection.",
-            "text-warning"
-          );
-        }
-      });
-    };
-
-    initData();
-  }, [
-    fruitLength,
-    // fruitCategoryLength,
-    fruitInventoryLength,
-    fetchFruitCategories,
-    fetchAllFruits,
-    fetchAllFruitInventories,
-    updateToast,
-  ]);
+  // ---------------- IMAGE HANDLING ----------------
 
   const handleImageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(e.target.files || []);
-      const validFiles = files.filter(
-        (file) =>
-          !selectedFiles.some((f: { name: string }) => f.name === file.name)
-      );
-      startTransition(() => {
-        setSelectedFiles((prev: any) => [...prev, ...validFiles]);
-        setImagePreviews((prev: any) => [
-          ...prev,
-          ...validFiles.map((file) => URL.createObjectURL(file)),
-        ]);
+
+      setSelectedFiles((prev) => {
+        const validFiles = files.filter(
+          (file) => !prev.some((f) => f.name === file.name)
+        );
+
+        startTransition(() => {
+          setImagePreviews((p) => [
+            ...p,
+            ...validFiles.map((file) => URL.createObjectURL(file)),
+          ]);
+        });
+
+        return [...prev, ...validFiles];
       });
     },
     []
   );
 
   const removeImage = useCallback((index: number) => {
-    setImagePreviews((prev: any) => {
-      const newPreviews = [...prev];
-      if (newPreviews[index]) URL.revokeObjectURL(newPreviews[index]);
-      newPreviews.splice(index, 1);
-      return newPreviews;
+    setImagePreviews((prev) => {
+      const copy = [...prev];
+      if (copy[index]) URL.revokeObjectURL(copy[index]);
+      copy.splice(index, 1);
+      return copy;
     });
-    setSelectedFiles((prev: any) => {
-      const newFiles = [...prev];
-      newFiles.splice(index, 1);
-      return newFiles;
+
+    setSelectedFiles((prev) => {
+      const copy = [...prev];
+      copy.splice(index, 1);
+      return copy;
     });
   }, []);
+
+  // ---------------- SUBMIT FRUIT ----------------
 
   const onSubmit = (data: any) => {
     if (selectedFiles.length < MIN_IMAGES) {
@@ -206,37 +183,32 @@ export default function useFruit<T extends FieldValues, S extends ZodType>(
       return;
     }
 
-    const formattedHarvestDate = new Date(data.harvestDate)
-      .toISOString()
-      .split("T")[0];
-    const formattedExpiryDate = new Date(data.expiryDate)
-      .toISOString()
-      .split("T")[0];
-
     const submissionData = {
       ...data,
-      harvestDate: formattedHarvestDate,
-      expiryDate: formattedExpiryDate,
+      harvestDate: new Date(data.harvestDate).toISOString().split("T")[0],
+      expiryDate: new Date(data.expiryDate).toISOString().split("T")[0],
     };
 
     startTransition(async () => {
       try {
         const formData = new FormData();
         formData.append("metadata", JSON.stringify(submissionData));
-        selectedFiles.forEach((file: any) => formData.append("images", file));
+        selectedFiles.forEach((file) => formData.append("images", file));
+
         const response = await FruitService<FruitFormData>(
           "fruits"
         ).addNewFruit(formData);
+
         const { status, data, message } = response.data;
-        if (status !== 201) {
-          throw new Error("Failed to add fruit variety.");
-        }
+        if (status !== 201) throw new Error();
+
         addFruit(data);
         updateToast(true, message, "text-success");
         reset(defaultValues);
-        setSelectedFiles([]);
-        imagePreviews.forEach((preview:any) => URL.revokeObjectURL(preview));
+
+        imagePreviews.forEach(URL.revokeObjectURL);
         setImagePreviews([]);
+        setSelectedFiles([]);
       } catch (err) {
         const { message } = utils.formatError(err);
         updateToast(true, message || "An error occurred", "text-error");
@@ -244,39 +216,44 @@ export default function useFruit<T extends FieldValues, S extends ZodType>(
     });
   };
 
+  // ---------------- DELETE FRUIT ----------------
+
   const handleDeleteFruit = useCallback(
     async (fruitId: string) => {
       try {
         await FruitService("fruits").removeFruit(fruitId);
         removeFruit(fruitId);
-        updateToast(true, "Fruit removed successfuly", "text-success")
+        updateToast(true, "Fruit removed successfully", "text-success");
       } catch (err) {
         updateToast(true, "Failed to delete fruit.", "text-error");
         throw new Error("Failed to delete fruit.");
       }
     },
-    [removeFruit]
+    [removeFruit, updateToast]
   );
 
+  // ---------------- CREATE CATEGORY ----------------
+
   const createNewCategory: SubmitHandler<FruitCategory> = (data) => {
-    if (!data.name || data.name.trim() === "") {
+    if (!data.name?.trim()) {
       updateToast(true, "Category name is required.", "text-error");
       return;
     }
-    if (!data.kinds || data.kinds.length === 0 || data.kinds[0].trim() === "") {
+
+    if (!data.kinds?.length || !data.kinds[0].trim()) {
       updateToast(true, "At least one kind is required.", "text-error");
       return;
     }
+
     startTransition(async () => {
       try {
         const response = (await FruitService("categories").createFruitCategory(
           data
         )) as unknown as AxiosResponse;
-        console.log("*******UseFruit Category Response********", response);
+
         const { status, message, data: categoryData } = response.data;
-        if (status !== 201) {
-          throw new Error("Failed to create fruit category.");
-        }
+        if (status !== 201) throw new Error();
+
         updateFruitCategories(categoryData);
         updateToast(true, message, "text-success");
         reset();
@@ -287,16 +264,53 @@ export default function useFruit<T extends FieldValues, S extends ZodType>(
     });
   };
 
+  // ---------------- EFFECTS ----------------
+
   useEffect(() => {
-    fetchFruitCategories();
-    setValue("images", selectedFiles as any, { shouldValidate: true });
-  }, [selectedFiles, fetchFruitCategories, setValue]);
+    if (isSubmitSuccessful && isSuccess) reset();
+
+    if (selectedFiles.length) {
+      setValue("images", selectedFiles as any, { shouldValidate: true });
+    }
+  }, [selectedFiles, setValue, isSubmitSuccessful, isSuccess, reset]);
+
+  useEffect(() => {
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
+
+    startTransition(async () => {
+      try {
+        const tasks: Promise<any>[] = [];
+
+        if (!fruitCategoryLength) tasks.push(fetchFruitCategories());
+        if (!fruitLength) tasks.push(fetchAllFruits());
+        if (!fruitInventoryLength) tasks.push(fetchAllFruitInventories());
+
+        await Promise.allSettled(tasks);
+      } catch {
+        updateToast(
+          true,
+          "Limited data may be available due to connection.",
+          "text-warning"
+        );
+      }
+    });
+  }, [
+    fruitLength,
+    fruitCategoryLength,
+    fruitInventoryLength,
+    fetchAllFruits,
+    fetchFruitCategories,
+    fetchAllFruitInventories,
+    updateToast,
+  ]);
+
+  // ---------------- API ----------------
 
   return {
     watch,
     reset,
     toast,
-    fruits,
     errors,
     control,
     isDirty,
@@ -316,8 +330,9 @@ export default function useFruit<T extends FieldValues, S extends ZodType>(
     handleDeleteFruit,
     handleImageChange,
     isSubmitSuccessful,
-    fruitCategories: categories,
-    fruitInventories: inventories,
+    fruits: validFruits,
+    fruitCategories: validCategories,
+    fruitInventories: validInventories,
     onSubmitCategory: createNewCategory,
   };
 }

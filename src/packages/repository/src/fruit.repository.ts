@@ -19,9 +19,7 @@ export default function FruitRepository<T>(URLResource: string) {
       AxiosResponse<IApiResponseData<FruitFormData[]>>
     > => {
       const { proxyClient } = await axiosServer();
-      const response = await proxyClient.get(`${partFruitUrl}/${URLResource}`);
-      console.log("All fruits Repo", response);
-      return response;
+      return await proxyClient.get(`${partFruitUrl}/${URLResource}`);
     },
     fetchOneFruitById: async (
       fruitId: string
@@ -41,8 +39,7 @@ export default function FruitRepository<T>(URLResource: string) {
       AxiosResponse<IApiResponseData<FruitCategory[]>>
     > => {
       const { proxyClient } = await axiosServer();
-      const response = await proxyClient.get(`${partFruitUrl}/fruits/${URLResource}`);
-      return response;
+      return await proxyClient.get(`${partFruitUrl}/fruits/${URLResource}`);
     },
     getFruitOriginList: async (): Promise<AxiosResponse> => {
       const { proxyClient } = await axiosServer();

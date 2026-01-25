@@ -27,10 +27,10 @@ export interface IPriceCardDetails {
   price: number;
   rating: number;
   cardNo: string;
-  imageSrc: string;
   isLoading: boolean;
   sellerName: string;
   description: string;
+  images: Array<ImagePreviewDetails>;
   onSave: (data: TPriceCardDetails) => void;
   onEditOrCancel: (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -43,15 +43,36 @@ export type TPriceCardDetails = Omit<
   "onEditOrCancel" | "onSave" | "edit" | "isLoading"
 >;
 
+export type ImagePreviewDetails = {
+  id: number;
+  imageUrl: string;
+};
+
 export type TLeftSideDashboard = {
   className: string;
   dashboardMenu: Array<string>;
 };
 
+export type FruitDetails = Omit<
+  FruitFormData,
+  | "unitPrice"
+  | "batchNumber"
+  | "harvestDate"
+  | "expiryDate"
+  | "supplier"
+  | "images"
+> & {
+  id?: number;
+  rating: number;
+  fruitId: string;
+  images: Array<ImagePreviewDetails>;
+  inventory: Array<FruitInventory>;
+};
+
 export interface IFruitInterface extends IClientMainRepository {
   addNewFruit: (
     fruit: FormData
-  ) => Promise<AxiosResponse<IApiResponseData<FruitFormData>>>;
+  ) => Promise<AxiosResponse<IApiResponseData<FruitDetails>>>;
   removeFruit: (
     frutiId: string
   ) => Promise<AxiosResponse<IApiResponseData<unknown>>>;
@@ -61,12 +82,12 @@ export interface IFruitInterface extends IClientMainRepository {
   >;
   fetchAllFruitByCategory: (
     categoryId: string
-  ) => Promise<AxiosResponse<IApiResponseData<FruitFormData[]>>>;
+  ) => Promise<AxiosResponse<IApiResponseData<FruitDetails[]>>>;
   fetchOneFruitById: (
     fruitId: string
-  ) => Promise<AxiosResponse<IApiResponseData<FruitFormData>>>;
+  ) => Promise<AxiosResponse<IApiResponseData<FruitDetails>>>;
   fetchAllFruits: () => Promise<
-    AxiosResponse<IApiResponseData<FruitFormData[]>>
+    AxiosResponse<IApiResponseData<FruitDetails[]>>
   >;
   fetchFruitCategories: () => Promise<
     AxiosResponse<IApiResponseData<FruitCategory[]>>

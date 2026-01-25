@@ -8,7 +8,7 @@ import { FruitInventorySchema } from "@/packages/helpers/src/validations/fruits.
 const url = `/fruits/${URLResource.FRUIT_INVENTORY}`;
 
 export async function GET(req: NextRequest) {
-  console.log("******** reached fruit inventory api route ********");
+  console.log("******** reached fruit Inventory GET api route ********");
   try {
     const { backendClient } = await axiosServer();
     const result = (await backendClient.get(url)) as unknown as AxiosResponse;

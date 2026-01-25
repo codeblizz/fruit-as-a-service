@@ -8,7 +8,7 @@ import { FruitSchema } from "@/packages/helpers/src/validations/fruits.validate"
 const partURL = `/${URLResource.FRUITS}`;
 
 export async function GET(req: NextRequest) {
-  console.log("******** reached fruit api route base ********");
+  console.log("******** reached fruit GET api route ********");
   try {
     const { backendClient } = await axiosServer();
     const result = (await backendClient.get(

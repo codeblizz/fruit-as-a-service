@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { string, z } from "zod";
 import CONSTANT from "../constants";
 
 export const PriceCardDetailSchema = z.object({
@@ -6,7 +6,7 @@ export const PriceCardDetailSchema = z.object({
   price: z.number(),
   rating: z.number(),
   cardNo: z.string(),
-  imageSrc: z.string(),
+  images: z.array(z.object({ id: z.number(), imageUrl: string() })),
   sellerName: z.string(),
   description: z.string(),
 });
@@ -36,7 +36,7 @@ export const FruitSchema = z
       .transform((val) => parseFloat(val))
       .refine((val) => val > 0, "Price must be greater than zero"),
 
-    initialStock: z
+    currentStock: z
       .string()
       .min(1, "Stock quantity is required.")
       .regex(/^\d+$/, "Stock must be a whole number")
@@ -88,7 +88,7 @@ export const FruitInventorySchema = z
     unitPrice: fruitObject.shape.unitPrice.optional(),
     harvestDate: fruitObject.shape.harvestDate.optional(),
     expiryDate: fruitObject.shape.expiryDate.optional(),
-    quantityAvailable: fruitObject.shape.initialStock.optional(),
+    quantityAvailable: fruitObject.shape.currentStock.optional(),
     batchNumber: fruitObject.shape.batchNumber.optional(),
     supplier: fruitObject.shape.supplier.optional(),
     createdAt: z.string(),
@@ -105,7 +105,7 @@ export const FruitInventorySchema = z
       return true;
     },
     { message: "Expiry date must be after harvest", path: ["expiryDate"] }
-);
+  );
 
 export type FruitFormInput = z.input<typeof FruitSchema>;
 export type FruitFormData = z.output<typeof FruitSchema>;

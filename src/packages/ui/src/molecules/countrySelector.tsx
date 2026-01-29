@@ -112,7 +112,7 @@ function CountrySelector({
 
               {isOpen && (
                 <div className="absolute z-[60] w-full mt-1 bg-ghost-apple border border-slate-200 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 origin-top">
-                  <div className="p-3 border-b border-slate-100 bg-slate-50/50 sticky top-0">
+                  <div className="p-3 border-b border-slate-100 bg-ghost-apple/50 sticky top-0">
                     <div className="relative -mt-1">
                       <Search
                         size={16}
@@ -146,8 +146,8 @@ function CountrySelector({
                         w-full flex items-center cursor-pointer justify-between px-4 py-2 text-left text-sm transition-all
                         ${
                           selectedId === opt.value
-                            ? "bg-slate-50 text-slate-700 font-semibold"
-                            : "text-slate-600 hover:bg-slate-50"
+                            ? "bg-ghost-apple text-slate-700 font-semibold"
+                            : "text-slate-600 hover:bg-ghost-apple"
                         }
                       `}
                           >
@@ -172,7 +172,7 @@ function CountrySelector({
                       </div>
                     ) : (
                       <div className="px-4 py-10 text-center space-y-2">
-                        <div className="bg-slate-50 w-10 h-10 rounded-full flex items-center justify-center mx-auto">
+                        <div className="bg-ghost-apple w-10 h-10 rounded-full flex items-center justify-center mx-auto">
                           <Search size={18} className="text-slate-300" />
                         </div>
                         <p className="text-sm text-slate-400">
@@ -182,7 +182,7 @@ function CountrySelector({
                     )}
                   </div>
 
-                  <div className="px-4 py-2 bg-slate-50 border-t border-slate-100 text-[10px] text-slate-400 flex justify-between uppercase tracking-tighter font-semibold">
+                  <div className="px-4 py-2 bg-ghost-apple border-t border-slate-100 text-[10px] text-slate-400 flex justify-between uppercase tracking-tighter font-semibold">
                     <span>{filteredOptions.length} Results</span>
                     <span>Global Database</span>
                   </div>

@@ -15,8 +15,8 @@ import {
   FruitCategory,
   FruitCategorySchema,
 } from "@/packages/helpers/src/validations/fruits.validate";
-import FruitBreadCrumb from "@/packages/ui/src/organisms/fruits/fruitBreadCrumb";
 import FruitHeader from "@/packages/ui/src/organisms/fruits/fruitHeader";
+import FruitBreadCrumb from "@/packages/ui/src/organisms/fruits/fruitBreadCrumb";
 
 export default function AddFruitCategory() {
   const {
@@ -55,7 +55,7 @@ export default function AddFruitCategory() {
         <Section className="w-full min-w-lg outline outline-apple-green bg-inherit rounded-lg shadow-xl border border-slate-200 overflow-hidden">
           <header className="p-4">
             <div className="flex items-center gap-2 mb-2">
-              <div className="bg-white/20 p-1 rounded-lg backdrop-blur-sm">
+              <div className="bg-ghost-apple/20 p-1 rounded-lg backdrop-blur-sm">
                 <Apple fill="" className="w-6 h-6 text-apple-green" />
               </div>
               <h1 className="text-2xl font-black tracking-tight">
@@ -102,7 +102,7 @@ export default function AddFruitCategory() {
                 {fields.length === 0 ? (
                   <div
                     className={cn(
-                      "flex flex-col items-center justify-center p-8 bg-slate-50 rounded-lg border border-dashed border-slate-200 text-slate-400",
+                      "flex flex-col items-center justify-center p-8 bg-ghost-apple rounded-lg border border-dashed border-slate-200 text-slate-400",
                       errors.kinds ? "border-cherry" : ""
                     )}
                   >

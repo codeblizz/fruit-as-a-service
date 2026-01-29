@@ -21,9 +21,9 @@ function ImagePreviewer({
       <div className="w-full flex justify-between items-center gap-x-2">
         <label
           className={cn(
-            "aspect-square w-24 p-3 text-center bg-white border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center transition-all group",
+            "aspect-square w-24 p-3 text-center bg-ghost-apple border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center transition-all group",
             isActualImageLength
-              ? "hover:border-slate-200 hover:bg-slate-50/50 cursor-not-allowed"
+              ? "hover:border-slate-200 hover:bg-ghost-apple/50 cursor-not-allowed"
               : "hover:border-emerald-400 hover:bg-emerald-50/50 cursor-pointer"
           )}
         >

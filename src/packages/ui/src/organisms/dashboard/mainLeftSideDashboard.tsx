@@ -1,32 +1,32 @@
 "use client";
 
-import Span from "../../atoms/span";
-import Section from "../../atoms/section";
-import { Button } from "../../atoms/button";
-import Paragraph from "../../atoms/paragraph";
+import { useSession } from "next-auth/react";
+import Span from "@/packages/ui/src/atoms/span";
 import { cn } from "@/packages/helpers/src/utils";
-import { signOut, useSession } from "next-auth/react";
+import Section from "@/packages/ui/src/atoms/section";
 import React, { useState, useTransition } from "react";
 import CONSTANT from "@/packages/helpers/src/constants";
+import { Button } from "@/packages/ui/src/atoms/button";
+import Paragraph from "@/packages/ui/src/atoms/paragraph";
 import NavItem from "@/packages/ui/src/molecules/navItems";
 import { useRouter, useSearchParams } from "next/navigation";
-import useDashboard from "../../molecules/hooks/useDashboard";
+import useAuth from "@/packages/ui/src/molecules/hooks/useAuth";
 import { ChevronLeft, ChevronRight, LogOutIcon } from "lucide-react";
-import DashBoardSubMenuAccordion from "../../molecules/dashboardSubMenu";
+import useDashboard from "@/packages/ui/src/molecules/hooks/useDashboard";
 import AppLogoComponent from "@/packages/ui/src/molecules/appLogoComponent";
+import DashBoardSubMenuAccordion from "@/packages/ui/src/molecules/dashboardSubMenu";
 
 function MainLeftSideDashboard() {
   const router = useRouter();
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const selected = searchParams.get("selected");
-  const [isPending, startTransition] = useTransition();
   const isActive = searchParams.get("active") === "true";
   const [toggleMainMenu, setToggleMainMenu] = useState(true);
   const [menuName, setMenuName] = useState<null | string>(null);
+  const { onSignOut, isLoading } = useAuth();
   const {
     activeTab,
-    updateToast,
     setActiveTab,
     isMobileOpen,
     setMobileOpen,
@@ -40,18 +40,10 @@ function MainLeftSideDashboard() {
     setMenuName((prev) => (prev === menu ? null : menu));
   };
 
-  const onSignOut = () => {
-    startTransition(async () => {
-      await signOut({ callbackUrl: "/auth/signin" });
-      updateToast(true, "User Signed Out", "text-success");
-      activeTab !== "overview" && setActiveTab("overview");
-    });
-  };
-
   return (
     <aside
       className={`
-          fixed inset-y-0 left-0 z-50 bg-ghost-apple border-r border-slate-200 transition-all duration-300 ease-in-out lg:relative
+          fixed inset-y-0 left-0 z-50 bg-ghost-apple border-r opacity-90 border-slate-200 transition-all duration-300 ease-in-out lg:relative
           ${isSidebarCollapsed ? "w-20" : "w-64"}
           ${
             isMobileOpen
@@ -179,7 +171,7 @@ function MainLeftSideDashboard() {
           <Button
             onClick={onSignOut}
             variant="destructive"
-            loading={isPending}
+            loading={isLoading}
             leftIcon={<LogOutIcon />}
             className="inline-flex items-center justify-center w-full h-8 px-3 text-quaternary rounded-xl"
           >

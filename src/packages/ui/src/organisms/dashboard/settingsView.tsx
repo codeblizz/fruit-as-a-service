@@ -1,38 +1,26 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Settings,
-  Bell,
-  Shield,
-  User,
-  Smartphone,
-  Save,
-  Trash2,
-  Database,
-  Globe,
-  Mail,
-  CheckCircle2,
-  Info,
-  RefreshCwIcon,
-  Tag,
-} from "lucide-react";
-import { Button } from "../../atoms/button";
-import CustomSelect from "../../atoms/select";
 import { useForm } from "react-hook-form";
+import CONSTANT from "@/packages/helpers/src/constants";
+import { Button } from "@/packages/ui/src/atoms/button";
+import CustomSelect from "@/packages/ui/src/atoms/select";
+import {
+  Tag,
+  Save,
+  Info,
+  Mail,
+  Globe,
+  Trash2,
+  Smartphone,
+  CheckCircle2,
+  RefreshCwIcon,
+} from "lucide-react";
 
 const SettingsView = () => {
   const [activeTab, setActiveTab] = useState("general");
   const [isSaving, setIsSaving] = useState(false);
   const { control } = useForm();
-
-  const tabs = [
-    { id: "general", label: "General", icon: Settings },
-    { id: "notifications", label: "Notifications", icon: Bell },
-    { id: "security", label: "Security", icon: Shield },
-    { id: "team", label: "Team Access", icon: User },
-    { id: "integration", label: "Integrations", icon: Database },
-  ];
 
   const handleSave = () => {
     setIsSaving(true);
@@ -40,11 +28,11 @@ const SettingsView = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 font-sans">
+    <div className="min-h-screen bg-ghost-apple/70 p-4 md:p-6 font-sans">
       <div className="max-w-4xl mx-auto">
         {/* Header & Internal Nav */}
         <div className="mb-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="flex bg-ghost-apple p-4 rounded-2xl shadow-2xl flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl font-bold text-slate-900">
                 Dashboard Settings
@@ -58,29 +46,28 @@ const SettingsView = () => {
               Last synced: 2 mins ago
             </div>
           </div>
-
-          {/* New Professional Horizontal Tab Bar */}
-          <div className="bg-white p-1 flex flex-wrap gap-1">
-            {tabs.map((tab) => (
-              <Button
-                key={tab.id}
-                variant={activeTab === tab.id ? "primary" : "outline"}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all `}
-              >
-                <tab.icon size={16} />
-                {tab.label}
-              </Button>
-            ))}
-          </div>
+        </div>
+        {/* New Professional Horizontal Tab Bar */}
+        <div className="bg-ghost-apple p-4 rounded-t-2xl shadow-2xl flex flex-wrap gap-1">
+          {CONSTANT.settingsTabs.map((tab) => (
+            <Button
+              key={tab.id}
+              variant={activeTab === tab.id ? "primary" : "outline"}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all `}
+            >
+              <tab.icon size={16} />
+              {tab.label}
+            </Button>
+          ))}
         </div>
         {/* Main Content Area */}
-        <div className="space-y-6">
+        <div className="space-y-6 rounded-b-2xl">
           {activeTab === "general" && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-400">
+            <div className="bg-ghost-apple border rounded-b-2xl border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-400">
               {/* Section: Fruit Identity */}
-              <div className="bg-white h-96 rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="px-8 py-6 border-b border-slate-100 bg-slate-50/50">
+              <div className="h-auto overflow-hidden">
+                <div className="px-8 py-6 border-b border-slate-100 bg-ghost-apple/50">
                   <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                     <Globe className="text-emerald-500" size={20} />
                     Fruit Identity
@@ -94,7 +81,7 @@ const SettingsView = () => {
                     <input
                       type="text"
                       defaultValue="Green Valley Premium Estates"
-                      className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium text-slate-900"
+                      className="w-full px-4 py-3.5 rounded-xl bg-ghost-apple border border-slate-200 focus:bg-ghost-apple focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-medium text-slate-900"
                     />
                   </div>
                   <div className="h-auto">
@@ -105,7 +92,7 @@ const SettingsView = () => {
                       icon={Tag}
                       name="categoryName"
                       control={control}
-                      className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:bg-white focus:border-emerald-500 transition-all font-medium text-slate-900"
+                      className="w-full px-4 py-3.5 rounded-xl bg-ghost-apple border border-slate-200 outline-none focus:bg-ghost-apple focus:border-emerald-500 transition-all font-medium text-slate-900"
                       placeholder="Select a category"
                       rules={{ required: "Select a category" }}
                       options={[
@@ -125,7 +112,7 @@ const SettingsView = () => {
                       icon={Tag}
                       name="categoryName"
                       control={control}
-                      className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:bg-white focus:border-emerald-500 transition-all font-medium text-slate-900"
+                      className="w-full px-4 py-3.5 rounded-xl bg-ghost-apple border border-slate-200 outline-none focus:bg-ghost-apple focus:border-emerald-500 transition-all font-medium text-slate-900"
                       placeholder="Select a category"
                       rules={{ required: "Select a category" }}
                       options={[
@@ -141,8 +128,8 @@ const SettingsView = () => {
               </div>
 
               {/* Section: Monitoring Thresholds */}
-              <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="px-8 py-6 border-b border-slate-100 bg-slate-50/50">
+              <div className="bg-ghost-apple rounded-b-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="px-8 py-6 border-b border-slate-100 bg-ghost-apple/50">
                   <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                     <Smartphone className="text-blue-500" size={20} />
                     Sensor Thresholds
@@ -165,7 +152,7 @@ const SettingsView = () => {
                   ].map((item, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-5 bg-white rounded-2xl border border-slate-100 hover:border-slate-300 transition-all group"
+                      className="flex items-center justify-between p-5 bg-ghost-apple rounded-2xl border border-slate-100 hover:border-slate-300 transition-all group"
                     >
                       <div className="flex gap-4 items-center">
                         <div
@@ -190,7 +177,7 @@ const SettingsView = () => {
                             defaultChecked
                             className="sr-only peer"
                           />
-                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-apple-green"></div>
+                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-ghost-apple after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-apple-green"></div>
                         </div>
                       </div>
                     </div>
@@ -201,14 +188,14 @@ const SettingsView = () => {
           )}
 
           {activeTab === "notifications" && (
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-400 overflow-hidden">
-              <div className="px-8 py-6 border-b border-slate-100 bg-slate-50/50">
+            <div className="bg-ghost-apple rounded-b-2xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-400 overflow-hidden">
+              <div className="px-8 pt-4 border-b border-slate-100 bg-ghost-apple/50">
                 <h2 className="text-lg font-bold text-slate-900">
                   Delivery Channels
                 </h2>
               </div>
-              <div className="p-8 space-y-6">
-                <div className="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors">
+              <div className="px-8 py-3 space-y-6">
+                <div className="flex items-center justify-between p-4 hover:bg-ghost-apple rounded-2xl transition-colors">
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
                       <Mail size={20} />
@@ -224,7 +211,7 @@ const SettingsView = () => {
                     Configure
                   </button>
                 </div>
-                <div className="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors">
+                <div className="flex items-center justify-between p-4 hover:bg-ghost-apple rounded-2xl transition-colors">
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
                       <Smartphone size={20} />
@@ -245,7 +232,7 @@ const SettingsView = () => {
           )}
 
           {/* Action Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 border-t border-slate-200 mt-4">
+          <div className="flex flex-col bg-ghost-apple p-4 shadow-2xl rounded-2xl sm:flex-row items-center justify-between gap-4 py-6 border-t border-slate-200 mt-4">
             <Button
               variant="outline"
               className="flex items-center gap-2 rounded-xl text-slate-400 hover:text-red-500 font-bold text-xs uppercase tracking-widest transition-colors px-4 py-2 group"
@@ -259,7 +246,7 @@ const SettingsView = () => {
             <div className="flex gap-3 w-full sm:w-auto">
               <Button
                 variant="outline"
-                className="flex-1 sm:flex-none gap-2 px-6 py-3 rounded-xl text-slate-500 font-bold text-sm hover:bg-white hover:border-slate-200 transition-all"
+                className="flex-1 sm:flex-none gap-2 px-6 py-3 rounded-xl text-slate-500 font-bold text-sm hover:bg-ghost-apple hover:border-slate-200 transition-all"
               >
                 <Trash2
                   size={14}

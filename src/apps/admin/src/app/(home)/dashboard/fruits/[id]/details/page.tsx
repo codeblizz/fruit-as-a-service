@@ -1,7 +1,6 @@
 "use client";
 
 import { ZodSchema } from "zod";
-import { usePathname, useSearchParams } from "next/navigation";
 import lib from "@/packages/helpers/src/libs";
 import React, { MouseEvent, useState } from "react";
 import Modal from "@/packages/ui/src/molecules/modal";
@@ -10,6 +9,7 @@ import Section from "@/packages/ui/src/atoms/section";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CONSTANT from "@/packages/helpers/src/constants";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { usePathname, useSearchParams } from "next/navigation";
 import useFruit from "@/packages/ui/src/molecules/hooks/useFruit";
 import { TPriceCardDetails } from "@/packages/types/src/fruits.type";
 import FruitHeader from "@/packages/ui/src/organisms/fruits/fruitHeader";
@@ -32,7 +32,7 @@ const defaultValues = {
   description: "",
 };
 
-function PriceCardDetailPage({ className }: { className: string }) {
+function PriceCardDetailPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams().get("id");
   const fruitParamsId = pathname.split("/").pop();
@@ -96,9 +96,7 @@ function PriceCardDetailPage({ className }: { className: string }) {
   return (
     <Section
       className={lib.cn([
-        // "flex flex-col gap-3 justify-start px-4 py-2 items-center border-2 border-l-1 my-16 border-plum",
-        "space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500",
-        className,
+        "space-y-6 animate-in bg-ghost-apple p-6 fade-in min-h-screen slide-in-from-bottom-2 duration-500",
       ])}
     >
       <FruitBreadCrumb />

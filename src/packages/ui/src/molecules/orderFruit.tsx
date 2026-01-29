@@ -4,15 +4,15 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Span from "@/packages/ui/src/atoms/span";
 import utils from "@/packages/helpers/src/utils";
-import Card from "@/packages/ui/src/molecules/card";
-import Button from "@/packages/ui/src/atoms/button";
 import Section from "@/packages/ui/src/atoms/section";
 import React, { useState, useTransition } from "react";
 import Fragment from "@/packages/ui/src/atoms/fragment";
 import CONSTANT from "@/packages/helpers/src/constants";
+import { Button } from "@/packages/ui/src/atoms/button";
 import Paragraph from "@/packages/ui/src/atoms/paragraph";
 import AuthForm from "@/packages/ui/src/molecules/authForm";
 import PaymentService from "@/packages/services/src/payments";
+import { Card } from "@/packages/ui/src/molecules/card";
 import { PaymentIntent } from "@/packages/types/src/gateway.type";
 
 export default function OrderFruit() {
@@ -69,7 +69,7 @@ export default function OrderFruit() {
     }
   };
 
-  if (session) {
+  if (!session) {
     router.push("/auth/signin");
     return (
       <Fragment className="flex flex-col w-full min-h-screen items-center justify-center">
@@ -80,10 +80,7 @@ export default function OrderFruit() {
 
   return (
     <Fragment className="flex flex-col items-center justify-center mt-16">
-      <Card
-        name=""
-        className="flex flex-col justify-center items-center size-full p-8"
-      >
+      <Card className="flex flex-col justify-center items-center size-full p-8">
         <Paragraph className="text-3xl font-bold mb-8">
           {"Order Fresh Fruits"}
         </Paragraph>
@@ -130,7 +127,7 @@ export default function OrderFruit() {
           <Button
             type="button"
             name="checkout"
-            isPending={isPending}
+            loading={isPending}
             onClick={handleCheckout}
             disabled={getTotalAmount() === 0}
             className="w-32 md:w-48 truncate inline-flex text-xs md:text-[16px] px-2 justify-center items-center"

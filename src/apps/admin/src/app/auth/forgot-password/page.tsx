@@ -68,7 +68,7 @@ const ForgotPassword = ({
   };
 
   return (
-    <div className="min-h-screen pt-12 w-full bg-[url('/images/fruit-platter-002.webp')] bg-no-repeat bg-cover bg-center bg-fixed flex flex-col justify-center items-center">
+    <div className="min-h-screen pt-12 w-full flex flex-col justify-center items-center">
       <div className="size-full bg-surface-primary backdrop-blur-sm justify-center max-w-md rounded-2xl">
         <Card
           className={cn(

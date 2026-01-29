@@ -38,6 +38,8 @@ export interface IPriceCardDetails {
   ) => void;
 }
 
+export type CartAction = "increment" | "decrement";
+
 export type TPriceCardDetails = Omit<
   IPriceCardDetails,
   "onEditOrCancel" | "onSave" | "edit" | "isLoading"
@@ -64,9 +66,13 @@ export type FruitDetails = Omit<
 > & {
   id?: number;
   rating: number;
+  reviews: number;
   fruitId: string;
-  images: Array<ImagePreviewDetails>;
+  isOrganic: boolean;
+  isLocallyGrown: boolean;
+  benefits: Array<String>;
   inventory: Array<FruitInventory>;
+  images: Array<ImagePreviewDetails>;
 };
 
 export interface IFruitInterface extends IClientMainRepository {

@@ -8,7 +8,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const { isMobileOpen, setMobileOpen } = useDashboard();
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] overflow-hidden font-sans antialiased text-slate-900">
+    <div className="flex h-screen overflow-hidden font-sans antialiased text-slate-900">
       {/* MOBILE OVERLAY */}
       {isMobileOpen && (
         <div
@@ -20,9 +20,9 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       <MainLeftSideDashboard />
 
       {/* MAIN CONTENT WRAPPER */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden opacity-90">
         <main className="flex-1 overflow-y-auto mt-20">
-          <div className="p-4 w-full">{children}</div>
+          <div className="w-full">{children}</div>
         </main>
       </div>
     </div>

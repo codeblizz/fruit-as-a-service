@@ -12,7 +12,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fruit.service.enums.InventoryStatus;
+import com.fruit.service.enums.PackagingUnit;
 
+import org.hibernate.annotations.ColumnTransformer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -60,9 +62,10 @@ public class InventoryEntity implements Serializable {
     private FruitEntity fruit;
 
     @Column(nullable = false)
-    private Integer quantityAvailable;
+    @Builder.Default
+    private Integer quantityAvailable = 0;
 
-    @Default
+    @Builder.Default
     @Column(nullable = false)
     private Integer quantityReserved = 0;
 
@@ -75,14 +78,21 @@ public class InventoryEntity implements Serializable {
     @Column(unique = true, length = 50)
     private String batchNumber;
     
+    @Column(nullable = false)
     private String supplier;
+
+    // @Enumerated(EnumType.STRING)
+    @Builder.Default
+    @Column(name = "packaging_unit", nullable = false, columnDefinition = "packaging_unit_type")
+    @ColumnTransformer(write = "?::packaging_unit_type")
+    private PackagingUnit packagingUnit = PackagingUnit.KG;
 
     @Column(nullable = false, precision = 10, scale = 2)
     @NotNull
     private BigDecimal unitPrice;
 
     @Enumerated(EnumType.STRING)
-    @Default
+    @Builder.Default
     @Column(nullable = false)
     private InventoryStatus status = InventoryStatus.IN_STOCK;
 

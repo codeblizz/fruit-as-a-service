@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 import lombok.Builder;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.EqualsAndHashCode;
 
@@ -58,7 +59,25 @@ public class FruitEntity implements Serializable {
     private String commonName;
     private String originCountry;
     private String description;
-    private Number rating;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Number rating = 0;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Number reviews = 0;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isOrganic = false;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isLocallyGrown = false;
+
+    @Column(nullable = false)
+    private List<String> benefits;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)

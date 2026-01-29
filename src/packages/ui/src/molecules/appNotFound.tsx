@@ -23,7 +23,7 @@ export default function AppNotFound({ error, reset }: IErrorProps) {
           <button
             type="button"
             onClick={() => router.back()}
-            className="rounded-xl sm:rounded-2xl md:rounded-3xl cursor-pointer max-h-dvh text-center bg-black px-3.5 py-2.5 text-sm overflow-hidden text-nowrap text-ellipsis font-semibold w-[45%] text-white"
+            className="rounded-xl sm:rounded-2xl md:rounded-3xl cursor-pointer max-h-dvh text-center bg-blackcurrant px-3.5 py-2.5 text-sm overflow-hidden text-nowrap text-ellipsis font-semibold w-[45%] text-white"
           >
             Go back
           </button>

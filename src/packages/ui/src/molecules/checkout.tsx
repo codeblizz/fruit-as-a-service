@@ -1,279 +1,245 @@
 "use client";
 
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Lock, Info, ChevronRight, CreditCard as CardIcon } from "lucide-react";
+
+import { useRouter } from "next/navigation";
 import Form from "@/packages/ui/src/atoms/form";
 import Input from "@/packages/ui/src/atoms/input";
 import Section from "@/packages/ui/src/atoms/section";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState, useTransition } from "react";
-import Fragment from "@/packages/ui/src/atoms/fragment";
 import { Button } from "@/packages/ui/src/atoms/button";
-import Paragraph from "@/packages/ui/src/atoms/paragraph";
-import { useSearchParams, useRouter } from "next/navigation";
-import PaymentService from "@/packages/services/src/payments";
-import { Card } from "@/packages/ui/src/molecules/card";
-import PayPalButtons from "@/packages/ui/src/molecules/paypalButton";
-import PayPalScriptProvider from "@/packages/providers/src/paypal.provider";
-import {
-  PaymentMethod,
-  PaymentMethodCreation,
-} from "@/packages/types/src/gateway.type";
+import { useCheckout } from "@/packages/ui/src/molecules/hooks/useCheckout";
 import {
   PaymentFormData,
   PaymentSchema,
 } from "@/packages/helpers/src/validations/paypal.validate";
+import NextImage from "../atoms/image";
 
 export default function Checkout() {
   const router = useRouter();
   const { data: session } = useSession();
-  const searchParams = useSearchParams();
-  const [error, setError] = useState<string>();
-  const [isPending, startTransition] = useTransition();
-  const orderAmount = searchParams.get("amount") || "0.00";
-  const paymentIntentId = searchParams.get("payment_intent");
-  const [paymentMethod, setPaymentMethod] =
-    useState<PaymentMethod["type"]>("stripe");
-
   const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<PaymentFormData>({
+    error,
+    isPending,
+    fruitImage,
+    orderAmount,
+    paymentMethod,
+    processPayment,
+    setPaymentMethod,
+  } = useCheckout();
+
+  const { control, handleSubmit } = useForm<PaymentFormData>({
     resolver: zodResolver(PaymentSchema),
     defaultValues: {
       email: session?.user?.email || "",
+      type: paymentMethod,
     },
   });
 
-  const onSubmit = async (data: PaymentFormData) => {
-    try {
-      let paymentMethod = {} as PaymentMethodCreation;
-      setError(undefined);
-      // Create payment method
-      startTransition(async () => {
-        paymentMethod = await PaymentService.createPaymentMethod(data.type, {
-          type: "card",
-          card: {
-            number: data.cardNumber,
-            expMonth: parseInt(data.expMonth),
-            expYear: parseInt(data.expYear),
-            cvc: data.cvc,
-          },
-          billingDetails: {
-            name: data.name,
-            email: data.email,
-            address: data.address,
-          },
-        });
-      });
-      // Confirm payment
-      if (paymentIntentId) {
-        await PaymentService.confirmPaymentIntent(data.type, {
-          paymentIntentId,
-          paymentMethodId: paymentMethod.id,
-        });
-      }
-      // Redirect to success page
-      router.replace("/order/success");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Payment failed");
-    }
-  };
-
-  if (session || !paymentIntentId) {
-    return (
-      <Fragment className="flex min-h-screen items-center justify-center">
-        <Card className="p-8">
-          <Paragraph className="text-2xl font-bold mb-4">
-            {"Invalid checkout session"}
-          </Paragraph>
-          <Button
-            name="back"
-            type="button"
-            className="w-full"
-            onClick={() => router.push("/order")}
-          >
-            {"Back to Order"}
-          </Button>
-        </Card>
-      </Fragment>
-    );
-  }
-
-  // Handle PayPal success
-  const handlePayPalSuccess = (orderId: string) => {
-    // Redirect to success page with the order ID
-    router.push(`/fruits/success?order_id=${orderId}`);
-  };
-
-  // Handle PayPal error
-  const handlePayPalError = (error: Error) => {
-    setError(error.message || "PayPal payment failed");
-  };
-
   return (
-    <Fragment className="flex flex-col items-center p-8">
-      <Card className="w-full max-w-2xl p-8">
-        <Paragraph className="text-3xl font-bold mb-8">{"Checkout"}</Paragraph>
-        <Section className="mb-6">
-          <Paragraph className="text-xl font-semibold mb-4">
-            {"Payment Method"}
-          </Paragraph>
-          <Section className="flex space-x-4">
-            <Button
-              type="button"
-              onClick={() => setPaymentMethod("stripe")}
-              className={`px-4 py-2 rounded-md ${
-                paymentMethod === "stripe"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-            >
-              {"Credit Card"}
-            </Button>
-            <Button
-              type="button"
-              onClick={() => setPaymentMethod("paypal")}
-              className={`px-4 py-2 rounded-md ${
-                paymentMethod === "paypal"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-            >
-              {"PayPal"}
-            </Button>
-          </Section>
-        </Section>
-        {paymentMethod === "stripe" ? (
-          <Form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <Section className="space-y-4">
-              <Paragraph className="text-xl font-semibold">
-                {"Payment Information"}
-              </Paragraph>
-              <Input
-                labelClassName=""
-                control={control}
-                name="cardNumber"
-                placeholder="Card Number"
-                className="w-full"
-              />
-              <Section className="grid grid-cols-3 gap-4">
-                <Input
-                  labelClassName=""
-                  control={control}
-                  name="expMonth"
-                  placeholder="MM"
-                  className="w-full"
-                />
-                <Input
-                  labelClassName=""
-                  control={control}
-                  name="expYear"
-                  placeholder="YYYY"
-                  className="w-full"
-                />
-                <Input
-                  labelClassName=""
-                  control={control}
-                  name="cvc"
-                  placeholder="CVC"
-                  className="w-full"
-                />
-              </Section>
-            </Section>
-            <Section className="space-y-4">
-              <Paragraph className="text-xl font-semibold">
-                {"Billing Information"}
-              </Paragraph>
-              <Input
-                labelClassName=""
-                control={control}
-                name="name"
-                placeholder="Full Name"
-                className="w-full"
-              />
-              <Input
-                labelClassName=""
-                control={control}
-                name="email"
-                placeholder="Email"
-                className="w-full"
-              />
-              <Input
-                labelClassName=""
-                control={control}
-                name="address.line1"
-                placeholder="Address"
-                className="w-full"
-              />
-              <Section className="grid grid-cols-2 gap-4">
-                <Input
-                  labelClassName=""
-                  control={control}
-                  name="address.city"
-                  placeholder="City"
-                  className="w-full"
-                />
-                <Input
-                  labelClassName=""
-                  control={control}
-                  name="address.state"
-                  placeholder="State"
-                  className="w-full"
-                />
-              </Section>
-              <Section className="grid grid-cols-2 gap-4">
-                <Input
-                  labelClassName=""
-                  control={control}
-                  name="address.postalCode"
-                  placeholder="Postal Code"
-                  className="w-full"
-                />
-                <Input
-                  labelClassName=""
-                  control={control}
-                  name="address.country"
-                  placeholder="Country"
-                  className="w-full"
-                />
-              </Section>
-            </Section>
-            {error && <i className="text-red-500 text-sm">{error}</i>}
-            <Button
-              name="pay"
-              type="submit"
-              loading={isPending}
-              className="w-full"
-            >
-              {"Complete Payment"}
-            </Button>
-          </Form>
-        ) : (
-          <Fragment className="space-y-6">
-            <Section className="py-4">
-              <Paragraph className="text-xl font-semibold mb-4">
-                {"PayPal Checkout"}
-              </Paragraph>
-              <Paragraph className="mb-4">
-                {"Click the PayPal button below to complete your payment of $"}
-                {orderAmount}.
-              </Paragraph>
-              <PayPalScriptProvider
-                clientId={process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test"}
+    <Section className="min-h-screen mt-[3rem] -mb-7 opacity-95 backdrop-blur-xl text-black font-sans selection:bg-blue-100">
+      <div className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+        {/* Left Side: Product Info & Summary (X-style Sidebar) */}
+        <div className="bg-[#F8F9F9] p-8 md:p-16 border-r border-stone-200">
+          <Button
+            variant="link"
+            onClick={() => router.back()}
+            className="text-stone-500 pl-0 hover:text-blackcurrant hover:no-underline transition-colors mb-12 flex items-center gap-2 text-sm font-extrabold hover:font-semibold"
+          >
+            <ChevronRight className="rotate-180 w-4 h-4" /> Back
+          </Button>
+
+          <div className="space-y-6">
+            <header className="space-y-1">
+              <h2 className="text-stone-500 font-bold text-sm uppercase tracking-wider">
+                Pay Fruit Market
+              </h2>
+              <h1 className="text-5xl font-extrabold tracking-tight text-black">
+                ${orderAmount}
+              </h1>
+            </header>
+
+            <div className="space-y-4 pt-8">
+              <div className="flex justify-between items-center group">
+                <div className="flex items-center gap-4">
+                  {fruitImage || (
+                    <NextImage
+                      width={30}
+                      height={30}
+                      src={"../assets/icons/fruit-icon.png"}
+                      alt="fruit-image"
+                      className="w-12 h-12 bg-stone-200 rounded-lg flex items-center justify-center text-2xl"
+                    />
+                  )}
+                  <div>
+                    <p className="font-bold text-black">Premium Harvest Box</p>
+                    <p className="text-stone-500 text-sm italic">
+                      One-time purchase
+                    </p>
+                  </div>
+                </div>
+                <span className="font-bold">${orderAmount}</span>
+              </div>
+            </div>
+
+            <div className="pt-8 space-y-3 border-t border-stone-200">
+              <div className="flex justify-between text-stone-500 text-sm">
+                <span>Subtotal</span>
+                <span>${orderAmount}</span>
+              </div>
+              <div className="flex justify-between text-stone-500 text-sm">
+                <span>Shipping</span>
+                <span>Free</span>
+              </div>
+              <div className="flex justify-between text-black font-bold text-lg pt-2">
+                <span>Total due today</span>
+                <span>${orderAmount}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side: Form (The Clean Stripe Input Style) */}
+        <div className="p-8 md:p-16 bg-ghost-apple">
+          <div className="max-w-md mx-auto space-y-10">
+            <header className="space-y-6">
+              <h2 className="text-xl font-bold">Payment method</h2>
+
+              {/* Simple Provider Toggle */}
+              <div className="flex gap-2">
+                {["STRIPE", "PAYPAL", "PAYSTACK"].map((id) => (
+                  <Button
+                    key={id}
+                    onClick={() => setPaymentMethod(id as any)}
+                    className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${
+                      paymentMethod === id
+                        ? "bg-blackcurrant text-ghost-apple border-blackcurrant"
+                        : "bg-ghost-apple text-stone-500 border-stone-200 hover:text-ghost-apple hover:border-stone-400"
+                    }`}
+                  >
+                    {id}
+                  </Button>
+                ))}
+              </div>
+            </header>
+
+            {paymentMethod === "STRIPE" ? (
+              <Form
+                onSubmit={handleSubmit(processPayment)}
+                className="space-y-6"
               >
-                <PayPalButtons
-                  amount={orderAmount}
-                  onError={handlePayPalError}
-                  onSuccess={handlePayPalSuccess}
-                />
-              </PayPalScriptProvider>
-            </Section>
-            {error && <i className="text-red-500 text-sm">{error}</i>}
-          </Fragment>
-        )}
-      </Card>
-    </Fragment>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-bold block mb-2">
+                      Email
+                    </label>
+                    <Input
+                      control={control}
+                      name="email"
+                      placeholder="email@example.com"
+                      labelClassName="hidden"
+                      className="w-full border-stone-200 focus:border-black focus:ring-0 rounded-md h-12"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold block mb-2">
+                      Card information
+                    </label>
+                    <div className="border border-stone-200 rounded-md overflow-hidden focus-within:border-black transition-colors">
+                      <Input
+                        control={control}
+                        name="cardNumber"
+                        placeholder="1234 5678 9101 1121"
+                        labelClassName="hidden"
+                        className="w-full border-none h-12 rounded-none"
+                      />
+                      <div className="flex border-t border-stone-200">
+                        <Input
+                          control={control}
+                          name="expMonth"
+                          placeholder="MM / YY"
+                          labelClassName="hidden"
+                          className="w-1/2 border-none border-r border-stone-200 h-12 rounded-none"
+                        />
+                        <Input
+                          control={control}
+                          name="cvc"
+                          placeholder="CVC"
+                          labelClassName="hidden"
+                          className="w-1/2 border-none h-12 rounded-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-bold block mb-2">
+                      Cardholder name
+                    </label>
+                    <Input
+                      control={control}
+                      name="name"
+                      placeholder="Full name on card"
+                      labelClassName="hidden"
+                      className="w-full border-stone-200 focus:border-black focus:ring-0 rounded-md h-12"
+                    />
+                  </div>
+                </div>
+
+                {error && (
+                  <p className="text-red-600 text-xs font-medium flex items-center gap-2 mt-2">
+                    <Info className="w-3 h-3" /> {error}
+                  </p>
+                )}
+
+                <Button
+                  type="submit"
+                  loading={isPending}
+                  className="w-full h-12 bg-blackcurrant hover:bg-stone-800 text-white rounded-md font-bold text-md transition-all mt-4 shadow-sm"
+                >
+                  Pay ${orderAmount}
+                </Button>
+
+                <p className="text-[11px] text-stone-400 text-center leading-relaxed">
+                  By confirming your payment, you allow Fruit Market to charge
+                  your card for this and future payments in accordance with
+                  their terms.
+                </p>
+              </Form>
+            ) : (
+              <div className="border-2 border-dashed border-stone-100 rounded-xl p-12 text-center">
+                <p className="text-stone-400 text-sm">
+                  Redirecting to {paymentMethod}...
+                </p>
+                <Button
+                  onClick={handleSubmit(processPayment)}
+                  className="mt-4 bg-stone-100 text-black border border-stone-200"
+                >
+                  Continue with {paymentMethod}
+                </Button>
+              </div>
+            )}
+
+            {/* <footer className="pt-12 flex justify-center items-center gap-4 text-stone-400">
+              <div className="flex items-center gap-1 text-[10px] font-bold tracking-tighter uppercase">
+                <Lock className="w-3 h-3" /> Powered by Stripe
+              </div>
+              <span className="w-1 h-1 bg-stone-200 rounded-full"></span>
+              <div className="text-[10px] font-bold tracking-tighter uppercase">
+                Terms
+              </div>
+              <span className="w-1 h-1 bg-stone-200 rounded-full"></span>
+              <div className="text-[10px] font-bold tracking-tighter uppercase">
+                Privacy
+              </div>
+            </footer> */}
+          </div>
+        </div>
+      </div>
+    </Section>
   );
 }

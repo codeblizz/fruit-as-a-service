@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useCallback, useState, useTransition } from "react";
-import NextImage from "../../atoms/image";
 import { useSession } from "next-auth/react";
+import NextImage from "@/packages/ui/src/atoms/image";
+import Section from "@/packages/ui/src/atoms/section";
+import { Button } from "@/packages/ui/src/atoms/button";
 import CONSTANT from "@/packages/helpers/src/constants";
+import React, { useCallback, useState, useTransition } from "react";
 import DefaultProfileImage from "@/packages/assets/images/defaultProfileImage.svg";
 import {
   Edit3,
@@ -25,7 +27,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Button } from "../../atoms/button";
 
 const ProfileView = () => {
   const { data: session } = useSession();
@@ -47,11 +48,11 @@ const ProfileView = () => {
   );
 
   return (
-    <div className="p-2 space-y-4 animate-in fade-in duration-500">
+    <div className="p-6 space-y-4 animate-in fade-in duration-500 min-h-screen bg-ghost-apple/70">
       {/* Profile Header Card */}
-      <section className="relative bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+      <Section className="relative bg-ghost-apple rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
         {/* Cover Pattern/Image */}
-        <div className="h-32 md:h-48 bg-gradient-to-br from-apple-green via-kiwi to-apple-green opacity-90"></div>
+        <div className="h-32 md:h-48 bg-gradient-to-br from-blackcurrant to-blackcurrant opacity-90"></div>
 
         <div className="px-6 pb-6">
           <div className="relative flex flex-col md:flex-row md:items-end -mt-12 md:-mt-16 gap-6">
@@ -60,12 +61,13 @@ const ProfileView = () => {
               <NextImage
                 src={session?.user.image ?? DefaultProfileImage}
                 alt="User Profile"
-                className="w-24 h-24 md:w-32 md:h-32 rounded-3xl object-cover border-4 border-white shadow-md bg-white"
+                className="w-24 h-24 md:w-32 md:h-32 rounded-3xl object-cover border-4 border-white shadow-md bg-ghost-apple"
               />
               <Button
                 variant="link"
                 animation="none"
-                className="absolute size-full inset-0 bg-black/10 text-white focus-visible:ring-0 rounded-3xl transition-opacity"
+                loading={isPending}
+                className="absolute size-full inset-0 bg-blackcurrant/10 text-white focus-visible:ring-0 rounded-3xl transition-opacity"
               >
                 <Camera
                   size={20}
@@ -108,12 +110,12 @@ const ProfileView = () => {
             </div>
           </div>
         </div>
-      </section>
+      </Section>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Personal Details */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+          <div className="bg-ghost-apple p-6 rounded-3xl shadow-sm border border-slate-200">
             <h3 className="font-bold text-lg mb-4">Contact Information</h3>
             <div className="space-y-4">
               <div className="flex items-center gap-4">
@@ -148,12 +150,12 @@ const ProfileView = () => {
 
             <h3 className="font-bold text-lg mb-4">Account Stats</h3>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-slate-50 p-4 rounded-2xl">
+              <div className="bg-ghost-apple p-4 rounded-2xl">
                 <Award className="text-orange-500 mb-2" size={20} />
                 <p className="text-xl font-bold text-slate-900">128</p>
                 <p className="text-xs text-slate-500">Badge Points</p>
               </div>
-              <div className="bg-slate-50 p-4 rounded-2xl">
+              <div className="bg-ghost-apple p-4 rounded-2xl">
                 <Clock className="text-purple-500 mb-2" size={20} />
                 <p className="text-xl font-bold text-slate-900">1.2k</p>
                 <p className="text-xs text-slate-500">Hours Logged</p>
@@ -161,13 +163,13 @@ const ProfileView = () => {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+          <div className="bg-ghost-apple p-6 rounded-3xl shadow-sm border border-slate-200">
             <h3 className="font-bold text-lg mb-4">Integrations</h3>
             <div className="space-y-3">
               {["Google Drive", "Slack", "Trello"].map((app) => (
                 <div
                   key={app}
-                  className="flex items-center justify-between p-3 bg-slate-50 rounded-xl"
+                  className="flex items-center justify-between p-3 bg-ghost-apple rounded-xl"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full bg-green-500"></div>
@@ -183,7 +185,7 @@ const ProfileView = () => {
         {/* Right Column: Performance & Bio */}
         <div className="lg:col-span-2 space-y-6">
           {/* Bio Section */}
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+          <div className="bg-ghost-apple p-6 rounded-3xl shadow-sm border border-slate-200">
             <h3 className="font-bold text-lg mb-2">About Me</h3>
             <p className="text-slate-600 leading-relaxed">
               Passionate inventory strategist with over 8 years of experience in
@@ -194,7 +196,7 @@ const ProfileView = () => {
           </div>
 
           {/* Activity Chart */}
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+          <div className="bg-ghost-apple p-6 rounded-3xl shadow-sm border border-slate-200">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="font-bold text-lg">System Activity</h3>
@@ -202,7 +204,7 @@ const ProfileView = () => {
                   Your contributions over the last 7 days
                 </p>
               </div>
-              <select className="bg-slate-50 border-none rounded-lg text-xs font-bold p-2 outline-none cursor-pointer">
+              <select className="bg-ghost-apple border-none rounded-lg text-xs font-bold p-2 outline-none cursor-pointer">
                 <option>Last Week</option>
                 <option>Last Month</option>
               </select>
@@ -257,7 +259,7 @@ const ProfileView = () => {
           </div>
 
           {/* Achievements Grid */}
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+          <div className="bg-ghost-apple p-6 rounded-3xl shadow-sm border border-slate-200">
             <h3 className="font-bold text-lg mb-4">Milestones</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex gap-4 p-4 border border-slate-100 rounded-2xl hover:border-orange-200 transition-colors cursor-pointer">

@@ -81,7 +81,7 @@ export default function VerifyPage() {
     verificationStatus === "idle" || verificationStatus === "error";
 
   return (
-    <Fragment className="min-h-screen pt-12 w-full bg-[url('/images/fruit-platter-002.webp')] bg-no-repeat bg-cover bg-center bg-fixed flex flex-col justify-center items-center">
+    <Fragment className="min-h-screen pt-12 w-full flex flex-col justify-center items-center">
       <div className="w-[60%] sm:w-[50%] min-w-max rounded-2xl flex items-center justify-center p-4">
         <div className="bg-gradient-to-br from-peach via-quaternary to-peach/70 p-8 rounded-2xl shadow-xl w-full max-w-sm transition-all duration-300 border border-gray-100">
           <div className="flex flex-col items-center space-y-4 mb-8">

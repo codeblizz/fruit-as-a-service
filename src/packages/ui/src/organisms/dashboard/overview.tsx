@@ -185,9 +185,9 @@ const DashboardOverview = () => {
       </div>
 
       {/* Footer / Context */}
-      <div className="flex items-center justify-center gap-4 py-4 text-slate-400">
+      <div className="flex items-center bg-ghost-apple rounded-2xl justify-center gap-4 p-4 text-slate-400">
         <div className="h-px flex-1 bg-slate-200"></div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em]">
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.2em]">
           System Version {`${packageInfo.version}`} Real-time Monitoring Active
         </p>
         <div className="h-px flex-1 bg-slate-200"></div>

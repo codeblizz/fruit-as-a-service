@@ -20,10 +20,10 @@ import {
 
 function FruitMainDashboard({ className }: { className: string }) {
   const router = useRouter();
-  const { fruits } = useFruit<
-    FruitFormInput,
-    ZodSchema
-  >(CONSTANT.defaultFruitValues, FruitSchema);
+  const { fruits } = useFruit<FruitFormInput, ZodSchema>(
+    CONSTANT.defaultFruitValues,
+    FruitSchema
+  );
   const { loader } = useCreateStore((state) => state);
 
   const hasData = fruits.length > 0;
@@ -31,24 +31,25 @@ function FruitMainDashboard({ className }: { className: string }) {
   return (
     <Section
       className={lib.cn([
-        // "flex flex-col gap-3 justify-start px-4 py-2 items-center border-2 border-l-1 my-16 border-plum",
-        "space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500",
+        "animate-in fade-in slide-in-from-bottom-2 duration-500",
         className,
       ])}
     >
-      <FruitBreadCrumb />
-      <FruitHeader
-        className=""
-        subClassName="flex flex-col md:flex-row md:items-center"
+      <Section className="bg-ghost-apple border border-quaternary/50 p-4 pb-0 md:p-6 md:pb-0 space-y-6">
+        <FruitBreadCrumb />
+        <FruitHeader
+          className=""
+          subClassName="flex flex-col md:flex-row md:items-center"
           subTitle="Intelligence"
           title="Global Inventory"
           message="Monitor your seasonal stock levels, adjust market pricing, and
-            review producer certifications from your central logistics hub."
+        review producer certifications from your central logistics hub."
         />
+      </Section>
       <Section className="space-y-6 animate-in fade-in duration-500">
-        <div className="bg-white rounded-2xl border border-quaternary/50 overflow-hidden">
+        <div className="bg-ghost-apple border border-quaternary/50 overflow-hidden">
           <table className="w-full text-center">
-            <thead className="w-full bg-slate-50 text-slate-500 text-xs uppercase">
+            <thead className="w-full bg-ghost-apple text-slate-500 text-xs uppercase">
               <tr className="border border-quaternary/50">
                 <th className="px-6 py-4 border-r">Item</th>
                 <th className="px-6 py-4 border-r">Category</th>
@@ -65,29 +66,41 @@ function FruitMainDashboard({ className }: { className: string }) {
                   return (
                     <tr
                       key={index}
-                      onClick={() => router.push(`/dashboard/fruits/edit?id=${fruit.id}`)}
-                      className="hover:bg-slate-200 bg-slate-50 text-slate-500 text-xs hover:cursor-pointer transition-colors border border-slate-100"
+                      onClick={() =>
+                        router.push(`/dashboard/fruits/edit?id=${fruit.id}`)
+                      }
+                      className="hover:bg-slate-200 bg-ghost-apple text-slate-500 text-xs hover:cursor-pointer transition-colors border border-slate-100"
                     >
                       <td className="px-6 py-4 font-medium">
                         {fruit?.commonName}
                       </td>
                       <td className="px-6 py-4">{fruit?.categoryName}</td>
-                      <td className="px-6 py-4">{fruit?.inventory[0]["harvestDate"]}</td>
-                      <td className="px-6 py-4">{fruit?.inventory[0]["expiryDate"]}</td>
-                      <td className="px-6 py-4">{fruit?.inventory[0]["quantityAvailable"]}</td>
-                      <td className="px-6 py-4">{fruit?.inventory[0]["unitPrice"]}</td>
+                      <td className="px-6 py-4">
+                        {fruit?.inventory[0]["harvestDate"]}
+                      </td>
+                      <td className="px-6 py-4">
+                        {fruit?.inventory[0]["expiryDate"]}
+                      </td>
+                      <td className="px-6 py-4">
+                        {fruit?.inventory[0]["quantityAvailable"]}
+                      </td>
+                      <td className="px-6 py-4">
+                        {fruit?.inventory[0]["unitPrice"]}
+                      </td>
                       <td className="px-6 py-4">
                         <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold">
                           {fruit?.inventory[0]["status"]}
                         </span>
                       </td>
                     </tr>
-                  )
+                  );
                 })
               ) : (
-                <tr className="w-full">
-                  <td colSpan={4} className="px-6 py-12 text-center">
-                    <NofruitFound />
+                <tr>
+                  <td colSpan={7} className="px-6 py-16 text-center">
+                    <div className="flex justify-center items-center">
+                      <NofruitFound />
+                    </div>
                   </td>
                 </tr>
               )}

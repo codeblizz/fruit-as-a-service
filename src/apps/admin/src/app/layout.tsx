@@ -10,6 +10,7 @@ import { authOptions } from "@/packages/auth/src/authOptions";
 import StoreProvider from "@/packages/providers/src/store.provider";
 import { ThemeProvider } from "@/packages/providers/src/theme.provider";
 import SessionProvider from "@/packages/providers/src/session.provider";
+import { cn } from "@/packages/helpers/src/utils";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -66,7 +67,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={cn(inter.className, "bg-[url('/images/fruit-platter-002.webp')] bg-no-repeat bg-cover bg-center bg-fixed")}>
         <StoreProvider>
           <SessionProvider session={session}>
             <ThemeProvider>

@@ -2,7 +2,6 @@
 
 import React from "react";
 import { ZodSchema } from "zod";
-import lib from "@/packages/helpers/src/libs";
 import Modal from "@/packages/ui/src/molecules/modal";
 import { useCreateStore } from "@/packages/store/src";
 import Section from "@/packages/ui/src/atoms/section";
@@ -18,7 +17,7 @@ import {
   FruitSchema,
 } from "@/packages/helpers/src/validations/fruits.validate";
 
-function FruitMainDashboard({ className }: { className: string }) {
+function FruitMainDashboard() {
   const searchParams = useSearchParams();
   const selectedfruits = searchParams.get("selected") ?? "";
   const router = useRouter();
@@ -34,25 +33,23 @@ function FruitMainDashboard({ className }: { className: string }) {
 
   return (
     <Section
-      className={lib.cn([
-        // "flex flex-col gap-3 justify-start px-4 py-2 items-center border-2 border-l-1 my-16 border-plum",
-        "space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500",
-        className,
-      ])}
+      className="animate-in fade-in slide-in-from-bottom-2 min-h-screen duration-500"
     >
-      <FruitBreadCrumb />
-      <FruitHeader
-        className=""
-        subTitle="Intelligence"
-        title="Global Inventory"
-        subClassName="flex flex-col md:flex-row md:items-center"
-        message="Monitor your seasonal stock levels, adjust market pricing, and
+      <Section className="bg-ghost-apple border border-quaternary/50 p-4 pb-0 md:p-6 md:pb-0 space-y-6">
+        <FruitBreadCrumb />
+        <FruitHeader
+          className=""
+          subTitle="Intelligence"
+          title="Global Inventory"
+          subClassName="flex flex-col md:flex-row md:items-center"
+          message="Monitor your seasonal stock levels, adjust market pricing, and
             review producer certifications from your central logistics hub."
-      />
-      <Section className="space-y-6 animate-in fade-in duration-500">
-        <div className="bg-white rounded-2xl border border-quaternary/50 overflow-hidden">
+        />
+      </Section>
+      <Section className="space-y-6 bg-ghost-apple min-h-screen animate-in fade-in duration-500">
+        <div className="border border-quaternary/50 overflow-hidden">
           <table className="w-full text-center">
-            <thead className="w-full bg-slate-50 text-slate-500 text-xs uppercase">
+            <thead className="w-full text-slate-500 text-xs uppercase">
               <tr className="border border-quaternary/50">
                 <th className="px-6 py-4 border-r">Item</th>
                 <th className="px-6 py-4 border-r">Category</th>
@@ -75,7 +72,7 @@ function FruitMainDashboard({ className }: { className: string }) {
                             `/dashboard/fruits/${selectedfruits}/details/?id=${fruit.fruitId}`
                           )
                         }
-                        className="hover:bg-slate-200 bg-slate-50 text-slate-500 text-xs hover:cursor-pointer transition-colors border border-slate-100"
+                        className="hover:bg-slate-200 bg-ghost-apple text-slate-500 text-xs hover:cursor-pointer transition-colors border border-slate-100"
                       >
                         <td className="px-6 py-4 font-medium border-r">
                           {fruit?.commonName}
@@ -105,9 +102,11 @@ function FruitMainDashboard({ className }: { className: string }) {
                   }
                 )
               ) : (
-                <tr className="w-full">
-                  <td colSpan={4} className="px-6 py-12 text-center">
-                    <NofruitFound />
+                <tr>
+                  <td colSpan={7} className="px-6 py-12 text-center">
+                    <div className="flex justify-center items-center">
+                      <NofruitFound />
+                    </div>
                   </td>
                 </tr>
               )}

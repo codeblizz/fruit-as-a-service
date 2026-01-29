@@ -218,7 +218,7 @@ function SellerPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sellerBenefits.map((benefit, index) => (
-              <Slide key={index} direction="up" delay={index * 100}>
+              <Slide key={index} direction="right" delay={index * 100}>
                 <motion.div
                   whileHover={{ scale: 1.05, rotateY: 5 }}
                   className={`relative p-8 rounded-3xl bg-gradient-to-br ${benefit.color} shadow-xl hover:shadow-2xl transition-all duration-300`}

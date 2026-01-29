@@ -29,7 +29,7 @@ const NavItem: React.FC<{
       <Button
         onClick={onClick}
         className={cn(
-          "w-full flex mx-auto justify-start bg-white cursor-pointer items-center p-2.5 rounded-xl transition-all group relative border-none",
+          "w-full flex mx-auto justify-start bg-ghost-apple cursor-pointer items-center p-2.5 rounded-xl transition-all group relative border-none",
           isActive
             ? "text-ghost-apple bg-gradient-to-tr from-apple-green via-primary to-kiwi shadow-sm shadow-slate-50"
             : "text-slate-500 hover:text-apple-green/70 hover:bg-apple-green/5",

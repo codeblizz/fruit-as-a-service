@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useCreateStore } from "@/packages/store/src";
-import useAuth from "./useAuth";
 
 export default function useDashboard() {
-  const { isDashboard } = useAuth();
+  const pathname = usePathname();
+  const isDashboard = pathname.startsWith("/dashboard");
   const {
     updateToast,
     setActiveTab,

@@ -17,7 +17,6 @@ const CustomSelect = ({
   icon: Icon,
   placeholder,
 }: any) => {
-
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
@@ -33,7 +32,10 @@ const CustomSelect = ({
         name={name}
         control={control}
         rules={rules}
-        render={({ field: { onChange, value }, fieldState: { error, isDirty } }) => {
+        render={({
+          field: { onChange, value },
+          fieldState: { error, isDirty },
+        }) => {
           const selectedLabel = options.find(
             (opt: OptionType) => opt.value === value
           )?.label;
@@ -56,7 +58,10 @@ const CustomSelect = ({
                   `}
               >
                 {Icon && (
-                  <Icon size={19} className={!isDirty && error ? "!text-cherry" : ""} />
+                  <Icon
+                    size={19}
+                    className={!isDirty && error ? "!text-cherry" : ""}
+                  />
                 )}
 
                 <span
@@ -78,7 +83,7 @@ const CustomSelect = ({
               </button>
               {/* Custom Dropdown Menu */}
               {isOpen && (
-                <div className="absolute z-50 w-full bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute z-50 w-full bg-ghost-apple border border-slate-200 rounded-lg shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="max-h-60 overflow-y-auto p-1">
                     {options.map((option: OptionType) => (
                       <div
@@ -92,7 +97,7 @@ const CustomSelect = ({
                             ${
                               value === option.value
                                 ? "bg-slate-100 text-slate-700 font-semibold"
-                                : "text-slate-500 hover:bg-slate-50"
+                                : "text-slate-500 hover:bg-ghost-apple"
                             }
                           `}
                       >
@@ -106,7 +111,9 @@ const CustomSelect = ({
               {/* Error Message */}
               {!isDirty && error && (
                 <div className="flex items-center gap-1 ml-1 !text-cherry">
-                  <span className="text-[0.6rem] font-medium">{error.message}</span>
+                  <span className="text-[0.6rem] font-medium">
+                    {error.message}
+                  </span>
                 </div>
               )}
             </div>

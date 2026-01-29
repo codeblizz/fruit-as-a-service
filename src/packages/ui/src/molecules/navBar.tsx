@@ -2,18 +2,18 @@
 
 import Headroom from "react-headroom";
 import useAuth from "./hooks/useAuth";
+import NextImage from "../atoms/image";
 import React, { useState } from "react";
 import { Button } from "../atoms/button";
-import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import Nav from "@/packages/ui/src/atoms/nav";
 import { usePathname } from "next/navigation";
 import lib from "@/packages/helpers/src/libs";
 import useDashboard from "./hooks/useDashboard";
 import { cn } from "@/packages/helpers/src/utils";
-import { useSearchParams } from "next/navigation";
 import AppLogoComponent from "./appLogoComponent";
 import NextLink from "@/packages/ui/src/atoms/link";
+import { useCreateStore } from "@/packages/store/src";
 import CONSTANT from "@/packages/helpers/src/constants";
 import { ThemeToggle } from "@/packages/providers/src/theme.provider";
 import DefaultProfileImage from "@/packages/assets/images/defaultProfileImage.svg";
@@ -21,59 +21,58 @@ import { useClickOutside } from "@/packages/ui/src/molecules/hooks/useClickOutsi
 import {
   Bell,
   Search,
-  MoreVertical,
+  LogOutIcon,
   X as XMarkIcon,
-  User as UserIcon,
   Menu as Bars3Icon,
   ShoppingCart as ShoppingCartIcon,
-  LogOutIcon,
-  User,
 } from "lucide-react";
-import NextImage from "../atoms/image";
 
 function NavBar() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const {
     isLoading,
+    onSignOut,
     isDashboard,
     isSigninPage,
     isSignupPage,
     isAuthenticated,
   } = useAuth();
-  const { data: session, status } = useSession();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { setMobileOpen, isMobileOpen, isSidebarCollapsed } = useDashboard();
+  const { data: session } = useSession();
+  const { isMenuOpen, setIsMenuOpen } = useAuth();
+  const { cart } = useCreateStore((state) => state);
+  const { setMobileOpen, isSidebarCollapsed } = useDashboard();
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === href;
     return pathname.startsWith(href);
   };
-  
+
   const hasFruitWritePrivilege = (name: string) => {
     const hideAddFruit =
-    !session?.user.permissions.includes("WRITE_FRUITS") &&
-    name === "Add Fruits"
-    ? "hidden"
-    : "";
+      !session?.user.permissions.includes("WRITE_FRUITS") &&
+      name === "Add Fruits"
+        ? "hidden"
+        : "";
     return hideAddFruit === "hidden";
   };
-  
+
   const isDashboardAccessRestricted = (name: string): boolean => {
     const hideUnauthorizedDashboardView =
-    !isDashboard && !isAuthenticated && name === "Dashboard" ? "hidden" : "";
+      !isDashboard && !isAuthenticated && name === "Dashboard" ? "hidden" : "";
     return hideUnauthorizedDashboardView === "hidden";
   };
 
   const showHiddenWhenUnauthenticated = (name: string): boolean => {
     const hideWhenUnauthenticated =
-    !isAuthenticated && (name === "Cart" || name === "Sell Fruits")
-      ? "hidden"
-      : "";
+      !isAuthenticated && (name === "Cart" || name === "Sell Fruits")
+        ? "hidden"
+        : "";
     return hideWhenUnauthenticated === "hidden";
-  }
-  
-  const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsMenuOpen(false));
+  };
+
+  const dropdownRef = useClickOutside<HTMLDivElement>(() =>
+    setIsMenuOpen(false)
+  );
 
   return (
     <Headroom pin className="w-full fixed z-50 transition-all duration-300">
@@ -97,7 +96,7 @@ function NavBar() {
                     <input
                       type="text"
                       placeholder="Search resources..."
-                      className="bg-slate-50 border-transparent focus:bg-ghost-apple focus:border-indigo-100 rounded-xl py-2 pl-10 pr-4 w-64 lg:w-96 text-sm transition-all outline-none"
+                      className="border-transparent bg-ghost-apple focus:border-indigo-100 rounded-xl py-2 pl-10 pr-4 w-64 lg:w-96 text-sm transition-all outline-none"
                     />
                   </div>
                 </div>
@@ -120,7 +119,13 @@ function NavBar() {
                     }`}
                   >
                     <div className="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm flex-shrink-0">
-                      <NextImage className="rounded-full size-full cursor-pointer" src={session?.user.image ?? DefaultProfileImage} alt="profile_user" width={60} height={60} />  
+                      <NextImage
+                        className="rounded-full size-full cursor-pointer"
+                        src={session?.user.image ?? DefaultProfileImage}
+                        alt="profile_user"
+                        width={60}
+                        height={60}
+                      />
                     </div>
 
                     {!isSidebarCollapsed && (
@@ -171,7 +176,7 @@ function NavBar() {
                   >
                     <ShoppingCartIcon className="w-6 h-6" />
                     <span className="absolute -top-1 -right-1 bg-strawberry text-ghost-apple text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                      0
+                      {Object.values(cart).reduce((a, b) => a + b, 0) || 0}
                     </span>
                   </NextLink>
                 )}
@@ -180,8 +185,9 @@ function NavBar() {
                   {isAuthenticated && (
                     <Button
                       leftIcon={<LogOutIcon />}
+                      loading={isLoading}
                       className="text-ghost-apple rounded-lg bg-gradient-to-br h-8 from-orange via-cherry to-lychee hover:text-apple-green py-0 font-medium transition-colors duration-200"
-                      onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+                      onClick={onSignOut}
                     >
                       Sign Out
                     </Button>
@@ -232,7 +238,10 @@ function NavBar() {
           )}
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div ref={dropdownRef} className="lg:hidden absolute top-[4rem] right-0 w-64 z-50 bg-quaternary mt-4 pb-4 border-t border-quaternary animate-[slideDown_0.3s_ease-out]">
+            <div
+              ref={dropdownRef}
+              className="lg:hidden absolute top-[4rem] right-0 w-64 z-50 bg-quaternary mt-4 pb-4 border-t border-quaternary animate-[slideDown_0.3s_ease-out]"
+            >
               <div className="flex flex-col space-y-2 pt-4">
                 {CONSTANT.navigationItems.map((item) => {
                   if (hasFruitWritePrivilege(item.name)) return null;
@@ -260,15 +269,14 @@ function NavBar() {
                   <div className="px-4 w-full">
                     <Button
                       leftIcon={<LogOutIcon />}
+                      loading={isLoading}
                       className={cn(
                         "w-full h-8 rounded-xl text-center text-ghost-apple font-medium transition-colors duration-200",
                         isDashboard
                           ? "bg-primary"
                           : "bg-gradient-to-br from-orange via-cherry to-lychee"
                       )}
-                      onClick={async () =>
-                        await signOut({ callbackUrl: "/auth/signin" })
-                      }
+                      onClick={onSignOut}
                     >
                       Sign Out
                     </Button>
@@ -276,11 +284,7 @@ function NavBar() {
                 ) : (
                   <div className="px-4">
                     <NextLink
-                      href={
-                        isSigninPage
-                          ? "/auth/signup"
-                          : "/auth/signin"
-                      }
+                      href={isSigninPage ? "/auth/signup" : "/auth/signin"}
                       onClick={() => setIsMenuOpen(false)}
                       className={cn(
                         "hidden",

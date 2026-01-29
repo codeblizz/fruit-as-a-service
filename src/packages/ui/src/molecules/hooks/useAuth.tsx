@@ -1,20 +1,27 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import utils from "@/packages/helpers/src/utils";
+import { signOut, useSession } from "next-auth/react";
 import { useCreateStore } from "@/packages/store/src";
 import CONSTANT from "@/packages/helpers/src/constants";
 import { signIn, SignInResponse } from "next-auth/react";
 import { TSignIn, SignUp } from "@/packages/types/src/auth.type";
 import { AuthService } from "@/packages/services/src/auth/auth.service";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { UserService } from "@/packages/services/src/users/user.service";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 
 export default function useAuth() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
   const isLoading = status === "loading";
@@ -22,9 +29,11 @@ export default function useAuth() {
   const [codeDigits, setCodeDigits] = useState(
     Array(CONSTANT.VERIFICATION_CODE_LENGTH).fill("")
   );
-  const hasFruitManagementAccess = session?.user.permissions.includes("MANAGE_FRUITS");
+  const hasFruitManagementAccess =
+    session?.user.permissions.includes("MANAGE_FRUITS");
   const [verificationStatus, setVerificationStatus] = useState("idle"); // idle, loading, success, error
   const [message, setMessage] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isSigninPage = pathname.includes("signin");
   const isSignupPage = pathname.includes("signup");
   const isPasswordResetPage = pathname.includes("password");
@@ -32,7 +41,13 @@ export default function useAuth() {
   const isDashboard = pathname.startsWith("/dashboard");
   const shouldShowDelayedLoading = !isAuthenticated && isDashboard;
   const [showDelayedLoading, setShowDelayedLoading] = useState(false);
-  const { updateToast, updateUser, user } = useCreateStore((state) => state);
+  const {
+    user,
+    updateUser,
+    updateToast,
+    setActiveTab,
+    dashboard: { activeTab },
+  } = useCreateStore((state) => state);
 
   // The token extracted from the URL is typically a long JWT, not a 6-digit code.
   // We treat the URL token as triggering an automatic verification attempt.
@@ -41,40 +56,45 @@ export default function useAuth() {
 
   const manualToken = codeDigits.join("");
 
-  const authSignin = async (payload: TSignIn) => {
-    try {
-      const response: SignInResponse | undefined = await signIn("credentials", {
-        email: payload.email,
-        password: payload.password,
-        callbackUrl: "/dashboard",
-        redirect: false,
-        ...(payload.rememberMe ? { maxAge: 30 * 24 * 60 * 60 } : {}),
-      });
-      if (response?.ok) {
-        updateToast(true, "Sign in successful", "text-success");
-        router.replace("/dashboard");
-      } else {
-        throw new Error("Sign in failed due to an unknown error.");
+  const authSignin = (payload: TSignIn) => {
+    startTransition(async () => {
+      try {
+        const response: SignInResponse | undefined = await signIn("credentials", {
+          email: payload.email,
+          password: payload.password,
+          callbackUrl: "/dashboard",
+          redirect: false,
+          ...(payload.rememberMe ? { maxAge: 30 * 24 * 60 * 60 } : {}),
+        });
+        if (response?.ok) {
+          updateToast(true, "Sign in successful", "text-success");
+          router.replace("/dashboard");
+        } else {
+          throw new Error("Sign in failed due to an unknown error.");
+        }
+      } catch (error) {
+        const { message } = utils.formatError(error);
+        updateToast(true, message, "text-cherry");
       }
-    } catch (error) {
-      const { message } = utils.formatError(error);
-      updateToast(true, message, "text-cherry");
-    }
+    });
   };
 
-  const authSignup = async (payload: SignUp) => {
-    try {
-      const response = await AuthService("signup").signUp(payload);
-      const { status, message } = response.data;
-      if (status) {
-        updateToast(true, message, "text-success");
-        router.replace("/auth/email-sent?type=VERIFICATION");
-      } else {
-        throw Error(message);
+  const authSignup = (payload: SignUp) => {
+    startTransition(async () => {
+      try {
+        const response = await AuthService("signup").signUp(payload);
+        const { status, message } = response.data;
+        if (status) {
+          updateToast(true, message, "text-success");
+          router.replace("/auth/email-sent?type=VERIFICATION");
+        } else {
+          throw Error(message);
+        }
+      } catch (error) {
+        const err = utils.formatError(error);
+        updateToast(true, err.message, "text-error");
       }
-    } catch (error) {
-      throw error;
-    }
+    });
   };
 
   const fetchAuthUserDetails = useCallback(async () => {
@@ -93,6 +113,15 @@ export default function useAuth() {
       roles: data.roles,
     });
   }, []);
+
+  const onSignOut = () => {
+    startTransition(async () => {
+      await signOut({ callbackUrl: "/auth/signin" });
+      updateToast(true, "User Signed Out", "text-success");
+      activeTab !== "overview" && setActiveTab("overview");
+      setIsMenuOpen(false);
+    });
+  };
 
   const performVerification = useCallback(
     async (token: string) => {
@@ -161,14 +190,16 @@ export default function useAuth() {
 
   return {
     user,
-    isLoading,
+    onSignOut,
     isSigninPage,
     isSignupPage,
     isDashboard,
     authSignup,
     authSignin,
     viewProps,
+    isMenuOpen,
     setMessage,
+    setIsMenuOpen,
     isAuthenticated,
     showDelayedLoading,
     isPasswordResetPage,
@@ -177,6 +208,7 @@ export default function useAuth() {
     isEmailNotificationPage,
     shouldShowDelayedLoading,
     hasFruitManagementAccess,
+    isLoading: isLoading || isPending,
     handlers: { handleSubmitManual, setCodeDigits },
   };
 }

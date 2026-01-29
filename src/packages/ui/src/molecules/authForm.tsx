@@ -1,19 +1,18 @@
 "use client";
 
+import React from "react";
 import useAuth from "./hooks/useAuth";
 import Section from "../atoms/section";
-import React, { useTransition } from "react";
+import { usePathname } from "next/navigation";
 import Form from "@/packages/ui/src/atoms/form";
+import { cn } from "@/packages/helpers/src/utils";
 import Input from "@/packages/ui/src/atoms/input";
 import NextLink from "@/packages/ui/src/atoms/link";
 import useResetFields from "./hooks/useResetFields";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateStore } from "@/packages/store/src";
 import CONSTANT from "@/packages/helpers/src/constants";
 import { Button } from "@/packages/ui/src/atoms/button";
-import utils, { cn } from "@/packages/helpers/src/utils";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useParams, usePathname } from "next/navigation";
 import { Card } from "@/packages/ui/src/molecules/card";
 import { TSignIn, SignUp } from "@/packages/types/src/auth.type";
 import {
@@ -23,11 +22,8 @@ import {
 
 function AuthForm({ className }: { className: string }) {
   const pathname = usePathname();
-  const { updateToast } = useCreateStore((state) => state);
-  const { isSigninPage, authSignup, authSignin, isSignupPage } = useAuth();
-  const params = useParams<{ slug: string }>();
-  const [isPending, startTransition] = useTransition();
-  // const slug = params.slug;
+  const { isSigninPage, authSignup, authSignin, isSignupPage, isLoading } =
+    useAuth();
   const {
     reset,
     control,
@@ -42,31 +38,23 @@ function AuthForm({ className }: { className: string }) {
   });
 
   const onSubmit: SubmitHandler<TSignIn | SignUp> = (data) => {
-    startTransition(async () => {
-      try {
-        if (isSignupPage) {
-          const registerData: SignUp = data as SignUp;
-          return await authSignup({
-            email: registerData.email,
-            password: registerData.password,
-            firstName: registerData.firstName,
-            lastName: registerData.lastName,
-            businessName: registerData.businessName,
-            termsAccepted: registerData.termsAccepted,
-          });
-        } else {
-          return await authSignin({
-            email: data.email,
-            password: data.password,
-            rememberMe: getValues("rememberMe"),
-          });
-        }
-      } catch (error) {
-        const err = utils.formatError(error);
-        updateToast(true, err.message, "text-error");
-      }
-    });
-    return;
+    if (isSignupPage) {
+      const registerData: SignUp = data as SignUp;
+      return authSignup({
+        email: registerData.email,
+        password: registerData.password,
+        firstName: registerData.firstName,
+        lastName: registerData.lastName,
+        businessName: registerData.businessName,
+        termsAccepted: registerData.termsAccepted,
+      });
+    } else {
+      return authSignin({
+        email: data.email,
+        password: data.password,
+        rememberMe: getValues("rememberMe"),
+      });
+    }
   };
 
   useResetFields(isDirty, errors, reset);
@@ -175,13 +163,13 @@ function AuthForm({ className }: { className: string }) {
             <Button
               name="submit"
               type="submit"
-              loading={isPending}
+              loading={isLoading}
               className={cn(
                 "w-full bg-gradient-to-tr from-apple-green via-primary to-kiwi text-ghost-apple py-4 text-lg font-semibold",
                 isSignupPage ? "h-9" : ""
               )}
             >
-              {isPending
+              {isLoading
                 ? isSignupPage
                   ? "Signing Up..."
                   : "Signing In..."

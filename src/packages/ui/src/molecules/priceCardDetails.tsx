@@ -195,7 +195,7 @@ function PriceCardDetails({
           </Section>
         </CardFooter>
       </Card>
-      <Card className="xl:w-[450px] flex-1 grid grid-cols-2 gap-4 bg-white p-6 border-2 border-emerald-600/20">
+      <Card className="xl:w-[450px] flex-1 grid grid-cols-2 gap-4 bg-ghost-apple p-6 border-2 border-emerald-600/20">
         {images?.length > 0 ? (
           images.map((image: ImagePreviewDetails) => (
             <FruitImageView
